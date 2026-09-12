@@ -13,7 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cargarMesas();
 
-    // ─── Limpiar formulario ───
+    // ─── Eliminar TODAS las mesas ───
+    document.getElementById('btnEliminarTodas').addEventListener('click', async () => {
+        const confirmacion1 = confirm('⚠️ ¿Estás seguro de eliminar TODAS las mesas del padrón?\n\nEsto también eliminará los locales, ubigeos y actas asociadas.');
+        if (!confirmacion1) return;
+
+        const confirmacion2 = confirm('🚨 SEGUNDA CONFIRMACIÓN\n\nEsta acción es IRREVERSIBLE. ¿Confirmas que deseas borrar todo el padrón de mesas?');
+        if (!confirmacion2) return;
+
+        try {
+            const res = await fetch('api/eliminar_todas_mesas.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (data.success) cargarMesas();
+        } catch (err) {
+            alert(`Error: ${err.message}`);
+        }
+    });
+
+
     btnLimpiar.addEventListener('click', () => {
         form.reset();
         inputId.readOnly = false;
