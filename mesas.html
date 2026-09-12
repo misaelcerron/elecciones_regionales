@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mantenimiento de Mesas | Sistema Electoral</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- SheetJS para leer archivos Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         .navbar {
             display: flex; justify-content: space-between; align-items: center;
@@ -30,6 +32,21 @@
         
         .btn-clear { background: rgba(255,255,255,0.1); margin-top: 1rem; border: 1px solid var(--glass-border); color: white; padding: 0.75rem; border-radius: 8px; width: 100%; cursor: pointer; transition: 0.3s; }
         .btn-clear:hover { background: rgba(255,255,255,0.2); }
+
+        /* Sección de Importación */
+        .import-panel { background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 1.5rem; }
+        .import-panel-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+        .btn-template { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-template:hover { background: rgba(16,185,129,0.3); }
+        .import-drop-zone { border: 2px dashed var(--glass-border); border-radius: 10px; padding: 2rem; text-align: center; transition: 0.3s; cursor: pointer; }
+        .import-drop-zone:hover, .import-drop-zone.dragover { border-color: var(--primary-color); background: rgba(59,130,246,0.07); }
+        .import-drop-zone input[type=file] { display: none; }
+        .import-drop-zone label { cursor: pointer; display: block; }
+        .import-result { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; display: none; }
+        .import-result.success { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; }
+        .import-result.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #f87171; }
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; display: none; margin-top: 0.75rem; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 4px; transition: width 0.3s; }
     </style>
 </head>
 <body>
@@ -85,6 +102,33 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Panel de Importación Masiva Excel -->
+    <div class="import-panel" style="max-width: 1100px; margin: 1.5rem auto;">
+        <div class="import-panel-header">
+            <h2 class="section-title" style="margin-bottom: 0;">Importar Mesas desde Excel</h2>
+            <button class="btn-template" id="btnDescargarPlantilla">
+                ⬇ Descargar Plantilla Excel
+            </button>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+            El archivo debe tener las columnas: <strong>N°, ODPE, DEPARTAMENTO, PROVINCIA, DISTRITO, CENTRO POBLADO, MESA DE SUFRAGIO N°</strong>. Use la plantilla para garantizar el formato correcto.
+        </p>
+
+        <div class="import-drop-zone" id="dropZone">
+            <input type="file" id="fileInput" accept=".xlsx,.xls">
+            <label for="fileInput">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📂</div>
+                <strong>Haz clic aquí o arrastra tu archivo Excel</strong><br>
+                <small style="color: var(--text-muted);">Formatos aceptados: .xlsx, .xls</small>
+            </label>
+        </div>
+
+        <div class="progress-bar" id="importProgress">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="import-result" id="importResult"></div>
     </div>
 
     <script src="js/auth.js"></script>
