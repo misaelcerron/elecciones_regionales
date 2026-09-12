@@ -38,9 +38,9 @@ try {
             continue;
         }
 
-        // 1. Crear Ubigeo único por Departamento-Provincia-Distrito si no existe
-        $id_ubigeo = substr(preg_replace('/[^A-Z0-9]/', '', strtoupper($departamento . $provincia . $distrito)), 0, 6);
-        $id_ubigeo = str_pad($id_ubigeo, 6, '0', STR_PAD_RIGHT);
+        // 1. Generar ubigeo único por Distrito (usando hash corto del nombre)
+        $ubigeo_key = strtoupper($departamento . '|' . $provincia . '|' . $distrito);
+        $id_ubigeo = strtoupper(substr(md5($ubigeo_key), 0, 6));
 
         $stmtUb = $pdo->prepare("INSERT IGNORE INTO ubigeo (id_ubigeo, departamento, provincia, distrito) VALUES (?, ?, ?, ?)");
         $stmtUb->execute([$id_ubigeo, strtoupper($departamento), strtoupper($provincia), strtoupper($distrito)]);

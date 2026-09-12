@@ -9,18 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const mesaCount = document.getElementById('mesaCount');
 
     let todasLasMesas = [];
+    let archivoExcel = null;
 
     cargarMesas();
 
-    // ─── Formulario: Limpiar ───
+    // ─── Limpiar formulario ───
     btnLimpiar.addEventListener('click', () => {
         form.reset();
         inputId.readOnly = false;
         btnGuardar.textContent = "Guardar Mesa";
-        btnGuardar.style.background = '';
     });
 
-    // ─── Formulario: Guardar / Actualizar ───
+    // ─── Guardar / Actualizar Mesa ───
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         btnGuardar.disabled = true;
@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             if (data.success) { alert(data.message); btnLimpiar.click(); cargarMesas(); }
             else { alert(`Error: ${data.message}`); }
-        } catch (err) { alert(`Error de red: ${err.message}`); }
+        } catch (err) { alert(`Error: ${err.message}`); }
         finally { btnGuardar.disabled = false; btnGuardar.textContent = "Guardar Mesa"; }
     });
 
-    // ─── Cargar Tabla ───
+    // ─── Cargar tabla de mesas ───
     async function cargarMesas() {
         try {
             const res = await fetch('api/get_mesas.php');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mesaCount.textContent = `Total: ${todasLasMesas.length} mesas`;
             renderTabla(todasLasMesas);
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="5" style="color:#ef4444; text-align:center">Error: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="color:#ef4444; text-align:center;">Error: ${err.message}</td></tr>`;
         }
     }
 
@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', () => {
         const q = searchInput.value.toLowerCase();
         const filtradas = todasLasMesas.filter(m =>
-            m.id_mesa.includes(q) || m.distrito.toLowerCase().includes(q)
+            m.id_mesa.includes(q) || m.distrito.toLowerCase().includes(q) || m.local.toLowerCase().includes(q)
         );
-        renderTabla(filtradas);
         mesaCount.textContent = `Mostrando: ${filtradas.length} / ${todasLasMesas.length}`;
+        renderTabla(filtradas);
     });
 
-    // ─── Renderizar Tabla ───
+    // ─── Renderizar tabla ───
     function renderTabla(data) {
         if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-muted);">No hay mesas registradas.</td></tr>';
@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach(mesa => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="font-weight:700; color:var(--primary-color); letter-spacing:0.5px;">${mesa.id_mesa}</td>
+                <td style="font-weight:700; color:#60a5fa; letter-spacing:0.5px;">${mesa.id_mesa}</td>
                 <td>${mesa.distrito}</td>
-                <td style="color:var(--text-muted); font-size:0.85rem;">${mesa.local}</td>
+                <td style="color:var(--text-muted); font-size:0.83rem;">${mesa.local}</td>
                 <td>${mesa.electores_habiles}</td>
-                <td>
+                <td style="white-space:nowrap;">
                     <button class="btn-accion btn-editar" onclick="editarMesa('${mesa.id_mesa}', ${mesa.electores_habiles})">✏ Editar</button>
                     <button class="btn-accion btn-eliminar" onclick="eliminarMesa('${mesa.id_mesa}')">🗑 Eliminar</button>
                 </td>`;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ─── Editar Mesa ───
+    // ─── Editar mesa ───
     window.editarMesa = function(id, electores) {
         inputId.value = id;
         inputElectores.value = electores;
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ─── Eliminar Mesa ───
+    // ─── Eliminar mesa ───
     window.eliminarMesa = async function(id) {
-        if (!confirm(`¿Estás seguro de eliminar la Mesa N° ${id}?\nEsta acción no se puede deshacer.`)) return;
+        if (!confirm(`¿Eliminar la Mesa N° ${id}?\nEsta acción no se puede deshacer.`)) return;
         try {
             const res = await fetch('api/eliminar_mesa.php', {
                 method: 'POST',
@@ -103,32 +103,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ id_mesa: id })
             });
             const data = await res.json();
-            if (data.success) { alert(data.message); cargarMesas(); }
-            else { alert(`No se pudo eliminar: ${data.message}`); }
-        } catch (err) { alert(`Error de red: ${err.message}`); }
+            alert(data.message);
+            if (data.success) cargarMesas();
+        } catch (err) { alert(`Error: ${err.message}`); }
     };
 
-    // ─── Acordeón Importación ───
-    const accordionHeader = document.getElementById('accordionHeader');
-    const accordionBody = document.getElementById('accordionBody');
-    const accordionIcon = document.getElementById('accordionIcon');
+    // ══════════════════════════════════════════
+    //   IMPORTACIÓN EXCEL (barra compacta)
+    // ══════════════════════════════════════════
+    const fileInput = document.getElementById('fileInput');
+    const fileNameEl = document.getElementById('fileName');
+    const btnImportar = document.getElementById('btnImportar');
+    const btnPlantilla = document.getElementById('btnDescargarPlantilla');
+    const feedback = document.getElementById('importFeedback');
 
-    accordionHeader.addEventListener('click', () => {
-        accordionBody.classList.toggle('visible');
-        accordionIcon.classList.toggle('open');
+    // Selección de archivo
+    fileInput.addEventListener('change', () => {
+        archivoExcel = fileInput.files[0] || null;
+        if (archivoExcel) {
+            fileNameEl.textContent = archivoExcel.name;
+            btnImportar.disabled = false;
+            mostrarFeedback('', '');
+        } else {
+            fileNameEl.textContent = 'Ningún archivo seleccionado';
+            btnImportar.disabled = true;
+        }
     });
 
-    // ─── Plantilla Excel ───
-    document.getElementById('btnDescargarPlantilla').addEventListener('click', () => {
+    // Descargar plantilla
+    btnPlantilla.addEventListener('click', () => {
         const wb = XLSX.utils.book_new();
         const datos = [
             ['N°', 'ODPE', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'CENTRO POBLADO', 'MESA DE SUFRAGIO N°'],
             [1, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'CHACAYAN', '', '068426'],
             [2, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'CHACAYAN', '', '068427'],
-            [3, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'CHACAYAN', '', '068428'],
-            [4, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'CHACAYAN', 'CHANGO', '903878'],
-            [5, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'GOLLLARISQUIZGA', '', '068434'],
-            [6, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'PAUCAR', '', '068437'],
+            [3, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'CHACAYAN', 'CHANGO', '903878'],
+            [4, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'GOLLLARISQUIZGA', '', '068434'],
+            [5, 'PASCO', 'PASCO', 'DANIEL ALCIDES CARRION', 'PAUCAR', '', '068437'],
         ];
         const ws = XLSX.utils.aoa_to_sheet(datos);
         ws['!cols'] = [{ wch: 5 }, { wch: 8 }, { wch: 14 }, { wch: 24 }, { wch: 22 }, { wch: 18 }, { wch: 22 }];
@@ -136,70 +147,80 @@ document.addEventListener('DOMContentLoaded', () => {
         XLSX.writeFile(wb, 'Plantilla_Mesas_ODPE_Pasco.xlsx');
     });
 
-    // ─── Drag & Drop + File Input ───
-    const fileInput = document.getElementById('fileInput');
-    const dropZone = document.getElementById('dropZone');
+    // Importar al servidor
+    btnImportar.addEventListener('click', () => {
+        if (archivoExcel) procesarExcel(archivoExcel);
+    });
 
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) procesarExcel(e.dataTransfer.files[0]); });
-    fileInput.addEventListener('change', () => { if (fileInput.files[0]) procesarExcel(fileInput.files[0]); });
-
-    async function procesarExcel(file) {
-        mostrarResultado('', '');
-        const progressBar = document.getElementById('importProgress');
-        const progressFill = document.getElementById('progressFill');
-        progressBar.style.display = 'block';
-        progressFill.style.width = '30%';
+    function procesarExcel(file) {
+        btnImportar.disabled = true;
+        btnImportar.textContent = '⏳ Procesando...';
+        mostrarFeedback('', '');
 
         const reader = new FileReader();
         reader.onload = async (e) => {
             try {
-                progressFill.style.width = '60%';
                 const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-                const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
 
-                if (rows.length < 2) { mostrarResultado('error', 'Archivo sin datos válidos.'); return; }
+                if (rows.length < 2) {
+                    mostrarFeedback('err', 'El archivo no tiene datos válidos.');
+                    return;
+                }
 
+                // Columnas según el formato del usuario:
+                // [0]=N°  [1]=ODPE  [2]=DEPTO  [3]=PROVINCIA  [4]=DISTRITO  [5]=CENTRO POBLADO  [6]=MESA N°
                 const mesas = [];
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i];
-                    const id_mesa = String(row[6] ?? '').trim().padStart(6, '0');
-                    if (!id_mesa || id_mesa === '000000') continue;
+                    const id_mesa = String(row[6] ?? '').trim();
+                    if (!id_mesa) continue;
+
                     mesas.push({
                         departamento: String(row[2] ?? 'PASCO').trim(),
-                        provincia: String(row[3] ?? '').trim(),
-                        distrito: String(row[4] ?? '').trim(),
+                        provincia:    String(row[3] ?? '').trim(),
+                        distrito:     String(row[4] ?? '').trim(),
                         centro_poblado: String(row[5] ?? '').trim(),
-                        id_mesa,
+                        id_mesa:      id_mesa.padStart(6, '0'),
                         electores_habiles: 0
                     });
                 }
 
-                progressFill.style.width = '80%';
-                if (mesas.length === 0) { mostrarResultado('error', 'No se encontraron mesas válidas.'); return; }
+                if (mesas.length === 0) {
+                    mostrarFeedback('err', 'No se encontraron mesas válidas en el archivo.');
+                    return;
+                }
 
-                const res = await fetch('api/importar_mesas.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mesas }) });
+                const res = await fetch('api/importar_mesas.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mesas })
+                });
                 const result = await res.json();
-                progressFill.style.width = '100%';
 
                 if (result.success) {
-                    let msg = `✅ ${result.message}`;
-                    if (result.errores?.length > 0) msg += `<br><small style="color:#fbbf24;">⚠️ ${result.errores.join('<br>')}</small>`;
-                    mostrarResultado('success', msg);
+                    mostrarFeedback('ok', `✅ ${result.message}`);
                     cargarMesas();
                     fileInput.value = '';
-                } else { mostrarResultado('error', `❌ ${result.message}`); }
-            } catch (err) { mostrarResultado('error', `Error: ${err.message}`); }
-            finally { setTimeout(() => progressBar.style.display = 'none', 1500); }
+                    fileNameEl.textContent = 'Ningún archivo seleccionado';
+                    archivoExcel = null;
+                } else {
+                    mostrarFeedback('err', `❌ ${result.message}`);
+                }
+            } catch (err) {
+                mostrarFeedback('err', `Error: ${err.message}`);
+            } finally {
+                btnImportar.disabled = true;
+                btnImportar.textContent = '⬆ Importar';
+            }
         };
         reader.readAsArrayBuffer(file);
     }
 
-    function mostrarResultado(tipo, mensaje) {
-        const el = document.getElementById('importResult');
-        el.style.display = mensaje ? 'block' : 'none';
-        el.className = `import-result ${tipo}`;
-        el.innerHTML = mensaje;
+    function mostrarFeedback(tipo, msg) {
+        feedback.style.display = msg ? 'inline-block' : 'none';
+        feedback.className = `import-feedback ${tipo}`;
+        feedback.textContent = msg;
     }
 });
