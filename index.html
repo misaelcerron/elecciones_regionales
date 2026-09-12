@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómputo de Votos | Elecciones Pasco 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Sistema de Cómputo de Votos</h1>
+            <p>Elecciones Regionales y Municipales 2026 - ODPE Pasco</p>
+        </div>
+
+        <form id="actaForm">
+            <!-- Sección: Identificación del Acta -->
+            <h2 class="section-title">Identificación de Mesa</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="id_mesa">Número de Mesa</label>
+                    <input type="text" id="id_mesa" name="id_mesa" placeholder="Ej: 068426" required maxlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="tipo_eleccion">Tipo de Elección</label>
+                    <select id="tipo_eleccion" name="tipo_eleccion" required>
+                        <option value="1">Gobernador y Vicegobernador Regional</option>
+                        <option value="2">Consejero Regional</option>
+                        <option value="3">Provincia (Alcalde y Regidores)</option>
+                        <option value="4">Distrito (Alcalde y Regidores)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="electores_habiles">Electores Hábiles (Padrón)</label>
+                    <input type="number" id="electores_habiles" name="electores_habiles" placeholder="0" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="total_votaron">Ciudadanos que Votaron</label>
+                    <input type="number" id="total_votaron" name="total_votaron" placeholder="0" required min="0">
+                </div>
+            </div>
+
+            <!-- Sección: Votos por Organización Política -->
+            <h2 class="section-title">Votos Válidos por Organización Política</h2>
+            <div class="grid-parties" id="partidosContainer">
+                <!-- Generados dinámicamente o harcodeados aquí para el ejemplo de Pasco -->
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Alianza Para el Progreso</span>
+                        <span class="party-number">Lista #1 (A)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="1" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Frente de la Esperanza</span>
+                        <span class="party-number">Lista #2 (Escoba)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="2" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Acción Popular</span>
+                        <span class="party-number">Lista #3 (Lampa)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="3" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Renovación Popular Perú</span>
+                        <span class="party-number">Lista #4 (R)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="4" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Partido Demócrata Verde</span>
+                        <span class="party-number">Lista #5 (V)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="5" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Alianza Regional por el Perú</span>
+                        <span class="party-number">Lista #6 (Árbol)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="6" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Perú Primero</span>
+                        <span class="party-number">Lista #7 (1)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="7" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Somos Perú</span>
+                        <span class="party-number">Lista #8 (Corazón)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="8" value="0" min="0" required>
+                </div>
+                <div class="party-card">
+                    <div class="party-info">
+                        <span class="party-name">Podemos Perú</span>
+                        <span class="party-number">Lista #9 (P)</span>
+                    </div>
+                    <input type="number" class="party-input" data-partido="9" value="0" min="0" required>
+                </div>
+            </div>
+
+            <!-- Sección: Votos Adicionales -->
+            <h2 class="section-title">Otros Votos</h2>
+            <div class="grid-parties">
+                <div class="party-card" style="border-color: #f1f5f9;">
+                    <span class="party-name">Votos en Blanco</span>
+                    <input type="number" id="votos_blancos" value="0" min="0" required>
+                </div>
+                <div class="party-card" style="border-color: #ef4444;">
+                    <span class="party-name">Votos Nulos</span>
+                    <input type="number" id="votos_nulos" value="0" min="0" required>
+                </div>
+                <div class="party-card" style="border-color: #f59e0b;">
+                    <span class="party-name">Votos Impugnados</span>
+                    <input type="number" id="votos_impugnados" value="0" min="0" required>
+                </div>
+            </div>
+
+            <!-- Panel de Validación Dinámica -->
+            <div class="validation-banner" id="validationBanner">
+                <div class="status">
+                    <span id="validationIcon">✓</span> 
+                    <span id="validationText">Esperando ingreso de datos...</span>
+                </div>
+                <div class="details" id="validationDetails">
+                    Votos Sumados: <strong id="sumVotos">0</strong> / Total Votantes: <strong id="txtVotantes">0</strong>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit" disabled>Guardar Acta Electoral</button>
+        </form>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
