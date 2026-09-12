@@ -108,23 +108,36 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { alert(`Error: ${err.message}`); }
     };
 
-    // ─── Eliminar TODAS las mesas (función global llamada desde onclick) ───
-    window.eliminarTodasLasMesas = async function() {
-        if (!confirm('⚠️ ¿Eliminar TODAS las mesas del padrón?\n\nEsto también eliminará los locales, ubigeos y actas asociadas.')) return;
-        if (!confirm('🚨 SEGUNDA CONFIRMACIÓN\n\nEsta acción es IRREVERSIBLE. ¿Confirmas borrar todo el padrón?')) return;
+    // ─── Eliminar TODAS las mesas (usa modal, no confirm()) ───
+    window.eliminarTodasLasMesas = function() {
+        // Mostrar el modal personalizado
+        const modal = document.getElementById('modalConfirm');
+        modal.style.display = 'flex';
 
-        try {
-            const res = await fetch('api/eliminar_todas_mesas.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ confirmar: true })
-            });
-            const data = await res.json();
-            alert(data.message);
-            if (data.success) cargarMesas();
-        } catch (err) {
-            alert('Error de red: ' + err.message);
-        }
+        // Conectar el botón de confirmación del modal
+        const btnConfirmar = document.getElementById('btnConfirmarEliminar');
+        // Clonar para eliminar listeners previos
+        const btnNuevo = btnConfirmar.cloneNode(true);
+        btnConfirmar.parentNode.replaceChild(btnNuevo, btnConfirmar);
+
+        btnNuevo.addEventListener('click', async function() {
+            modal.style.display = 'none';
+            btnNuevo.textContent = 'Eliminando...';
+            btnNuevo.disabled = true;
+
+            try {
+                const res = await fetch('api/eliminar_todas_mesas.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirmar: true })
+                });
+                const data = await res.json();
+                alert(data.success ? '✅ ' + data.message : '❌ ' + data.message);
+                if (data.success) cargarMesas();
+            } catch (err) {
+                alert('❌ Error de red: ' + err.message);
+            }
+        });
     };
 
     // ══════════════════════════════════════════

@@ -149,6 +149,19 @@
         </div>
     </div>
 
+    <!-- Modal de confirmación personalizado -->
+    <div id="modalConfirm" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#1e1b4b; border:1px solid #ef4444; border-radius:16px; padding:2rem; max-width:420px; width:90%; text-align:center; box-shadow:0 0 40px rgba(239,68,68,0.3);">
+            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🚨</div>
+            <h3 style="color:#f87171; margin-bottom:0.75rem; font-size:1.2rem;">Eliminar Todo el Padrón</h3>
+            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem;">Esta acción eliminará <strong style="color:white;">TODAS las mesas</strong>, locales de votación y ubigeos registrados.<br><br>Esta acción es <strong style="color:#f87171;">IRREVERSIBLE</strong>.</p>
+            <div style="display:flex; gap:1rem; justify-content:center;">
+                <button onclick="document.getElementById('modalConfirm').style.display='none'" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:0.65rem 1.5rem; border-radius:8px; cursor:pointer; font-weight:600;">Cancelar</button>
+                <button id="btnConfirmarEliminar" style="background:#ef4444; border:none; color:white; padding:0.65rem 1.5rem; border-radius:8px; cursor:pointer; font-weight:700;">Sí, Eliminar Todo</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/mesas.js"></script>
 </body>
