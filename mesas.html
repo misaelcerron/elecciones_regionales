@@ -3,78 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mantenimiento de Mesas | Sistema Electoral</title>
+    <title>Gestión de Mesas | Sistema Electoral</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 2rem; background: var(--glass-bg);
-            backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border);
-            position: fixed; top: 0; width: 100%; z-index: 100;
-        }
-        .navbar a { color: white; text-decoration: none; margin-right: 1.5rem; font-weight: 600; transition: color 0.3s; }
-        .navbar a:hover { color: var(--primary-color); }
-        .navbar-user { display: flex; align-items: center; gap: 1rem; }
-        .btn-logout { background: transparent; border: 1px solid var(--error-color); color: var(--error-color); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
-        .btn-logout:hover { background: var(--error-color); color: white; }
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:var(--glass-bg); backdrop-filter:blur(10px); border-bottom:1px solid var(--glass-border); position:fixed; top:0; width:100%; z-index:100; }
+        .navbar a { color:white; text-decoration:none; margin-right:1.5rem; font-weight:600; transition:color 0.3s; }
+        .navbar a:hover { color:var(--primary-color); }
+        .navbar-user { display:flex; align-items:center; gap:1rem; }
+        .btn-logout { background:transparent; border:1px solid var(--error-color); color:var(--error-color); padding:0.5rem 1rem; border-radius:8px; cursor:pointer; transition:all 0.3s; }
+        .btn-logout:hover { background:var(--error-color); color:white; }
 
-        .page-wrapper { margin-top: 90px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem 1.5rem; }
+        .page-wrapper { margin-top:90px; max-width:1300px; margin-left:auto; margin-right:auto; padding:1rem 1.5rem; }
 
-        /* ── Barra compacta de importación (TOP) ── */
-        .import-bar {
-            display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-            background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25);
-            border-radius: 10px; padding: 0.65rem 1.2rem; margin-bottom: 1.25rem;
-        }
-        .import-bar label { font-size: 0.85rem; font-weight: 600; color: #94a3b8; white-space: nowrap; }
-        .import-bar-file { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
-        .import-file-btn { background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.25); color: #94a3b8; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; white-space: nowrap; }
-        .import-file-btn:hover { background: rgba(255,255,255,0.15); color: white; }
-        .import-file-name { font-size: 0.8rem; color: #60a5fa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
-        .btn-upload { background: rgba(59,130,246,0.8); border: none; color: white; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.2s; white-space: nowrap; }
-        .btn-upload:hover { background: #3b82f6; }
-        .btn-upload:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
-        .btn-template-sm { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: 0.2s; white-space: nowrap; }
-        .btn-template-sm:hover { background: rgba(16,185,129,0.3); }
-        .import-feedback { font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 6px; display: none; }
-        .import-feedback.ok { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid #10b981; }
-        .import-feedback.err { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid #ef4444; }
+        /* Barra de herramientas */
+        .toolbar { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+        .btn-nueva-mesa { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:white; padding:0.55rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:0.3s; white-space:nowrap; }
+        .btn-nueva-mesa:hover { opacity:0.85; transform:translateY(-1px); }
+        .import-bar { display:flex; align-items:center; gap:0.75rem; flex:1; background:rgba(59,130,246,0.07); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:0.5rem 1rem; flex-wrap:wrap; }
+        .import-bar label { font-size:0.82rem; font-weight:600; color:#94a3b8; white-space:nowrap; }
+        .import-file-btn { background:rgba(255,255,255,0.08); border:1px dashed rgba(255,255,255,0.25); color:#94a3b8; padding:0.35rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.82rem; transition:0.2s; white-space:nowrap; }
+        .import-file-btn:hover { background:rgba(255,255,255,0.15); color:white; }
+        .import-file-name { font-size:0.78rem; color:#60a5fa; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .btn-upload { background:rgba(59,130,246,0.8); border:none; color:white; padding:0.35rem 0.9rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:700; transition:0.2s; white-space:nowrap; }
+        .btn-upload:hover { background:#3b82f6; }
+        .btn-upload:disabled { background:#374151; color:#6b7280; cursor:not-allowed; }
+        .btn-template-sm { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; padding:0.35rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:600; transition:0.2s; white-space:nowrap; }
+        .btn-template-sm:hover { background:rgba(16,185,129,0.3); }
+        .import-feedback { font-size:0.78rem; padding:0.3rem 0.7rem; border-radius:5px; display:none; }
+        .import-feedback.ok { background:rgba(16,185,129,0.15); color:#34d399; border:1px solid #10b981; }
+        .import-feedback.err { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid #ef4444; }
 
-        /* ── Grid principal ── */
-        .main-grid { display: grid; grid-template-columns: 280px 1fr; gap: 1.25rem; align-items: start; }
-        @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
+        /* Tabla */
+        .table-panel { background:rgba(0,0,0,0.25); padding:1.4rem; border-radius:14px; border:1px solid var(--glass-border); overflow-x:auto; }
+        .table-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem; }
+        .mesa-count { color:var(--text-muted); font-size:0.82rem; }
+        .search-input { background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); border-radius:8px; padding:0.45rem 0.9rem; color:white; font-size:0.85rem; outline:none; width:200px; }
+        .search-input:focus { border-color:var(--primary-color); }
+        table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+        th { color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; padding:0.65rem 0.9rem; border-bottom:1px solid var(--glass-border); }
+        td { padding:0.6rem 0.9rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+        tr:hover td { background:rgba(255,255,255,0.04); }
+        .btn-accion { padding:3px 10px; border-radius:5px; border:none; font-size:0.76rem; font-weight:700; cursor:pointer; transition:0.2s; }
+        .btn-editar { background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid #3b82f6; }
+        .btn-editar:hover { background:#3b82f6; color:white; }
+        .btn-eliminar { background:rgba(239,68,68,0.2); color:#f87171; border:1px solid #ef4444; margin-left:5px; }
+        .btn-eliminar:hover { background:#ef4444; color:white; }
 
-        .form-panel { background: rgba(0,0,0,0.25); padding: 1.4rem; border-radius: 14px; border: 1px solid var(--glass-border); position: sticky; top: 100px; }
-        .table-panel { background: rgba(0,0,0,0.25); padding: 1.4rem; border-radius: 14px; border: 1px solid var(--glass-border); overflow-x: auto; min-height: 400px; }
+        /* ── MODAL EDITAR/CREAR ── */
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9998; justify-content:center; align-items:center; padding:1rem; }
+        .modal-overlay.visible { display:flex; }
+        .modal-box { background:#0f172a; border:1px solid var(--glass-border); border-radius:16px; padding:2rem; width:100%; max-width:520px; box-shadow:0 25px 60px rgba(0,0,0,0.6); animation:slideUp 0.25s ease; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .modal-title { font-size:1.15rem; font-weight:700; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.5rem; }
+        .modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .modal-grid .full { grid-column:1/-1; }
+        .modal-footer { display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem; }
+        .btn-modal-cancel { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:var(--text-muted); padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:600; transition:0.2s; }
+        .btn-modal-cancel:hover { background:rgba(255,255,255,0.15); color:white; }
+        .btn-modal-save { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:white; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
+        .btn-modal-save:hover { opacity:0.85; }
+        .btn-modal-save:disabled { background:#374151; color:#6b7280; cursor:not-allowed; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--glass-border); }
-        td { padding: 0.6rem 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-        tr:hover td { background: rgba(255,255,255,0.04); }
-
-        .btn-accion { padding: 3px 9px; border-radius: 5px; border: none; font-size: 0.76rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-editar { background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid #3b82f6; }
-        .btn-editar:hover { background: #3b82f6; color: white; }
-        .btn-eliminar { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid #ef4444; margin-left: 5px; }
-        .btn-eliminar:hover { background: #ef4444; color: white; }
-
-        .btn-clear { background: rgba(255,255,255,0.07); margin-top: 0.6rem; border: 1px solid var(--glass-border); color: var(--text-muted); padding: 0.6rem; border-radius: 8px; width: 100%; cursor: pointer; transition: 0.3s; }
-        .btn-clear:hover { background: rgba(255,255,255,0.14); color: white; }
-
-        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem; }
-        .search-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.45rem 0.85rem; color: white; font-size: 0.85rem; outline: none; width: 180px; }
-        .search-input:focus { border-color: var(--primary-color); }
-        .mesa-count { color: var(--text-muted); font-size: 0.8rem; }
+        /* ── MODAL ELIMINAR TODO ── */
+        .modal-danger { background:#1e0a0a; border-color:#ef4444; text-align:center; }
+        .modal-danger h3 { color:#f87171; margin-bottom:0.75rem; }
+        .modal-danger p { color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem; line-height:1.6; }
+        .btn-danger-confirm { background:#ef4444; border:none; color:white; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
+        .btn-danger-confirm:hover { background:#dc2626; }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-links">
-            <span style="font-weight: 800; font-size: 1.2rem; margin-right: 2rem; color: #a78bfa;">ODPE PASCO</span>
+            <span style="font-weight:800; font-size:1.2rem; margin-right:2rem; color:#a78bfa;">ODPE PASCO</span>
             <a href="dashboard.html">Dashboard</a>
             <a href="reportes.html">Reportes</a>
-            <a href="mesas.html" style="color: var(--primary-color);">Gestión Mesas</a>
+            <a href="mesas.html" style="color:var(--primary-color);">Gestión Mesas</a>
             <a href="index.html">Digitación</a>
         </div>
         <div class="navbar-user">
@@ -85,79 +90,100 @@
 
     <div class="page-wrapper">
 
-        <!-- ── Barra compacta de importación ── -->
-        <div class="import-bar">
-            <label>📥 Importar Excel:</label>
-            <div class="import-bar-file">
+        <!-- Barra de herramientas -->
+        <div class="toolbar">
+            <button class="btn-nueva-mesa" onclick="abrirModalNueva()">+ Nueva Mesa</button>
+            <div class="import-bar">
+                <label>📥 Importar Excel:</label>
                 <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
                 <button class="import-file-btn" onclick="document.getElementById('fileInput').click()">Seleccionar archivo</button>
                 <span class="import-file-name" id="fileName">Ningún archivo seleccionado</span>
+                <button class="btn-upload" id="btnImportar" disabled>⬆ Importar</button>
+                <button class="btn-template-sm" id="btnDescargarPlantilla">⬇ Plantilla</button>
+                <div class="import-feedback" id="importFeedback"></div>
             </div>
-            <button class="btn-upload" id="btnImportar" disabled>⬆ Importar</button>
-            <button class="btn-template-sm" id="btnDescargarPlantilla">⬇ Plantilla</button>
-            <div class="import-feedback" id="importFeedback"></div>
         </div>
 
-        <!-- ── Grid: Formulario + Tabla ── -->
-        <div class="main-grid">
-
-            <!-- Formulario -->
-            <div class="form-panel">
-                <h2 class="section-title">Registrar / Editar Mesa</h2>
-                <form id="mesaForm">
-                    <div class="form-group" style="margin-bottom:0.9rem;">
-                        <label>Número de Mesa</label>
-                        <input type="text" id="id_mesa" required placeholder="Ej: 068426" maxlength="10">
-                        <small style="color:var(--text-muted); margin-top:3px; display:block; font-size:0.78rem;">*Si existe, actualizará los datos.</small>
-                    </div>
-                    <div class="form-group">
-                        <label>Electores Hábiles (Padrón)</label>
-                        <input type="number" id="electores_habiles" required min="0" placeholder="Ej: 300">
-                    </div>
-                    <button type="submit" class="btn-submit" id="btnGuardar" style="margin-top:0.9rem;">Guardar Mesa</button>
-                    <button type="button" class="btn-clear" id="btnLimpiar">Limpiar Formulario</button>
-                </form>
-            </div>
-
-            <!-- Tabla Padrón -->
-            <div class="table-panel">
-                <div class="table-header">
-                    <h2 class="section-title" style="margin-bottom:0;">Padrón de Mesas</h2>
-                    <div style="display:flex; gap:0.6rem; align-items:center;">
-                        <span class="mesa-count" id="mesaCount"></span>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Buscar mesa/distrito...">
-                        <button onclick="eliminarTodasLasMesas()" style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#f87171; padding:0.4rem 0.85rem; border-radius:7px; cursor:pointer; font-size:0.8rem; font-weight:700; transition:0.2s; white-space:nowrap;" onmouseover="this.style.background='#ef4444';this.style.color='white'" onmouseout="this.style.background='rgba(239,68,68,0.2)';this.style.color='#f87171'">
-                            🗑 Eliminar Todo
-                        </button>
-                    </div>
+        <!-- Tabla -->
+        <div class="table-panel">
+            <div class="table-header">
+                <h2 class="section-title" style="margin-bottom:0;">Padrón de Mesas</h2>
+                <div style="display:flex; gap:0.6rem; align-items:center;">
+                    <span class="mesa-count" id="mesaCount"></span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar mesa o distrito...">
+                    <button onclick="abrirModalEliminarTodo()" style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#f87171; padding:0.4rem 0.9rem; border-radius:7px; cursor:pointer; font-size:0.8rem; font-weight:700; white-space:nowrap;"
+                        onmouseover="this.style.background='#ef4444';this.style.color='white'"
+                        onmouseout="this.style.background='rgba(239,68,68,0.2)';this.style.color='#f87171'">
+                        🗑 Eliminar Todo
+                    </button>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>N° Mesa</th>
-                            <th>Distrito</th>
-                            <th>Local / Centro Poblado</th>
-                            <th>Electores</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaMesas">
-                        <tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
-                    </tbody>
-                </table>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Mesa</th>
+                        <th>Departamento</th>
+                        <th>Provincia</th>
+                        <th>Distrito</th>
+                        <th>Centro Poblado</th>
+                        <th>Electores</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaMesas">
+                    <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Crear / Editar Mesa -->
+    <div class="modal-overlay" id="modalMesa">
+        <div class="modal-box">
+            <div class="modal-title" id="modalTitulo">✏️ Editar Mesa</div>
+            <input type="hidden" id="idMesaOriginal">
+            <div class="modal-grid">
+                <div class="form-group full">
+                    <label>Número de Mesa</label>
+                    <input type="text" id="mId" placeholder="Ej: 068426" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label>Departamento</label>
+                    <input type="text" id="mDepartamento" placeholder="Ej: PASCO">
+                </div>
+                <div class="form-group">
+                    <label>Provincia</label>
+                    <input type="text" id="mProvincia" placeholder="Ej: DANIEL ALCIDES CARRION">
+                </div>
+                <div class="form-group">
+                    <label>Distrito</label>
+                    <input type="text" id="mDistrito" placeholder="Ej: CHACAYAN">
+                </div>
+                <div class="form-group">
+                    <label>Centro Poblado</label>
+                    <input type="text" id="mCentroPoblado" placeholder="Ej: CHANGO (opcional)">
+                </div>
+                <div class="form-group full">
+                    <label>Electores Hábiles (Padrón)</label>
+                    <input type="number" id="mElectores" placeholder="Ej: 300" min="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="cerrarModalMesa()">Cancelar</button>
+                <button class="btn-modal-save" id="btnGuardarModal" onclick="guardarDesdeModal()">💾 Guardar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de confirmación personalizado -->
-    <div id="modalConfirm" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
-        <div style="background:#1e1b4b; border:1px solid #ef4444; border-radius:16px; padding:2rem; max-width:420px; width:90%; text-align:center; box-shadow:0 0 40px rgba(239,68,68,0.3);">
+    <!-- Modal Confirmar Eliminar Todo -->
+    <div class="modal-overlay" id="modalEliminarTodo">
+        <div class="modal-box modal-danger">
             <div style="font-size:2.5rem; margin-bottom:0.75rem;">🚨</div>
-            <h3 style="color:#f87171; margin-bottom:0.75rem; font-size:1.2rem;">Eliminar Todo el Padrón</h3>
-            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem;">Esta acción eliminará <strong style="color:white;">TODAS las mesas</strong>, locales de votación y ubigeos registrados.<br><br>Esta acción es <strong style="color:#f87171;">IRREVERSIBLE</strong>.</p>
+            <h3>Eliminar Todo el Padrón</h3>
+            <p>Esta acción eliminará <strong style="color:white;">TODAS las mesas</strong>, locales de votación y ubigeos registrados.<br><br>Esta acción es <strong style="color:#f87171;">IRREVERSIBLE</strong>.</p>
             <div style="display:flex; gap:1rem; justify-content:center;">
-                <button onclick="document.getElementById('modalConfirm').style.display='none'" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:0.65rem 1.5rem; border-radius:8px; cursor:pointer; font-weight:600;">Cancelar</button>
-                <button id="btnConfirmarEliminar" style="background:#ef4444; border:none; color:white; padding:0.65rem 1.5rem; border-radius:8px; cursor:pointer; font-weight:700;">Sí, Eliminar Todo</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('modalEliminarTodo').classList.remove('visible')">Cancelar</button>
+                <button class="btn-danger-confirm" id="btnConfirmarEliminar">Sí, Eliminar Todo</button>
             </div>
         </div>
     </div>

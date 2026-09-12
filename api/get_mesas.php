@@ -12,10 +12,14 @@ if (!isset($_SESSION['user_id'])) {
 try {
     $sql = "
         SELECT 
-            m.id_mesa, 
+            m.id_mesa,
+            IFNULL(u.departamento, 'PASCO') as departamento,
+            IFNULL(u.provincia, '') as provincia,
+            IFNULL(u.distrito, '') as distrito,
+            REPLACE(IFNULL(l.nombre_local, ''), CONCAT('LOCAL GENERICO - ', IFNULL(u.distrito, '')), '') as centro_poblado,
             m.electores_habiles,
-            IFNULL(u.distrito, 'Genérico') as distrito,
-            IFNULL(l.nombre_local, 'Local Genérico') as local
+            u.id_ubigeo,
+            l.id_local
         FROM mesa_sufragio m
         LEFT JOIN local_votacion l ON m.id_local = l.id_local
         LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo
