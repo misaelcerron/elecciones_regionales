@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Sistema Electoral</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .navbar a { color: white; text-decoration: none; margin-right: 1.5rem; font-weight: 600; transition: color 0.3s; }
+        .navbar a:hover { color: var(--primary-color); }
+        .navbar-user { display: flex; align-items: center; gap: 1rem; }
+        .btn-logout { background: transparent; border: 1px solid var(--error-color); color: var(--error-color); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .btn-logout:hover { background: var(--error-color); color: white; }
+        
+        .dashboard-container { margin-top: 80px; width: 100%; max-width: 1200px; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .kpi-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .kpi-card h3 { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .kpi-card .value { font-size: 2.5rem; font-weight: 700; color: white; }
+        .kpi-card .value.blue { color: #60a5fa; }
+        .kpi-card .value.green { color: #34d399; }
+        .kpi-card .value.red { color: #f87171; }
+
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+        .chart-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem; }
+        @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-links">
+            <span style="font-weight: 800; font-size: 1.2rem; margin-right: 2rem; color: #a78bfa;">ODPE PASCO</span>
+            <a href="dashboard.html" style="color: var(--primary-color);">Dashboard</a>
+            <a href="index.html">Digitación de Actas</a>
+        </div>
+        <div class="navbar-user">
+            <span id="navUsername">Usuario</span>
+            <button class="btn-logout" id="btnLogout">Salir</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="header" style="text-align: left; padding-bottom: 1rem;">
+            <h1>Dashboard Estadístico en Tiempo Real</h1>
+            <p>Monitoreo del procesamiento de actas y conteo de votos</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <h3>Mesas Procesadas</h3>
+                <div class="value blue" id="kpiMesas">0</div>
+            </div>
+            <div class="kpi-card">
+                <h3>Total Votos Emitidos</h3>
+                <div class="value green" id="kpiVotantes">0</div>
+            </div>
+            <div class="kpi-card">
+                <h3>Actas Observadas</h3>
+                <div class="value red" id="kpiObservadas">0</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="section-title">Votos por Organización Política</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="section-title">Distribución de Votos</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

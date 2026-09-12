@@ -1,6 +1,12 @@
 <?php
-// api/guardar_acta.php
+session_start();
 require_once 'db.php';
+
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'No autorizado. Por favor, inicie sesión.']);
+    exit;
+}
 
 // Leer el JSON recibido
 $json = file_get_contents('php://input');

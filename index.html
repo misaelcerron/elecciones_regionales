@@ -5,8 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cómputo de Votos | Elecciones Pasco 2026</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .navbar a { color: white; text-decoration: none; margin-right: 1.5rem; font-weight: 600; transition: color 0.3s; }
+        .navbar a:hover { color: var(--primary-color); }
+        .navbar-user { display: flex; align-items: center; gap: 1rem; }
+        .btn-logout { background: transparent; border: 1px solid var(--error-color); color: var(--error-color); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .btn-logout:hover { background: var(--error-color); color: white; }
+        
+        .container { margin-top: 80px; }
+    </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <div class="navbar-links">
+            <span style="font-weight: 800; font-size: 1.2rem; margin-right: 2rem; color: #a78bfa;">ODPE PASCO</span>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="index.html" style="color: var(--primary-color);">Digitación de Actas</a>
+        </div>
+        <div class="navbar-user">
+            <span id="navUsername">Usuario</span>
+            <button class="btn-logout" id="btnLogout">Salir</button>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="header">
@@ -142,6 +176,7 @@
         </form>
     </div>
 
+    <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
