@@ -13,27 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cargarMesas();
 
-    // ─── Eliminar TODAS las mesas ───
-    document.getElementById('btnEliminarTodas').addEventListener('click', async () => {
-        const confirmacion1 = confirm('⚠️ ¿Estás seguro de eliminar TODAS las mesas del padrón?\n\nEsto también eliminará los locales, ubigeos y actas asociadas.');
-        if (!confirmacion1) return;
-
-        const confirmacion2 = confirm('🚨 SEGUNDA CONFIRMACIÓN\n\nEsta acción es IRREVERSIBLE. ¿Confirmas que deseas borrar todo el padrón de mesas?');
-        if (!confirmacion2) return;
-
-        try {
-            const res = await fetch('api/eliminar_todas_mesas.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const data = await res.json();
-            alert(data.message);
-            if (data.success) cargarMesas();
-        } catch (err) {
-            alert(`Error: ${err.message}`);
-        }
-    });
-
 
     btnLimpiar.addEventListener('click', () => {
         form.reset();
@@ -114,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ─── Eliminar mesa ───
+    // ─── Eliminar mesa individual ───
     window.eliminarMesa = async function(id) {
         if (!confirm(`¿Eliminar la Mesa N° ${id}?\nEsta acción no se puede deshacer.`)) return;
         try {
@@ -127,6 +106,25 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(data.message);
             if (data.success) cargarMesas();
         } catch (err) { alert(`Error: ${err.message}`); }
+    };
+
+    // ─── Eliminar TODAS las mesas (función global llamada desde onclick) ───
+    window.eliminarTodasLasMesas = async function() {
+        if (!confirm('⚠️ ¿Eliminar TODAS las mesas del padrón?\n\nEsto también eliminará los locales, ubigeos y actas asociadas.')) return;
+        if (!confirm('🚨 SEGUNDA CONFIRMACIÓN\n\nEsta acción es IRREVERSIBLE. ¿Confirmas borrar todo el padrón?')) return;
+
+        try {
+            const res = await fetch('api/eliminar_todas_mesas.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ confirmar: true })
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (data.success) cargarMesas();
+        } catch (err) {
+            alert('Error de red: ' + err.message);
+        }
     };
 
     // ══════════════════════════════════════════
