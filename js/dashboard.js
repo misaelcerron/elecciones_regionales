@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 afterDraw: (chart) => {
                     const ctx = chart.ctx;
                     const xAxis = chart.scales.x;
-                    const y = xAxis.bottom - 25; // Draw near the bottom padding
+                    const y = xAxis.top + 8; // Draw directly below the X axis line
                     
                     if (!chart.config.data.logoImages) return;
 
