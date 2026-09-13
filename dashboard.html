@@ -180,7 +180,14 @@
         <h1 class="page-title">Estadísticas y Dashboard</h1>
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
             <p class="page-sub" style="margin-bottom: 0;">Monitoreo y análisis estadístico en barras de votos por organización política y avance de actas.</p>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <!-- LIVE BADGE -->
+                <div id="liveBadge" style="display:flex;align-items:center;gap:0.45rem;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(50,215,75,0.9);background:rgba(50,215,75,0.09);border:0.5px solid rgba(50,215,75,0.25);border-radius:30px;padding:0.3rem 0.85rem;">
+                    <span id="liveDot" style="width:7px;height:7px;border-radius:50%;background:#32d74b;box-shadow:0 0 6px #32d74b;display:inline-block;"></span>
+                    EN VIVO
+                </div>
+                <!-- COUNTDOWN -->
+                <span id="refreshCountdown" style="font-size:0.72rem;color:#86868b;font-weight:600;"></span>
                 <select id="distritoFilterSelect" style="display: none; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
                     <option value="TODOS" style="color: black;">Todos los distritos</option>
                 </select>
@@ -247,8 +254,8 @@
             </div>
         </div>
     </div>
-<script src="js/auth.js?v=15"></script>
-    <script src="js/dashboard.js?v=15"></script>
+<script src="js/auth.js?v=16"></script>
+    <script src="js/dashboard.js?v=16"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
