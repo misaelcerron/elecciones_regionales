@@ -51,6 +51,66 @@
             pointer-events:none;z-index:0;
         }
 
+        /* ── MESA FIELD STATES ── */
+        .field-input.mesa-ok{
+            border-color:rgba(50,215,75,0.5) !important;
+            background:rgba(50,215,75,0.06) !important;
+            box-shadow:0 0 0 3px rgba(50,215,75,0.18) !important;
+        }
+        .field-input.mesa-err{
+            border-color:rgba(255,69,58,0.55) !important;
+            background:rgba(255,69,58,0.06) !important;
+            box-shadow:0 0 0 3px rgba(255,69,58,0.18) !important;
+        }
+        .mesa-feedback{
+            margin-top:0.55rem;
+            font-size:0.8rem;font-weight:600;
+            display:flex;align-items:center;gap:0.4rem;
+            padding:0.55rem 0.85rem;border-radius:10px;
+            display:none;
+            animation:feedIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+        }
+        @keyframes feedIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+        .mesa-feedback.ok{
+            display:flex;
+            background:rgba(50,215,75,0.1);
+            border:0.5px solid rgba(50,215,75,0.25);
+            color:var(--ok);
+        }
+        .mesa-feedback.err{
+            display:flex;
+            background:rgba(255,69,58,0.1);
+            border:0.5px solid rgba(255,69,58,0.25);
+            color:var(--err);
+        }
+        .mesa-feedback.loading{
+            display:flex;
+            background:rgba(255,255,255,0.04);
+            border:0.5px solid var(--border);
+            color:var(--text-2);
+        }
+        /* Navbar logo */
+        .navbar-logo{
+            width:28px;height:28px;border-radius:7px;
+            object-fit:contain;flex-shrink:0;
+            background:white;padding:2px;
+        }
+        .navbar-brand-wrap{
+            display:flex;align-items:center;gap:0.6rem;
+        }
+        .navbar-brand-text{
+            display:flex;flex-direction:column;line-height:1.1;
+        }
+        .navbar-brand-main{
+            font-size:0.85rem;font-weight:800;letter-spacing:-0.01em;
+            background:linear-gradient(135deg,#60a5fa,#a78bfa);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .navbar-brand-sub{
+            font-size:0.62rem;font-weight:600;letter-spacing:0.08em;
+            text-transform:uppercase;color:var(--text-3);
+        }
+
         /* ── NAVBAR ── */
         .navbar{
             position:fixed;top:0;left:0;right:0;z-index:1000;
@@ -401,7 +461,13 @@
 
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
-    <span class="navbar-brand">ODPE PASCO</span>
+    <div class="navbar-brand-wrap">
+        <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú" class="navbar-logo">
+        <div class="navbar-brand-text">
+            <span class="navbar-brand-main">SISTEMA ELECTORAL</span>
+            <span class="navbar-brand-sub">Podemos Perú &middot; ODPE Pasco</span>
+        </div>
+    </div>
     <div class="navbar-links">
         <a href="dashboard.html">Dashboard</a>
         <a href="reportes.html">Reportes</a>
@@ -447,9 +513,16 @@
             <div class="fields-grid">
                 <div class="field-group">
                     <label class="field-label" for="id_mesa">Número de Mesa</label>
-                    <input type="text" class="field-input" id="id_mesa" name="id_mesa"
-                           placeholder="Ej: 068426" required maxlength="10"
-                           autocomplete="off" inputmode="numeric">
+                    <div style="position:relative;">
+                        <input type="text" class="field-input" id="id_mesa" name="id_mesa"
+                               placeholder="Ej: 068426" required maxlength="10"
+                               autocomplete="off" inputmode="numeric"
+                               style="padding-right:2.5rem;">
+                        <span id="mesaSpinner" style="position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);display:none;">
+                            <span class="spinner" style="width:14px;height:14px;border-width:1.5px;"></span>
+                        </span>
+                    </div>
+                    <div class="mesa-feedback" id="mesaFeedback"></div>
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="tipo_eleccion">Tipo de Elección</label>
@@ -463,7 +536,9 @@
                 <div class="field-group">
                     <label class="field-label" for="electores_habiles">Electores Hábiles (Padrón)</label>
                     <input type="number" class="field-input" id="electores_habiles"
-                           placeholder="0" required min="1" inputmode="numeric">
+                           placeholder="Se carga automáticamente" required min="1"
+                           inputmode="numeric" readonly
+                           style="cursor:not-allowed;opacity:0.7;" id="electores_habiles">
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="total_votaron">Ciudadanos que Votaron</label>

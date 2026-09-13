@@ -25,9 +25,10 @@ const btnSubmit     = document.getElementById('btnSubmit');
 const mesaChip      = document.getElementById('mesaChip');
 const mesaChipText  = document.getElementById('mesaChipText');
 
-// ─── Estado ──────────────────────────────────────────────────
-let orgsData   = [];   // [{id_partido, nombre, siglas, simbolo_url}]
-let toastTimer = null;
+// ─── Estado ────────────────────────────────────────────
+let orgsData    = [];   // [{id_partido, nombre, siglas, simbolo_url}]
+let toastTimer  = null;
+let mesaValida  = false; // true si la mesa fue encontrada en la BD
 
 // ─── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
@@ -185,33 +186,102 @@ function handleArrowKeys(e) {
     if (e.key === 'ArrowUp'   && idx > 0)              { e.preventDefault(); all[idx-1].focus(); }
 }
 
-// Lookup de mesa (autocompletado de electores)
+// Lookup/validación de mesa — se activa al completar el número
 let mesaTimeout;
 function bindMesaLookup() {
     inputMesa.addEventListener('input', () => {
         clearTimeout(mesaTimeout);
-        mesaChip.classList.remove('visible');
         const val = inputMesa.value.trim();
+
+        // Resetear estado
+        mesaValida = false;
+        resetMesaState();
+        inputElect.value = '';
+        mesaChip.classList.remove('visible');
+        validateMath();
+
+        if (val.length === 0) return;
+
         if (val.length >= 4) {
-            mesaTimeout = setTimeout(() => buscarMesa(val), 600);
+            // Mostrar loading
+            setMesaFeedback('loading', '\u23F3 Verificando mesa…');
+            mesaTimeout = setTimeout(() => validarMesa(val), 700);
+        }
+    });
+
+    // También validar al perder foco si hay valor
+    inputMesa.addEventListener('blur', () => {
+        const val = inputMesa.value.trim();
+        if (val.length > 0 && !mesaValida) {
+            clearTimeout(mesaTimeout);
+            validarMesa(val);
         }
     });
 }
 
-async function buscarMesa(nro) {
+async function validarMesa(nro) {
+    const spinner = document.getElementById('mesaSpinner');
+    spinner.style.display = 'inline';
+    setMesaFeedback('loading', '\u23F3 Verificando en el padrón…');
+
     try {
-        const res = await fetch(`api/get_mesas.php?search=${encodeURIComponent(nro)}`);
+        const res  = await fetch(`api/validar_mesa.php?id_mesa=${encodeURIComponent(nro)}`);
         const json = await res.json();
-        if (json.success && json.data && json.data.length > 0) {
-            const mesa = json.data.find(m => m.id_mesa === nro) || json.data[0];
-            if (mesa && mesa.electores_habiles) {
-                inputElect.value = mesa.electores_habiles;
-                mesaChipText.textContent = `✓ Mesa ${mesa.id_mesa} — ${mesa.distrito || ''} · ${mesa.electores_habiles} electores hábiles`;
-                mesaChip.classList.add('visible');
-                validateMath();
-            }
+
+        spinner.style.display = 'none';
+
+        if (json.success && json.data) {
+            const m = json.data;
+            mesaValida = true;
+
+            // Rellenar electores habíliles automáticamente
+            inputElect.value = m.electores_habiles;
+
+            // Chip de éxito en el campo
+            const partes = [m.distrito, m.provincia, m.departamento].filter(Boolean).join(' · ');
+            setMesaFeedback('ok',
+                `\u2713 Mesa ${m.id_mesa} — ${partes} · ${Number(m.electores_habiles).toLocaleString()} electores hábiles`);
+
+            // Chip antiguo (debajo del grid)
+            mesaChipText.textContent = `Mesa ${m.id_mesa} · ${partes} · ${Number(m.electores_habiles).toLocaleString()} electores`;
+            mesaChip.classList.add('visible');
+
+            // Foco al campo siguiente
+            document.getElementById('total_votaron').focus();
+
+        } else {
+            mesaValida = false;
+            inputElect.value = '';
+            mesaChip.classList.remove('visible');
+
+            const msg = json.message || `La mesa N° ${nro} no existe en el padrón.`;
+            setMesaFeedback('err', `\u26A0\uFE0F ${msg}`);
         }
-    } catch (_) { /* silencioso */ }
+
+    } catch (e) {
+        spinner.style.display = 'none';
+        setMesaFeedback('err', '\u26A0\uFE0F Error de conexión al verificar la mesa.');
+        mesaValida = false;
+    }
+
+    validateMath();
+}
+
+function setMesaFeedback(tipo, texto) {
+    const fb  = document.getElementById('mesaFeedback');
+    const inp = inputMesa;
+    fb.className  = `mesa-feedback ${tipo}`;
+    fb.textContent = texto;
+    inp.classList.remove('mesa-ok', 'mesa-err');
+    if (tipo === 'ok')  inp.classList.add('mesa-ok');
+    if (tipo === 'err') inp.classList.add('mesa-err');
+}
+
+function resetMesaState() {
+    const fb  = document.getElementById('mesaFeedback');
+    fb.className  = 'mesa-feedback';
+    fb.textContent = '';
+    inputMesa.classList.remove('mesa-ok','mesa-err');
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -242,16 +312,23 @@ function validateMath() {
     // Actualizar indicador de steps
     updateSteps(sumaTotalVotos, totalVotaron);
 
+    // Bloquear si la mesa no fue validada
+    if (!mesaValida && inputMesa.value.trim().length > 0) {
+        setVal('err', '\u26A0\uFE0F', 'Primero debes ingresar un número de mesa válido del padrón.');
+        btnSubmit.disabled = true;
+        return;
+    }
+
     // Estado neutro
     if (totalVotaron === 0 && sumaTotalVotos === 0) {
-        setVal('neutral', '⏳', 'Esperando ingreso de datos…');
+        setVal('neutral', '\u23F3', 'Esperando datos…');
         btnSubmit.disabled = true;
         return;
     }
 
     // Error: excede padrón
     if (electoresHab > 0 && totalVotaron > electoresHab) {
-        setVal('err', '⚠️', `Los votantes (${totalVotaron.toLocaleString()}) exceden el padrón (${electoresHab.toLocaleString()}).`);
+        setVal('err', '\u26A0\uFE0F', `Los votantes (${totalVotaron.toLocaleString()}) exceden el padrón (${electoresHab.toLocaleString()}).`);
         btnSubmit.disabled = true;
         return;
     }
@@ -262,13 +339,13 @@ function validateMath() {
         const msg  = diff > 0
             ? `Faltan ${diff.toLocaleString()} votos por asignar.`
             : `Hay ${Math.abs(diff).toLocaleString()} votos de más.`;
-        setVal('err', '✗', msg);
+        setVal('err', '\u2717', msg);
         btnSubmit.disabled = true;
         return;
     }
 
     // ¡Cuadra perfecto!
-    setVal('ok', '✓', '¡Cuadre aritmético perfecto! El acta está lista para guardar.');
+    setVal('ok', '\u2713', '¡Cuadre aritmético perfecto! El acta está lista para guardar.');
     btnSubmit.disabled = false;
 }
 
@@ -320,6 +397,13 @@ function sanitizeInput(inp) {
 async function handleSubmit(e) {
     e.preventDefault();
 
+    // Doble chequeo de mesa válida
+    if (!mesaValida) {
+        mostrarToast('\u26A0\uFE0F Verifica el número de mesa antes de guardar', 'error');
+        inputMesa.focus();
+        return;
+    }
+
     const btnOrig = btnSubmit.innerHTML;
     btnSubmit.disabled  = true;
     btnSubmit.innerHTML = '<span class="spinner"></span> Guardando…';
@@ -362,6 +446,10 @@ async function handleSubmit(e) {
                     if (card) card.classList.remove('has-votes');
                 });
                 mesaChip.classList.remove('visible');
+                // Reset estado de mesa
+                mesaValida = false;
+                resetMesaState();
+                inputElect.value = '';
                 validateMath();
             }, 300);
         } else {
