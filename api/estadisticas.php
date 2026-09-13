@@ -82,10 +82,14 @@ try {
     $stmtDistritos = $pdo->query("SELECT DISTINCT distrito FROM ubigeo WHERE distrito IS NOT NULL ORDER BY distrito ASC");
     $distritos_list = $stmtDistritos->fetchAll(PDO::FETCH_COLUMN);
 
+    // 5. Total de mesas en el sistema
+    $stmtTotalMesas = $pdo->query("SELECT COUNT(DISTINCT id_mesa) as total FROM mesa_sufragio");
+    $kpis['total_mesas'] = $stmtTotalMesas->fetch()['total'] ?? 106;
+
     echo json_encode([
-        'kpis' => $kpis,
-        'partidos' => $votos_partidos,
-        'distribucion' => $distribucion,
+        'kpis'                 => $kpis,
+        'partidos'             => $votos_partidos,
+        'distribucion'         => $distribucion,
         'distritos_disponibles' => $distritos_list
     ]);
 } catch (Exception $e) {

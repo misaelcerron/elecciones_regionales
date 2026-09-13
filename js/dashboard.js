@@ -19,6 +19,105 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const REFRESH_INTERVAL = 15; // seconds
 
+    // ─────────────────────────────────────────────────────────────
+    // ELECTION TYPE CONFIG
+    // ─────────────────────────────────────────────────────────────
+    const ELECTION_CONFIG = {
+        1: {
+            icon: '🏛️',
+            pill: 'Elección Regional',
+            title: 'Presidente Regional',
+            sub: 'Elecciones Regionales 2026 · ODPE Pasco',
+            color: '#0071e3',
+            gradFrom: 'rgba(0,113,227,0.15)',
+            gradTo: 'rgba(0,113,227,0.04)',
+            pillColor: 'rgba(0,113,227,0.9)',
+            pillBg: 'rgba(0,113,227,0.12)',
+            pillBorder: 'rgba(0,113,227,0.3)',
+        },
+        2: {
+            icon: '🫱🏼‍🫲🏾',
+            pill: 'Consejo Regional',
+            title: 'Consejero Regional',
+            sub: 'Elecciones al Consejo Regional 2026 · ODPE Pasco',
+            color: '#af52de',
+            gradFrom: 'rgba(175,82,222,0.15)',
+            gradTo: 'rgba(175,82,222,0.04)',
+            pillColor: 'rgba(175,82,222,0.95)',
+            pillBg: 'rgba(175,82,222,0.12)',
+            pillBorder: 'rgba(175,82,222,0.3)',
+        },
+        3: {
+            icon: '🏙️',
+            pill: 'Municipal Provincial',
+            title: 'Alcalde Provincial',
+            sub: 'Elecciones Municipales Provinciales 2026 · Pasco',
+            color: '#ff9f0a',
+            gradFrom: 'rgba(255,159,10,0.15)',
+            gradTo: 'rgba(255,159,10,0.04)',
+            pillColor: 'rgba(255,159,10,0.95)',
+            pillBg: 'rgba(255,159,10,0.12)',
+            pillBorder: 'rgba(255,159,10,0.3)',
+        },
+        4: {
+            icon: '🏘️',
+            pill: 'Municipal Distrital',
+            title: 'Alcalde Distrital',
+            sub: 'Elecciones Municipales Distritales 2026 · Pasco',
+            color: '#32d74b',
+            gradFrom: 'rgba(50,215,75,0.15)',
+            gradTo: 'rgba(50,215,75,0.04)',
+            pillColor: 'rgba(50,215,75,0.9)',
+            pillBg: 'rgba(50,215,75,0.10)',
+            pillBorder: 'rgba(50,215,75,0.3)',
+        }
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // UPDATE ELECTION HEADER
+    // ─────────────────────────────────────────────────────────────
+    function updateElectionHeader(idTipo, mesasProcesadas, totalMesas = 106) {
+        const cfg = ELECTION_CONFIG[idTipo] || ELECTION_CONFIG[1];
+
+        const elHeader    = document.getElementById('electionHeader');
+        const elIcon      = document.getElementById('electionIcon');
+        const elPill      = document.getElementById('electionPill');
+        const elTitle     = document.getElementById('electionMainTitle');
+        const elSub       = document.getElementById('electionSub');
+        const elMesasNum  = document.getElementById('electionMesasNum');
+        const elTotalM    = document.getElementById('electionTotalMesas');
+        const elBar       = document.getElementById('electionProgressBar');
+        const barTitle    = document.getElementById('barChartTitle');
+        const rankSub     = document.getElementById('rankingSubtitle');
+
+        if (elHeader) {
+            elHeader.style.background = `linear-gradient(135deg, ${cfg.gradFrom} 0%, ${cfg.gradTo} 100%)`;
+            elHeader.style.borderColor = cfg.pillBorder;
+        }
+        if (elIcon)     elIcon.textContent = cfg.icon;
+        if (elPill) {
+            elPill.textContent = cfg.pill;
+            elPill.style.color = cfg.pillColor;
+            elPill.style.background = cfg.pillBg;
+            elPill.style.borderColor = cfg.pillBorder;
+        }
+        if (elTitle)    elTitle.textContent = cfg.title;
+        if (elSub)      elSub.textContent   = cfg.sub;
+        if (elMesasNum) {
+            elMesasNum.textContent = Number(mesasProcesadas).toLocaleString();
+            elMesasNum.style.color = cfg.color;
+        }
+        if (elTotalM)   elTotalM.textContent = totalMesas;
+        if (elBar) {
+            const pct = totalMesas > 0 ? Math.min(100, (mesasProcesadas / totalMesas) * 100).toFixed(1) : 0;
+            elBar.style.width = `${pct}%`;
+            elBar.style.background = `linear-gradient(90deg, ${cfg.color}, ${cfg.pillColor})`;
+            elBar.title = `${pct}% de mesas procesadas`;
+        }
+        if (barTitle)   barTitle.textContent = `Votos por Organización Política · ${cfg.title}`;
+        if (rankSub)    rankSub.textContent  = `Ranking · ${cfg.title} · ODPE Pasco 2026`;
+    }
+
     const tipoEleccionSelect  = document.getElementById('tipoEleccionSelect');
     const distritoFilterSelect = document.getElementById('distritoFilterSelect');
     const countdownEl         = document.getElementById('refreshCountdown');
@@ -258,6 +357,13 @@ document.addEventListener('DOMContentLoaded', () => {
             updateKPI('kpiMesas',     data.kpis.mesas_procesadas || 0);
             updateKPI('kpiVotantes',  data.kpis.total_votantes   || 0);
             updateKPI('kpiObservadas', data.kpis.observadas       || 0);
+
+            // ── Election Type Header ──
+            updateElectionHeader(
+                parseInt(idTipoEleccion),
+                parseInt(data.kpis.mesas_procesadas || 0),
+                parseInt(data.kpis.total_mesas || 106)
+            );
 
             // ── Prepare chart data ──
             const coloresBarras = [
