@@ -1,5 +1,5 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once 'db.php';
 header('Content-Type: application/json');
 
@@ -28,7 +28,44 @@ try {
             ORDER BY u.distrito ASC, m.id_mesa ASC
         ";
         $stmt = $pdo->query($sql);
-        echo json_encode(['success' => true, 'data' => $stmt->fetchAll()]);
+        $data = $stmt->fetchAll();
+
+        // Calcular KPIs de resumen para el reporte de mesas
+        $totalMesas = count($data);
+        $contabilizadas = 0;
+        $digitadas = 0;
+        $observadas = 0;
+        $falta = 0;
+        $totalElectores = 0;
+        $totalVotantes = 0;
+
+        foreach ($data as $r) {
+            $st = strtoupper($r['estado'] ?? '');
+            if ($st === 'CONTABILIZADA') $contabilizadas++;
+            elseif ($st === 'DIGITADA') $digitadas++;
+            elseif ($st === 'OBSERVADA') $observadas++;
+            else $falta++;
+
+            $totalElectores += (int)($r['electores_habiles'] ?? 0);
+            $totalVotantes += (int)($r['votantes'] ?? 0);
+        }
+
+        $pctAvance = $totalMesas > 0 ? round((($contabilizadas + $digitadas) / $totalMesas) * 100, 1) : 0;
+
+        echo json_encode([
+            'success' => true,
+            'data' => $data,
+            'kpis' => [
+                'total_mesas' => $totalMesas,
+                'contabilizadas' => $contabilizadas,
+                'digitadas' => $digitadas,
+                'observadas' => $observadas,
+                'falta' => $falta,
+                'total_electores' => $totalElectores,
+                'total_votantes' => $totalVotantes,
+                'pct_avance' => $pctAvance
+            ]
+        ]);
         
     } else if ($tipo === 'distritos') {
         // Reporte a nivel de Distrito

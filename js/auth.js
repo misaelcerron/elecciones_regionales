@@ -95,6 +95,59 @@ function adaptNavbarForRole(rol, currentPage, username) {
         }
     }
 
+    // Adaptar Menú Móvil (Drawer y Botón Hamburguesa)
+    const navbar = document.querySelector('.navbar');
+    if (navbar && !document.getElementById('navToggleBtn')) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.id = 'navToggleBtn';
+        toggleBtn.className = 'nav-toggle-btn';
+        toggleBtn.setAttribute('aria-label', 'Abrir Menú');
+        toggleBtn.innerHTML = '☰';
+        navbar.appendChild(toggleBtn);
+
+        // Crear Drawer Móvil
+        const drawer = document.createElement('div');
+        drawer.id = 'mobileNavDrawer';
+        drawer.className = 'mobile-nav-drawer';
+
+        let drawerLinksHtml = '';
+        if (rol === 'DIGITADOR') {
+            drawerLinksHtml = `
+                <a href="index.html" class="${currentPage === 'index.html' ? 'active' : ''}">✍️ Digitación de Votos</a>
+            `;
+        } else if (rol === 'INVITADO') {
+            drawerLinksHtml = `
+                <a href="dashboard.html" class="${currentPage === 'dashboard.html' ? 'active' : ''}">📊 Estadísticas y Resultados</a>
+            `;
+        } else if (rol === 'ADMIN') {
+            drawerLinksHtml = `
+                <a href="dashboard.html" class="${currentPage === 'dashboard.html' ? 'active' : ''}">📊 Dashboard</a>
+                <a href="reportes.html" class="${currentPage === 'reportes.html' ? 'active' : ''}">📑 Reportes de Escrutinio</a>
+                <a href="mesas.html" class="${currentPage === 'mesas.html' ? 'active' : ''}">🗳️ Gestión Mesas</a>
+                <a href="organizaciones.html" class="${currentPage === 'organizaciones.html' ? 'active' : ''}">🏛️ Organizaciones Políticas</a>
+                <a href="index.html" class="${currentPage === 'index.html' ? 'active' : ''}">✍️ Digitación de Actas</a>
+                <a href="usuarios.html" class="${currentPage === 'usuarios.html' ? 'active' : ''}">👥 Gestión de Usuarios</a>
+            `;
+        }
+        drawer.innerHTML = drawerLinksHtml;
+        navbar.parentNode.insertBefore(drawer, navbar.nextSibling);
+
+        // Toggle evento
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            drawer.classList.toggle('open');
+            toggleBtn.innerHTML = drawer.classList.contains('open') ? '✕' : '☰';
+        });
+
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!drawer.contains(e.target) && e.target !== toggleBtn) {
+                drawer.classList.remove('open');
+                toggleBtn.innerHTML = '☰';
+            }
+        });
+    }
+
     // Nombre de usuario y badge de rol en el navbar
     const userSpan = document.getElementById('navUsername');
     if (userSpan) {

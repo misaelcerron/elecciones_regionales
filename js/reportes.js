@@ -1,102 +1,299 @@
+// js/reportes.js — Reportes de Escrutinio y Actas (Estilo Pantallazo 1 Apple Dark)
 document.addEventListener('DOMContentLoaded', () => {
-    const tabMesas = document.getElementById('tabMesas');
-    const tabDistritos = document.getElementById('tabDistritos');
-    const tableContainer = document.getElementById('tableContainer');
+    let currentTipo = 'mesas';
+    let rawData = [];
+    let currentKpis = null;
 
-    // Event Listeners
-    tabMesas.addEventListener('click', () => loadReport('mesas'));
-    tabDistritos.addEventListener('click', () => loadReport('distritos'));
+    // Elementos UI
+    const tabStepMesas = document.getElementById('tabStepMesas');
+    const tabStepDistritos = document.getElementById('tabStepDistritos');
+    const sectionLabelTag = document.getElementById('sectionLabelTag');
+    const sectionIcon = document.getElementById('sectionIcon');
+    const sectionTitleText = document.getElementById('sectionTitleText');
+    const reportSearchInput = document.getElementById('reportSearchInput');
+    const statusFilterSelect = document.getElementById('statusFilterSelect');
+    const btnReloadReport = document.getElementById('btnReloadReport');
+    const thead = document.getElementById('reportTableHead');
+    const tbody = document.getElementById('reportTableBody');
+    const reportCountFooter = document.getElementById('reportCountFooter');
+
+    // KPIs
+    const kpiTotalMesas = document.getElementById('kpiTotalMesas');
+    const kpiTotalElectoresSub = document.getElementById('kpiTotalElectoresSub');
+    const kpiContabilizadas = document.getElementById('kpiContabilizadas');
+    const kpiObservadas = document.getElementById('kpiObservadas');
+    const kpiAvancePct = document.getElementById('kpiAvancePct');
+    const kpiVotantesSub = document.getElementById('kpiVotantesSub');
+
+    // Eventos
+    tabStepMesas.addEventListener('click', () => switchTab('mesas'));
+    tabStepDistritos.addEventListener('click', () => switchTab('distritos'));
+    reportSearchInput.addEventListener('input', renderCurrentTable);
+    statusFilterSelect.addEventListener('change', renderCurrentTable);
+    btnReloadReport.addEventListener('click', () => loadReport(currentTipo));
 
     // Iniciar
     loadReport('mesas');
 
+    function switchTab(tipo) {
+        currentTipo = tipo;
+        tabStepMesas.classList.toggle('active', tipo === 'mesas');
+        tabStepDistritos.classList.toggle('active', tipo === 'distritos');
+
+        if (tipo === 'mesas') {
+            sectionLabelTag.textContent = 'PASO 1 · MONITOREO DE MESAS';
+            sectionIcon.textContent = '📋';
+            sectionTitleText.textContent = 'Padrón de Mesas y Estado de Actas';
+            statusFilterSelect.style.display = 'inline-block';
+        } else {
+            sectionLabelTag.textContent = 'PASO 2 · CONSOLIDADO DISTRITAL';
+            sectionIcon.textContent = '🏛️';
+            sectionTitleText.textContent = 'Avance del Escrutinio por Distritos';
+            statusFilterSelect.style.display = 'none'; // Distritos no tienen estado individual
+        }
+
+        reportSearchInput.value = '';
+        loadReport(tipo);
+    }
+
     async function loadReport(tipo) {
-        // Actualizar UI
-        tabMesas.classList.toggle('active', tipo === 'mesas');
-        tabDistritos.classList.toggle('active', tipo === 'distritos');
-        tableContainer.innerHTML = '<p style="text-align:center; color: #94a3b8;">Cargando datos...</p>';
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #86868b; padding: 2.5rem;">Cargando datos electorales...</td></tr>`;
+        reportCountFooter.textContent = 'Consultando base de datos...';
 
         try {
-            const res = await fetch(`api/reportes.php?tipo=${tipo}`);
+            const res = await fetch(`api/reportes.php?tipo=${tipo}&_=${new Date().getTime()}`);
             const json = await res.json();
-            
+
             if (json.error) throw new Error(json.error);
-            
-            if (tipo === 'mesas') {
-                renderMesas(json.data);
-            } else {
-                renderDistritos(json.data);
-            }
+
+            rawData = json.data || [];
+            currentKpis = json.kpis || null;
+
+            actualizarKpis();
+            renderCurrentTable();
+
         } catch (error) {
-            tableContainer.innerHTML = `<p style="text-align:center; color: #ef4444;">Error: ${error.message}</p>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ff453a; padding: 2rem;">Error al cargar datos: ${error.message}</td></tr>`;
+            reportCountFooter.textContent = 'Error en la consulta.';
         }
     }
 
-    function renderMesas(data) {
-        let html = `<table>
-            <thead>
-                <tr>
-                    <th>N° Mesa</th>
-                    <th>Distrito</th>
-                    <th>Electores Hábiles</th>
-                    <th>Votantes</th>
-                    <th>Estado de Acta</th>
-                </tr>
-            </thead>
-            <tbody>`;
+    function actualizarKpis() {
+        if (!currentKpis) {
+            // Calcular dinámicamente si no vinieron en kpis
+            let totalM = rawData.length;
+            let contab = 0;
+            let obs = 0;
+            let elect = 0;
+            let vot = 0;
 
-        if (data.length === 0) {
-            html += `<tr><td colspan="5" style="text-align:center">No hay mesas registradas.</td></tr>`;
+            if (currentTipo === 'mesas') {
+                rawData.forEach(r => {
+                    const st = (r.estado || '').toUpperCase();
+                    if (st === 'CONTABILIZADA') contab++;
+                    else if (st === 'OBSERVADA') obs++;
+                    elect += parseInt(r.electores_habiles || 0);
+                    vot += parseInt(r.votantes || 0);
+                });
+            } else {
+                totalM = rawData.reduce((acc, r) => acc + parseInt(r.total_mesas || 0), 0);
+                contab = rawData.reduce((acc, r) => acc + parseInt(r.mesas_escrutadas || 0), 0);
+                elect = rawData.reduce((acc, r) => acc + parseInt(r.electores_habiles || 0), 0);
+                vot = rawData.reduce((acc, r) => acc + parseInt(r.total_votantes || 0), 0);
+            }
+
+            const pct = totalM > 0 ? Math.round((contab / totalM) * 100) : 0;
+            kpiTotalMesas.textContent = totalM.toLocaleString();
+            kpiTotalElectoresSub.textContent = `Padrón: ${elect.toLocaleString()} electores`;
+            kpiContabilizadas.textContent = contab.toLocaleString();
+            kpiObservadas.textContent = obs.toLocaleString();
+            kpiAvancePct.textContent = `${pct}%`;
+            kpiVotantesSub.textContent = `Votantes computados: ${vot.toLocaleString()}`;
+            return;
         }
 
-        data.forEach(row => {
-            let badgeClass = row.estado.toLowerCase().replace('_', '');
-            if(badgeClass.includes('falta')) badgeClass = 'falta';
-
-            html += `<tr>
-                <td style="font-weight: 600;">${row.id_mesa}</td>
-                <td>${row.distrito}</td>
-                <td>${row.electores_habiles}</td>
-                <td>${row.votantes}</td>
-                <td><span class="badge ${badgeClass}">${row.estado}</span></td>
-            </tr>`;
-        });
-        html += `</tbody></table>`;
-        tableContainer.innerHTML = html;
+        kpiTotalMesas.textContent = Number(currentKpis.total_mesas || 0).toLocaleString();
+        kpiTotalElectoresSub.textContent = `Padrón: ${Number(currentKpis.total_electores || 0).toLocaleString()} electores`;
+        kpiContabilizadas.textContent = Number(currentKpis.contabilizadas || 0).toLocaleString();
+        kpiObservadas.textContent = Number(currentKpis.observadas || 0).toLocaleString();
+        kpiAvancePct.textContent = `${currentKpis.pct_avance || 0}%`;
+        kpiVotantesSub.textContent = `Votantes computados: ${Number(currentKpis.total_votantes || 0).toLocaleString()}`;
     }
 
-    function renderDistritos(data) {
-        let html = `<table>
-            <thead>
-                <tr>
-                    <th>Distrito</th>
-                    <th>Avance de Escrutinio</th>
-                    <th>Total Mesas</th>
-                    <th>Padrón Electoral</th>
-                    <th>Total Votantes</th>
-                </tr>
-            </thead>
-            <tbody>`;
+    function renderCurrentTable() {
+        const query = (reportSearchInput.value || '').toLowerCase().trim();
+        const selectedStatus = statusFilterSelect.value;
 
-        if (data.length === 0) {
-            html += `<tr><td colspan="5" style="text-align:center">No hay distritos registrados.</td></tr>`;
+        if (currentTipo === 'mesas') {
+            renderMesasTable(query, selectedStatus);
+        } else {
+            renderDistritosTable(query);
+        }
+    }
+
+    function renderMesasTable(query, statusFilter) {
+        thead.innerHTML = `
+            <tr>
+                <th>N° Mesa</th>
+                <th>Distrito</th>
+                <th>Electores Hábiles</th>
+                <th>Ciudadanos Votaron</th>
+                <th>Estado del Acta</th>
+                <th style="min-width: 140px;">Participación</th>
+            </tr>
+        `;
+
+        const filtrados = rawData.filter(row => {
+            const matchQuery = !query || 
+                (row.id_mesa && row.id_mesa.toString().toLowerCase().includes(query)) ||
+                (row.distrito && row.distrito.toLowerCase().includes(query));
+
+            let matchStatus = true;
+            if (statusFilter !== 'TODOS') {
+                const st = (row.estado || '').toUpperCase();
+                if (statusFilter === 'FALTA') {
+                    matchStatus = st.includes('FALTA') || st.includes('PENDIENTE');
+                } else {
+                    matchStatus = st.includes(statusFilter);
+                }
+            }
+
+            return matchQuery && matchStatus;
+        });
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #86868b; padding: 2.5rem;">No se encontraron mesas con los filtros seleccionados.</td></tr>`;
+            reportCountFooter.textContent = `0 mesas encontradas`;
+            return;
         }
 
-        data.forEach(row => {
-            let pct = row.total_mesas > 0 ? Math.round((row.mesas_escrutadas / row.total_mesas) * 100) : 0;
-            
-            html += `<tr>
-                <td style="font-weight: 600;">${row.distrito}</td>
-                <td>
-                    ${row.mesas_escrutadas} / ${row.total_mesas} actas (${pct}%)
-                    <div class="progress-bar"><div class="progress-fill" style="width: ${pct}%"></div></div>
-                </td>
-                <td>${row.total_mesas}</td>
-                <td>${row.electores_habiles}</td>
-                <td>${row.total_votantes}</td>
-            </tr>`;
+        let html = '';
+        filtrados.forEach(row => {
+            const electores = parseInt(row.electores_habiles || 0);
+            const votaron = parseInt(row.votantes || 0);
+            const pct = electores > 0 ? Math.min(100, Math.round((votaron / electores) * 100)) : 0;
+
+            const rawEstado = (row.estado || 'FALTA ENTREGAR').toUpperCase();
+            let badgeClass = 'falta';
+            let badgeIcon = '⏳';
+
+            if (rawEstado.includes('CONTABILIZADA')) {
+                badgeClass = 'contabilizada';
+                badgeIcon = '✅';
+            } else if (rawEstado.includes('OBSERVADA')) {
+                badgeClass = 'observada';
+                badgeIcon = '⚠️';
+            } else if (rawEstado.includes('DIGITADA')) {
+                badgeClass = 'digitada';
+                badgeIcon = '✍️';
+            }
+
+            html += `
+                <tr>
+                    <td>
+                        <span class="mesa-tag">${escapeHtml(row.id_mesa)}</span>
+                    </td>
+                    <td style="font-weight: 600; color: #ffffff;">${escapeHtml(row.distrito)}</td>
+                    <td style="color: #94a3b8;">${electores.toLocaleString()}</td>
+                    <td style="font-weight: 700; color: #f5f5f7;">${votaron.toLocaleString()}</td>
+                    <td>
+                        <span class="badge ${badgeClass}">
+                            <span>${badgeIcon}</span> ${escapeHtml(rawEstado)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="progress-bar-wrap">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #86868b; font-weight: 600;">
+                                <span>${pct}%</span>
+                                <span>${votaron}/${electores}</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
         });
-        html += `</tbody></table>`;
-        tableContainer.innerHTML = html;
+
+        tbody.innerHTML = html;
+        reportCountFooter.textContent = `Mostrando ${filtrados.length} de ${rawData.length} mesas registradas`;
+    }
+
+    function renderDistritosTable(query) {
+        thead.innerHTML = `
+            <tr>
+                <th>Distrito</th>
+                <th style="min-width: 180px;">Avance del Escrutinio</th>
+                <th>Total Mesas</th>
+                <th>Padrón Electoral</th>
+                <th>Total Votantes</th>
+                <th style="min-width: 130px;">Participación</th>
+            </tr>
+        `;
+
+        const filtrados = rawData.filter(row => {
+            return !query || (row.distrito && row.distrito.toLowerCase().includes(query));
+        });
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #86868b; padding: 2.5rem;">No se encontraron distritos coincidentes con "${escapeHtml(query)}".</td></tr>`;
+            reportCountFooter.textContent = `0 distritos encontrados`;
+            return;
+        }
+
+        let html = '';
+        filtrados.forEach(row => {
+            const totalM = parseInt(row.total_mesas || 0);
+            const escrutadas = parseInt(row.mesas_escrutadas || 0);
+            const pctAvance = totalM > 0 ? Math.round((escrutadas / totalM) * 100) : 0;
+
+            const electores = parseInt(row.electores_habiles || 0);
+            const votantes = parseInt(row.total_votantes || 0);
+            const pctPart = electores > 0 ? Math.min(100, Math.round((votantes / electores) * 100)) : 0;
+
+            html += `
+                <tr>
+                    <td style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">
+                        <span>📍</span> ${escapeHtml(row.distrito)}
+                    </td>
+                    <td>
+                        <div class="progress-bar-wrap">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #fff; font-weight: 700;">
+                                <span style="color: #60a5fa;">${escrutadas} de ${totalM} actas</span>
+                                <span style="color: #32d74b;">${pctAvance}%</span>
+                            </div>
+                            <div class="progress-bar-bg" style="height: 8px;">
+                                <div class="progress-bar-fill" style="width: ${pctAvance}%; background: linear-gradient(90deg, #0071e3, #60a5fa);"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight: 700; color: #f5f5f7;">${totalM.toLocaleString()}</td>
+                    <td style="color: #94a3b8;">${electores.toLocaleString()}</td>
+                    <td style="font-weight: 700; color: #32d74b;">${votantes.toLocaleString()}</td>
+                    <td>
+                        <div class="progress-bar-wrap">
+                            <div style="font-size: 0.74rem; color: #86868b; font-weight: 600; text-align: right; margin-bottom: 0.2rem;">${pctPart}%</div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${pctPart}%; background: #32d74b;"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        reportCountFooter.textContent = `Mostrando ${filtrados.length} distritos de la ODPE Pasco`;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 });

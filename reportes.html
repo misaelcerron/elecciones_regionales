@@ -6,185 +6,20 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Reportes | Sistema Electoral Podemos Perú</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=4">
-    <style>
-        /* ─── RESET & TOKENS ─── */
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-        body{
-            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-            background:#000; color:#f5f5f7;
-            min-height:100vh; overflow-x:hidden;
-            -webkit-font-smoothing:antialiased;
-        }
-        body::before{
-            content:''; position:fixed; top:0;left:0;right:0;height:500px;
-            background:radial-gradient(ellipse 70% 45% at 50% -5%,rgba(0,113,227,0.15) 0%,transparent 70%);
-            pointer-events:none;z-index:0;
-        }
-
-        /* ─── NAVBAR (mismo que Digitación) ─── */
-        .navbar{
-            position:fixed;top:0;left:0;right:0;z-index:1000;
-            display:flex;align-items:center;justify-content:space-between;
-            padding:0 1.5rem;height:56px;
-            background:rgba(0,0,0,0.82);
-            backdrop-filter:saturate(180%) blur(24px);
-            -webkit-backdrop-filter:saturate(180%) blur(24px);
-            border-bottom:1px solid rgba(59,130,246,0.15);
-        }
-
-        /* Brand pill */
-        .navbar-brand{
-            display:flex;align-items:center;gap:0.5rem;
-            background:linear-gradient(135deg,rgba(27,75,138,0.55),rgba(10,40,90,0.7));
-            border:1px solid rgba(59,130,246,0.55);
-            border-radius:22px;
-            padding:0.25rem 0.75rem 0.25rem 0.3rem;
-            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(255,255,255,0.1);
-            text-decoration:none;flex-shrink:0;
-        }
-        .navbar-brand img{
-            width:28px;height:28px;border-radius:7px;
-            object-fit:cover;background:white;padding:1px;
-            box-shadow:0 2px 6px rgba(0,0,0,0.5);flex-shrink:0;
-        }
-        .navbar-brand-text{display:flex;flex-direction:column;line-height:1.15;}
-        .navbar-brand-main{
-            font-size:0.75rem;font-weight:900;letter-spacing:0.06em;
-            text-transform:uppercase;color:#fff;
-            text-shadow:0 0 10px rgba(96,165,250,0.7);
-        }
-        .navbar-brand-sub{
-            font-size:0.55rem;font-weight:700;letter-spacing:0.08em;
-            text-transform:uppercase;color:#93c5fd;opacity:0.9;
-        }
-
-        /* Links pill group */
-        .navbar-links{
-            display:flex;align-items:center;gap:0.25rem;
-            position:absolute;left:50%;transform:translateX(-50%);
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
-            border-radius:26px;
-            padding:0.2rem 0.25rem;
-        }
-        .navbar-links a{
-            color:rgba(255,255,255,0.55);text-decoration:none;
-            font-size:0.8rem;font-weight:600;letter-spacing:0.01em;
-            padding:0.36rem 0.85rem;border-radius:20px;
-            border:0.5px solid transparent;
-            transition:all 0.22s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;
-        }
-        .navbar-links a:hover{
-            color:white;background:rgba(59,130,246,0.12);
-            border-color:rgba(59,130,246,0.35);box-shadow:0 0 10px rgba(59,130,246,0.2);
-        }
-        .navbar-links a.active{
-            color:white;
-            background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8));
-            border-color:rgba(59,130,246,0.6);
-            box-shadow:0 0 14px rgba(27,75,138,0.5),inset 0 0.5px 0 rgba(255,255,255,0.1);
-            font-weight:700;
-        }
-
-        /* User area */
-        .navbar-user{display:flex;align-items:center;gap:0.6rem;flex-shrink:0;}
-        .nav-username{
-            font-size:0.78rem;color:#86868b;
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
-            padding:0.28rem 0.7rem;border-radius:20px;white-space:nowrap;
-        }
-        .btn-logout{
-            background:transparent;border:0.5px solid rgba(255,69,58,0.4);
-            color:#ff453a;padding:0.32rem 0.8rem;border-radius:20px;
-            font-size:0.78rem;font-weight:600;cursor:pointer;
-            transition:all 0.22s ease;letter-spacing:0.02em;
-        }
-        .btn-logout:hover{background:#ff453a;color:white;border-color:#ff453a;box-shadow:0 0 12px rgba(255,69,58,0.4);}
-
-        /* ─── PAGE ─── */
-        .page{
-            position:relative;z-index:1;
-            max-width:1200px;margin:0 auto;
-            padding:76px 1.5rem 4rem;
-        }
-        .page-eyebrow{
-            font-size:0.72rem;font-weight:700;letter-spacing:0.1em;
-            text-transform:uppercase;color:#0071e3;margin-bottom:0.4rem;
-        }
-        .page-title{
-            font-size:2rem;font-weight:800;letter-spacing:-0.03em;
-            margin-bottom:0.3rem;
-        }
-        .page-sub{font-size:0.9rem;color:#86868b;margin-bottom:2rem;}
-
-        /* Tabs */
-        .tabs{display:flex;gap:0.4rem;margin-bottom:1.5rem;}
-        .tab-btn{
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
-            color:rgba(255,255,255,0.55);
-            padding:0.5rem 1.25rem;border-radius:20px;
-            cursor:pointer;font-size:0.82rem;font-weight:600;
-            font-family:inherit;
-            transition:all 0.22s ease;letter-spacing:0.01em;
-        }
-        .tab-btn:hover{
-            color:white;background:rgba(59,130,246,0.12);
-            border-color:rgba(59,130,246,0.35);
-        }
-        .tab-btn.active{
-            color:white;
-            background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8));
-            border-color:rgba(59,130,246,0.6);
-            box-shadow:0 0 14px rgba(27,75,138,0.45);
-        }
-
-        /* Table */
-        .table-wrap{
-            background:rgba(255,255,255,0.03);
-            border:0.5px solid rgba(255,255,255,0.09);
-            border-radius:18px;overflow:hidden;
-        }
-        table{width:100%;border-collapse:collapse;}
-        th{
-            background:rgba(255,255,255,0.04);color:#86868b;
-            font-size:0.7rem;font-weight:700;letter-spacing:0.08em;
-            text-transform:uppercase;padding:0.85rem 1rem;
-            border-bottom:0.5px solid rgba(255,255,255,0.08);
-            text-align:left;
-        }
-        td{
-            padding:0.9rem 1rem;border-bottom:0.5px solid rgba(255,255,255,0.05);
-            font-size:0.85rem;color:#f5f5f7;
-        }
-        tr:last-child td{border-bottom:none;}
-        tr:hover td{background:rgba(255,255,255,0.03);}
-
-        /* Badges */
-        .badge{padding:0.2rem 0.65rem;border-radius:99px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
-        .badge.contabilizada{background:rgba(50,215,75,0.15);color:#32d74b;border:0.5px solid rgba(50,215,75,0.3);}
-        .badge.observada{background:rgba(255,69,58,0.15);color:#ff453a;border:0.5px solid rgba(255,69,58,0.3);}
-        .badge.digitada{background:rgba(59,130,246,0.15);color:#60a5fa;border:0.5px solid rgba(59,130,246,0.3);}
-        .badge.falta{background:rgba(148,163,184,0.1);color:#94a3b8;border:0.5px solid rgba(148,163,184,0.2);}
-
-        /* Progress */
-        .progress-bar{width:100%;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-top:0.4rem;}
-        .progress-fill{height:100%;background:linear-gradient(90deg,#0071e3,#a78bfa);border-radius:3px;}
-
-        @media(max-width:900px){.navbar-links{display:none;}}
-    </style>
+    <title>Reportes de Escrutinio | Sistema Electoral Podemos Perú</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
+
+    <!-- ── NAVBAR APPLE DARK UNIFICADO ── -->
     <nav class="navbar">
-        <a class="navbar-brand" href="dashboard.html">
-            <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú">
+        <a href="dashboard.html" class="navbar-brand-wrap">
+            <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú" class="navbar-logo">
             <div class="navbar-brand-text">
                 <span class="navbar-brand-main">Sistema Electoral</span>
-                <span class="navbar-brand-sub">Podemos Perú · ODPE Pasco</span>
+                <span class="navbar-brand-sub">Podemos Perú &middot; ODPE Pasco</span>
             </div>
         </a>
         <div class="navbar-links">
@@ -196,27 +31,121 @@
             <a href="usuarios.html">Usuarios</a>
         </div>
         <div class="navbar-user">
-            <span class="nav-username" id="navUsername">Usuario</span>
+            <span class="nav-user-name" id="navUsername">Usuario</span>
             <button class="btn-logout" id="btnLogout">Salir</button>
         </div>
     </nav>
 
+    <!-- ── PÁGINA PRINCIPAL (ESTILO PANTALLAZO 1) ── -->
     <div class="page">
-        <p class="page-eyebrow">Módulo Electoral</p>
-        <h1 class="page-title">Módulo de Reportes</h1>
-        <p class="page-sub">Monitoreo detallado del estado del escrutinio · Elecciones 2026</p>
 
-        <div class="tabs">
-            <button class="tab-btn active" id="tabMesas">Reporte por Mesas</button>
-            <button class="tab-btn" id="tabDistritos">Reporte por Distritos</button>
+        <!-- Encabezado de Página -->
+        <p class="page-eyebrow">MÓDULO ELECTORAL</p>
+        <h1 class="page-title">Reportes de Escrutinio</h1>
+        <p class="page-sub">Elecciones Regionales y Municipales 2026 · ODPE Pasco</p>
+
+        <!-- Segmented Stepper Tabs (Idéntico a Pantallazo 1) -->
+        <div class="steps">
+            <div class="step active" id="tabStepMesas">
+                <span class="step-num">1</span>
+                Reporte por Mesas
+            </div>
+            <div class="step" id="tabStepDistritos">
+                <span class="step-num">2</span>
+                Reporte por Distritos
+            </div>
         </div>
 
-        <div class="table-wrap" id="tableContainer">
-            <!-- La tabla se generará aquí con JS -->
+        <!-- Tarjetas de Resumen KPI (Estilo Apple Glass) -->
+        <div class="kpi-grid">
+            <div class="kpi-card" style="border-top: 2px solid #0071e3;">
+                <div class="kpi-card-title">
+                    <span>Total Mesas</span>
+                    <span>🗳️</span>
+                </div>
+                <div class="kpi-card-value" style="color: #60a5fa;" id="kpiTotalMesas">0</div>
+                <div class="kpi-card-sub" id="kpiTotalElectoresSub">Padrón: 0 electores</div>
+            </div>
+            <div class="kpi-card" style="border-top: 2px solid #32d74b;">
+                <div class="kpi-card-title">
+                    <span>Actas Contabilizadas</span>
+                    <span>✅</span>
+                </div>
+                <div class="kpi-card-value" style="color: #32d74b;" id="kpiContabilizadas">0</div>
+                <div class="kpi-card-sub">Actas procesadas y validadas</div>
+            </div>
+            <div class="kpi-card" style="border-top: 2px solid #ff453a;">
+                <div class="kpi-card-title">
+                    <span>Actas Observadas</span>
+                    <span>⚠️</span>
+                </div>
+                <div class="kpi-card-value" style="color: #ff453a;" id="kpiObservadas">0</div>
+                <div class="kpi-card-sub">Requieren verificación legal</div>
+            </div>
+            <div class="kpi-card" style="border-top: 2px solid #ffd60a;">
+                <div class="kpi-card-title">
+                    <span>Avance General</span>
+                    <span>📊</span>
+                </div>
+                <div class="kpi-card-value" style="color: #ffd60a;" id="kpiAvancePct">0%</div>
+                <div class="kpi-card-sub" id="kpiVotantesSub">Votantes computados: 0</div>
+            </div>
         </div>
+
+        <!-- ── SECTION CARD (IDÉNTICO A PANTALLAZO 1: PASO 1) ── -->
+        <div class="section-card">
+            <div class="section-label" id="sectionLabelTag">PASO 1 · MONITOREO EN VIVO</div>
+            <div class="section-title">
+                <div class="section-title-icon" id="sectionIcon">📋</div>
+                <span id="sectionTitleText">Padrón de Mesas y Estado de Actas</span>
+            </div>
+
+            <!-- Barra de Herramientas: Búsqueda y Filtros -->
+            <div class="toolbar-bar">
+                <div class="search-wrapper">
+                    <span>🔍</span>
+                    <input type="text" id="reportSearchInput" placeholder="Buscar por N° de mesa o distrito..." autocomplete="off">
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                    <select class="select-filter" id="statusFilterSelect">
+                        <option value="TODOS">Todos los estados</option>
+                        <option value="CONTABILIZADA">✅ Contabilizadas</option>
+                        <option value="DIGITADA">✍️ Digitadas</option>
+                        <option value="OBSERVADA">⚠️ Observadas</option>
+                        <option value="FALTA">⏳ Falta Entregar</option>
+                    </select>
+
+                    <button type="button" class="btn-logout" id="btnReloadReport" style="color: #60a5fa; border-color: rgba(96,165,250,0.4); display: flex; align-items: center; gap: 0.35rem;" title="Recargar datos">
+                        <span>🔄</span> Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenedor de la Tabla Apple Responsive -->
+            <div class="table-responsive-wrapper" id="tableWrapper">
+                <table id="reportTable">
+                    <thead id="reportTableHead">
+                        <!-- Cabecera dinámica -->
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #86868b; padding: 2.5rem;">Cargando datos del escrutinio...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pie de resultados y contadores -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.1rem; padding-top: 0.85rem; border-top: 0.5px solid rgba(255,255,255,0.08); font-size: 0.78rem; color: #86868b; flex-wrap: wrap; gap: 0.5rem;">
+                <span id="reportCountFooter">Cargando registros...</span>
+                <span style="color: #60a5fa; font-weight: 600;">PODEMOS PERÚ · ODPE PASCO</span>
+            </div>
+        </div>
+
     </div>
 
-    <script src="js/auth.js?v=4"></script>
-    <script src="js/reportes.js?v=4"></script>
+    <script src="js/auth.js?v=5"></script>
+    <script src="js/reportes.js?v=5"></script>
 </body>
 </html>
