@@ -179,12 +179,17 @@
         <h1 class="page-title">Estadísticas y Dashboard</h1>
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
             <p class="page-sub" style="margin-bottom: 0;">Monitoreo y análisis estadístico en barras de votos por organización política y avance de actas.</p>
-            <select id="tipoEleccionSelect" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
-                <option value="1" style="color: black;">Presidente Regional</option>
-                <option value="2" style="color: black;">Consejero Regional</option>
-                <option value="3" style="color: black;">Alcalde Provincial</option>
-                <option value="4" style="color: black;">Alcalde Distrital</option>
-            </select>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <select id="distritoFilterSelect" style="display: none; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
+                    <option value="TODOS" style="color: black;">Todos los distritos</option>
+                </select>
+                <select id="tipoEleccionSelect" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
+                    <option value="1" style="color: black;">Presidente Regional</option>
+                    <option value="2" style="color: black;">Consejero Regional</option>
+                    <option value="3" style="color: black;">Alcalde Provincial</option>
+                    <option value="4" style="color: black;">Alcalde Distrital</option>
+                </select>
+            </div>
         </div>
 
         <div class="kpi-grid">
@@ -242,7 +247,7 @@
         </div>
     </div>
 
-    <script src="js/auth.js?v=12"></script>
-    <script src="js/dashboard.js?v=12"></script>
+    <script src="js/auth.js?v=13"></script>
+    <script src="js/dashboard.js?v=13"></script>
 </body>
 </html>

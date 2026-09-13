@@ -6,15 +6,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     let barChartInstance = null;
     let pieChartInstance = null;
     const tipoEleccionSelect = document.getElementById('tipoEleccionSelect');
+    const distritoFilterSelect = document.getElementById('distritoFilterSelect');
 
     async function loadDashboard(idTipoEleccion = 1) {
         try {
-            const res = await fetch(`api/estadisticas.php?id_tipo_eleccion=${idTipoEleccion}&_=` + new Date().getTime());
+            // Mostrar u ocultar el filtro de distritos si es distrital (4)
+            if (distritoFilterSelect) {
+                if (idTipoEleccion == 4) {
+                    distritoFilterSelect.style.display = 'inline-block';
+                } else {
+                    distritoFilterSelect.style.display = 'none';
+                    distritoFilterSelect.value = 'TODOS';
+                }
+            }
+
+            const distritoSeleccionado = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none') ? distritoFilterSelect.value : '';
+            const res = await fetch(`api/estadisticas.php?id_tipo_eleccion=${idTipoEleccion}&distrito=${encodeURIComponent(distritoSeleccionado)}&_=` + new Date().getTime());
             const data = await res.json();
 
             if (data.error) throw new Error(data.error);
 
-        // 1. Actualizar KPIs
+            // Poblar menú de distritos si aplica
+            if (distritoFilterSelect && data.distritos_disponibles) {
+                const currentSelection = distritoFilterSelect.value;
+                let distritosHtml = '<option value="TODOS" style="color: black;">Todos los distritos</option>';
+                data.distritos_disponibles.forEach(d => {
+                    distritosHtml += `<option value="${escapeHtml(d)}" style="color: black;">${escapeHtml(d)}</option>`;
+                });
+                distritoFilterSelect.innerHTML = distritosHtml;
+                // Restaurar la selección anterior si aún existe en la lista, sino, poner TODOS
+                if (data.distritos_disponibles.includes(currentSelection)) {
+                    distritoFilterSelect.value = currentSelection;
+                } else {
+                    distritoFilterSelect.value = 'TODOS';
+                }
+            }
+
+            // 1. Actualizar KPIs
         const totalVotantes = parseInt(data.kpis.total_votantes || 0);
         document.getElementById('kpiMesas').textContent = Number(data.kpis.mesas_procesadas || 0).toLocaleString();
         document.getElementById('kpiVotantes').textContent = totalVotantes.toLocaleString();
@@ -143,6 +171,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tipoEleccionSelect) {
         tipoEleccionSelect.addEventListener('change', () => {
             loadDashboard(tipoEleccionSelect.value);
+        });
+    }
+
+    if (distritoFilterSelect) {
+        distritoFilterSelect.addEventListener('change', () => {
+            loadDashboard(tipoEleccionSelect ? tipoEleccionSelect.value : 1);
         });
     }
 
