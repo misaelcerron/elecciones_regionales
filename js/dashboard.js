@@ -3,11 +3,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     Chart.defaults.color = '#94a3b8';
     Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
 
-    try {
-        const res = await fetch('api/estadisticas.php?_=' + new Date().getTime());
-        const data = await res.json();
+    let barChartInstance = null;
+    let pieChartInstance = null;
+    const tipoEleccionSelect = document.getElementById('tipoEleccionSelect');
 
-        if (data.error) throw new Error(data.error);
+    async function loadDashboard(idTipoEleccion = 1) {
+        try {
+            const res = await fetch(`api/estadisticas.php?id_tipo_eleccion=${idTipoEleccion}&_=` + new Date().getTime());
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
 
         // 1. Actualizar KPIs
         const totalVotantes = parseInt(data.kpis.total_votantes || 0);
@@ -35,9 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             datosPartidos.push(v);
         });
 
-        // 3. Dibujar Gráfico de Barras Verticales (Chart.js)
+        if (barChartInstance) {
+            barChartInstance.destroy();
+        }
+
         const ctxBar = document.getElementById('barChart').getContext('2d');
-        new Chart(ctxBar, {
+        barChartInstance = new Chart(ctxBar, {
             type: 'bar',
             data: {
                 labels: labelsPartidos,
@@ -86,8 +94,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const nulos = parseInt(data.distribucion.nulos || 0);
         const impugnados = parseInt(data.distribucion.impugnados || 0);
 
+        if (pieChartInstance) {
+            pieChartInstance.destroy();
+        }
+
         const ctxPie = document.getElementById('pieChart').getContext('2d');
-        new Chart(ctxPie, {
+        pieChartInstance = new Chart(ctxPie, {
             type: 'doughnut',
             data: {
                 labels: ['Válidos', 'Blancos', 'Nulos', 'Impugnados'],
@@ -119,13 +131,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 5. Renderizar Ranking Detallado en Barras Horizontales con Logos
         renderRankingBarras(partidos, totalVotosValidos, coloresBarras);
 
-    } catch (e) {
-        console.error("Error cargando estadísticas:", e);
-        const rankingContainer = document.getElementById('partyRankingList');
-        if (rankingContainer) {
-            rankingContainer.innerHTML = `<p style="color:#ff453a;text-align:center;">Error al cargar datos estadísticos: ${e.message}</p>`;
+        } catch (e) {
+            console.error("Error cargando estadísticas:", e);
+            const rankingContainer = document.getElementById('partyRankingList');
+            if (rankingContainer) {
+                rankingContainer.innerHTML = `<p style="color:#ff453a;text-align:center;">Error al cargar datos estadísticos: ${e.message}</p>`;
+            }
         }
     }
+
+    if (tipoEleccionSelect) {
+        tipoEleccionSelect.addEventListener('change', () => {
+            loadDashboard(tipoEleccionSelect.value);
+        });
+    }
+
+    // Inicializar dashboard
+    loadDashboard(tipoEleccionSelect ? tipoEleccionSelect.value : 1);
 
     // Lógica para Limpiar Proceso Electoral (Solo Admin)
     const btnLimpiar = document.getElementById('btnLimpiarProceso');

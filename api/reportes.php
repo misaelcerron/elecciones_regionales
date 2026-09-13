@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $tipo = $_GET['tipo'] ?? 'mesas';
+$id_tipo_eleccion = isset($_GET['id_tipo_eleccion']) ? (int)$_GET['id_tipo_eleccion'] : 1;
 
 try {
     if ($tipo === 'mesas') {
@@ -24,10 +25,11 @@ try {
             FROM mesa_sufragio m
             LEFT JOIN local_votacion l ON m.id_local = l.id_local
             LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo
-            LEFT JOIN acta_electoral a ON m.id_mesa = a.id_mesa
+            LEFT JOIN acta_electoral a ON m.id_mesa = a.id_mesa AND a.id_tipo_eleccion = :tipo_elec
             ORDER BY u.distrito ASC, m.id_mesa ASC
         ";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['tipo_elec' => $id_tipo_eleccion]);
         $data = $stmt->fetchAll();
 
         // Calcular KPIs de resumen para el reporte de mesas
@@ -79,11 +81,12 @@ try {
             FROM mesa_sufragio m
             LEFT JOIN local_votacion l ON m.id_local = l.id_local
             LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo
-            LEFT JOIN acta_electoral a ON m.id_mesa = a.id_mesa
+            LEFT JOIN acta_electoral a ON m.id_mesa = a.id_mesa AND a.id_tipo_eleccion = :tipo_elec
             GROUP BY u.distrito
             ORDER BY u.distrito ASC
         ";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['tipo_elec' => $id_tipo_eleccion]);
         echo json_encode(['success' => true, 'data' => $stmt->fetchAll()]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Tipo de reporte inválido']);

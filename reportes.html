@@ -108,6 +108,18 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                    <select class="select-filter" id="tipoEleccionSelect">
+                        <option value="1">Presidente Regional</option>
+                        <option value="2">Consejero Regional</option>
+                        <option value="3">Alcalde Provincial</option>
+                        <option value="4">Alcalde Distrital</option>
+                    </select>
+
+                    <select class="select-filter" id="distritoFilterSelect" style="display: none;">
+                        <option value="TODOS">Todos los distritos</option>
+                        <!-- Se llena dinámicamente -->
+                    </select>
+
                     <select class="select-filter" id="statusFilterSelect">
                         <option value="TODOS">Todos los estados</option>
                         <option value="CONTABILIZADA">✅ Contabilizadas</option>
@@ -145,7 +157,7 @@
 
     </div>
 
-    <script src="js/auth.js?v=5"></script>
-    <script src="js/reportes.js?v=5"></script>
+    <script src="js/auth.js?v=12"></script>
+    <script src="js/reportes.js?v=12"></script>
 </body>
 </html>

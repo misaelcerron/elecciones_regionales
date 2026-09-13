@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionIcon = document.getElementById('sectionIcon');
     const sectionTitleText = document.getElementById('sectionTitleText');
     const reportSearchInput = document.getElementById('reportSearchInput');
+    const tipoEleccionSelect = document.getElementById('tipoEleccionSelect');
+    const distritoFilterSelect = document.getElementById('distritoFilterSelect');
     const statusFilterSelect = document.getElementById('statusFilterSelect');
     const btnReloadReport = document.getElementById('btnReloadReport');
     const thead = document.getElementById('reportTableHead');
@@ -29,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tabStepMesas.addEventListener('click', () => switchTab('mesas'));
     tabStepDistritos.addEventListener('click', () => switchTab('distritos'));
     reportSearchInput.addEventListener('input', renderCurrentTable);
+    tipoEleccionSelect.addEventListener('change', () => loadReport(currentTipo));
+    distritoFilterSelect.addEventListener('change', renderCurrentTable);
     statusFilterSelect.addEventListener('change', renderCurrentTable);
     btnReloadReport.addEventListener('click', () => loadReport(currentTipo));
 
@@ -50,6 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sectionIcon.textContent = '🏛️';
             sectionTitleText.textContent = 'Avance del Escrutinio por Distritos';
             statusFilterSelect.style.display = 'none'; // Distritos no tienen estado individual
+            distritoFilterSelect.style.display = 'none'; // Distritos no necesitan filtro de distrito adicional
+        }
+
+        // Mostrar filtro de distrito si es reporte de mesas
+        if (tipo === 'mesas') {
+            distritoFilterSelect.style.display = 'inline-block';
         }
 
         reportSearchInput.value = '';
@@ -61,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         reportCountFooter.textContent = 'Consultando base de datos...';
 
         try {
-            const res = await fetch(`api/reportes.php?tipo=${tipo}&_=${new Date().getTime()}`);
+            const idTipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
+            const res = await fetch(`api/reportes.php?tipo=${tipo}&id_tipo_eleccion=${idTipo}&_=${new Date().getTime()}`);
             const json = await res.json();
 
             if (json.error) throw new Error(json.error);
@@ -69,12 +80,39 @@ document.addEventListener('DOMContentLoaded', () => {
             rawData = json.data || [];
             currentKpis = json.kpis || null;
 
+            actualizarDistritosDropdown();
             actualizarKpis();
             renderCurrentTable();
 
         } catch (error) {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ff453a; padding: 2rem;">Error al cargar datos: ${error.message}</td></tr>`;
             reportCountFooter.textContent = 'Error en la consulta.';
+        }
+    }
+
+    function actualizarDistritosDropdown() {
+        if (!distritoFilterSelect) return;
+        
+        const distritos = new Set();
+        rawData.forEach(r => {
+            if (r.distrito) distritos.add(r.distrito);
+        });
+
+        // Guardar selección actual
+        const currentSelection = distritoFilterSelect.value;
+        
+        let html = '<option value="TODOS">Todos los distritos</option>';
+        Array.from(distritos).sort().forEach(d => {
+            html += `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`;
+        });
+        
+        distritoFilterSelect.innerHTML = html;
+        
+        // Restaurar selección si existe en los nuevos datos
+        if (distritos.has(currentSelection)) {
+            distritoFilterSelect.value = currentSelection;
+        } else {
+            distritoFilterSelect.value = 'TODOS';
         }
     }
 
@@ -132,6 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMesasTable(query, statusFilter) {
+        const distritoFilter = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none') ? distritoFilterSelect.value : 'TODOS';
+
         thead.innerHTML = `
             <tr>
                 <th>N° Mesa</th>
@@ -158,7 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            return matchQuery && matchStatus;
+            let matchDistrito = true;
+            if (distritoFilter !== 'TODOS') {
+                matchDistrito = row.distrito === distritoFilter;
+            }
+
+            return matchQuery && matchStatus && matchDistrito;
         });
 
         if (filtrados.length === 0) {
