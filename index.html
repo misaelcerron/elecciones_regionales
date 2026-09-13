@@ -129,6 +129,45 @@
             opacity:0.9;
         }
 
+        
+        /* ── TABS ── */
+        .tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--t);
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            background: var(--surface-h);
+            color: var(--text);
+        }
+        .tab-btn.active {
+            background: var(--accent-light);
+            border-color: rgba(0,113,227,0.4);
+            color: var(--accent);
+        }
+        .tab-content {
+            display: none;
+            animation: feedIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+
         /* ── NAVBAR ── */
         .navbar{
             position:fixed;top:0;left:0;right:0;z-index:1000;
@@ -586,15 +625,7 @@
                     </div>
                     <div class="mesa-feedback" id="mesaFeedback"></div>
                 </div>
-                <div class="field-group">
-                    <label class="field-label" for="tipo_eleccion">Tipo de Elección</label>
-                    <select class="field-input" id="tipo_eleccion" name="tipo_eleccion" required>
-                        <option value="1">Gobernador y Vicegobernador Regional</option>
-                        <option value="2">Consejero Regional</option>
-                        <option value="3">Provincia (Alcalde y Regidores)</option>
-                        <option value="4">Distrito (Alcalde y Regidores)</option>
-                    </select>
-                </div>
+
                 <div class="field-group">
                     <label class="field-label" for="electores_habiles">
                         Electores Hábiles (Padrón)
@@ -608,14 +639,7 @@
                         <span style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;">&#x1F4CB;</span>
                     </div>
                 </div>
-                <div class="field-group">
-                    <label class="field-label" for="total_votaron">
-                        Ciudadanos que Votaron
-                        <button type="button" id="btnAutoVotaron" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span id="btnAutoVotaronNum">0</span>)</button>
-                    </label>
-                    <input type="number" class="field-input" id="total_votaron"
-                           placeholder="0" required min="0" inputmode="numeric">
-                </div>
+
             </div>
             <!-- Chip de mesa encontrada -->
             <div class="mesa-chip" id="mesaChip">
@@ -624,87 +648,226 @@
             </div>
         </div>
 
-        <!-- ══ PASO 2: VOTOS POR ORGANIZACIÓN ══ -->
-        <div class="section-card">
+        
+        <!-- ══ PASO 2: ESCRUTINIO ══ -->
+        <div class="section-card" id="escrutinioSection" style="display:none;">
             <p class="section-label">Paso 2</p>
             <h2 class="section-title">
-                <span class="section-title-icon">🏛</span>
-                Votos Válidos por Organización Política
+                <span class="section-title-icon">📝</span>
+                Ingreso de Escrutinio por Elección
             </h2>
-
-            <!-- Grid de partidos (renderizado por JS) -->
-            <div class="parties-grid" id="partidosContainer">
-                <!-- Skeletons mientras carga -->
-                <div class="skeleton"></div>
-                <div class="skeleton" style="animation-delay:.1s"></div>
-                <div class="skeleton" style="animation-delay:.2s"></div>
-                <div class="skeleton" style="animation-delay:.3s"></div>
-                <div class="skeleton" style="animation-delay:.4s"></div>
-                <div class="skeleton" style="animation-delay:.5s"></div>
+            
+            <div class="tabs-container" id="tabsContainer">
+                <button type="button" class="tab-btn active" data-tab="1">1. Regional</button>
+                <button type="button" class="tab-btn" data-tab="2">2. Consejero</button>
+                <button type="button" class="tab-btn" data-tab="3">3. Provincial</button>
+                <button type="button" class="tab-btn" data-tab="4">4. Distrital</button>
             </div>
 
-            <!-- Otros Votos -->
-            <h2 class="section-title" style="margin-top:1.75rem;">
-                <span class="section-title-icon">🗂</span>
-                Otros Votos
-            </h2>
-            <div class="other-votes-grid">
-                <div class="other-card">
-                    <span class="other-label blanco">
-                        <span class="other-dot blanco"></span>Votos en Blanco
-                    </span>
-                    <div class="vote-counter">
-                        <button type="button" class="btn-step minus" data-target="votos_blancos">−</button>
-                        <input type="number" class="vote-value" id="votos_blancos" value="0" min="0" inputmode="numeric">
-                        <button type="button" class="btn-step plus"  data-target="votos_blancos">+</button>
-                    </div>
+            <div class="tab-content active" id="tab-content-1">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_1">
+                        Ciudadanos que Votaron (Elección 1)
+                        <button type="button" class="btnAutoVotaron" data-target="1" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_1" data-tab="1"
+                           placeholder="0" required min="0" inputmode="numeric">
                 </div>
-                <div class="other-card">
-                    <span class="other-label nulo">
-                        <span class="other-dot nulo"></span>Votos Nulos
-                    </span>
-                    <div class="vote-counter">
-                        <button type="button" class="btn-step minus" data-target="votos_nulos">−</button>
-                        <input type="number" class="vote-value" id="votos_nulos" value="0" min="0" inputmode="numeric">
-                        <button type="button" class="btn-step plus"  data-target="votos_nulos">+</button>
-                    </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_1" data-tab="1">
+                    <!-- Partidos generados por JS -->
                 </div>
-                <div class="other-card">
-                    <span class="other-label impugnado">
-                        <span class="other-dot impugnado"></span>Votos Impugnados
-                    </span>
-                    <div class="vote-counter">
-                        <button type="button" class="btn-step minus" data-target="votos_impugnados">−</button>
-                        <input type="number" class="vote-value" id="votos_impugnados" value="0" min="0" inputmode="numeric">
-                        <button type="button" class="btn-step plus"  data-target="votos_impugnados">+</button>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_1">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="tab-content " id="tab-content-2">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_2">
+                        Ciudadanos que Votaron (Elección 2)
+                        <button type="button" class="btnAutoVotaron" data-target="2" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_2" data-tab="2"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_2" data-tab="2">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_2">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-3">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_3">
+                        Ciudadanos que Votaron (Elección 3)
+                        <button type="button" class="btnAutoVotaron" data-target="3" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_3" data-tab="3"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_3" data-tab="3">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_3">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-4">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_4">
+                        Ciudadanos que Votaron (Elección 4)
+                        <button type="button" class="btnAutoVotaron" data-target="4" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_4" data-tab="4"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_4" data-tab="4">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_4">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- ══ PASO 3: VALIDACIÓN ══ -->
-        <div class="section-card">
+        <div class="section-card" id="validacionSection" style="display:none;">
             <p class="section-label">Paso 3</p>
             <h2 class="section-title">
                 <span class="section-title-icon">✓</span>
-                Verificación y Cuadre Aritmético
+                Verificación Consolidada
             </h2>
 
-            <div class="validation-box" id="validationBox">
-                <div class="val-left">
-                    <span class="val-icon" id="valIcon">⏳</span>
-                    <span class="val-text" id="valText">Esperando datos…</span>
-                </div>
-                <div class="val-right">
-                    Votos sumados: <strong id="sumVotos">0</strong> &nbsp;|&nbsp;
-                    Votantes: <strong id="txtVotantes">0</strong> &nbsp;|&nbsp;
-                    Padrón: <strong id="txtPadron">0</strong>
-                </div>
-            </div>
-
-            <!-- Barra de progreso de cuadre -->
-            <div class="vote-progress">
-                <div class="vote-progress-fill" id="progressFill"></div>
+            <div id="validationsContainer">
+                <!-- Generado por JS: 4 cajas de validación -->
             </div>
 
             <button type="submit" class="btn-submit" id="btnSubmit" disabled>
@@ -713,7 +876,7 @@
                     <polyline points="17,21 17,13 7,13 7,21"/>
                     <polyline points="7,3 7,8 15,8"/>
                 </svg>
-                Guardar Acta Electoral
+                Guardar Actas (4)
             </button>
         </div>
 
