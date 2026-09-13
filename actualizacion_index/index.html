@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Digitación de Actas | Sistema Electoral ODPE PASCO</title>
+    <meta name="description" content="Digitación y cómputo de votos por organización política. Elecciones Regionales 2026 - ODPE Pasco.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=5">
+    <style>
+        /* ═══════════════════════════════════
+           DESIGN TOKENS — Apple Dark
+        ═══════════════════════════════════ */
+        :root {
+            --bg:           #000;
+            --bg2:          #0a0a0a;
+            --surface:      rgba(255,255,255,0.045);
+            --surface-h:    rgba(255,255,255,0.075);
+            --surface-a:    rgba(255,255,255,0.10);
+            --border:       rgba(255,255,255,0.09);
+            --border-h:     rgba(255,255,255,0.16);
+            --accent:       #0071e3;
+            --accent-h:     #0077ed;
+            --accent-glow:  rgba(0,113,227,0.3);
+            --accent-light: rgba(0,113,227,0.12);
+            --text:         #f5f5f7;
+            --text-2:       #86868b;
+            --text-3:       #515154;
+            --ok:           #32d74b;
+            --ok-light:     rgba(50,215,75,0.12);
+            --warn:         #ffd60a;
+            --warn-light:   rgba(255,214,10,0.12);
+            --err:          #ff453a;
+            --err-light:    rgba(255,69,58,0.12);
+            --r:            16px;
+            --r-lg:         20px;
+            --shadow:       0 8px 32px rgba(0,0,0,0.55);
+            --t:            all 0.22s cubic-bezier(0.4,0,0.2,1);
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg); color:var(--text);
+            min-height:100vh; overflow-x:hidden;
+            -webkit-font-smoothing:antialiased;
+        }
+        body::before{
+            content:''; position:fixed; top:0;left:0;right:0;height:500px;
+            background:radial-gradient(ellipse 70% 45% at 50% -5%,rgba(0,113,227,0.16) 0%,transparent 70%);
+            pointer-events:none;z-index:0;
+        }
+
+        /* ── MESA FIELD STATES ── */
+        .field-input.mesa-ok{
+            border-color:rgba(50,215,75,0.5) !important;
+            background:rgba(50,215,75,0.06) !important;
+            box-shadow:0 0 0 3px rgba(50,215,75,0.18) !important;
+        }
+        .field-input.mesa-err{
+            border-color:rgba(255,69,58,0.55) !important;
+            background:rgba(255,69,58,0.06) !important;
+            box-shadow:0 0 0 3px rgba(255,69,58,0.18) !important;
+        }
+        .mesa-feedback{
+            margin-top:0.55rem;
+            font-size:0.8rem;font-weight:600;
+            display:flex;align-items:center;gap:0.4rem;
+            padding:0.55rem 0.85rem;border-radius:10px;
+            display:none;
+            animation:feedIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+        }
+        @keyframes feedIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+        .mesa-feedback.ok{
+            display:flex;
+            background:rgba(50,215,75,0.1);
+            border:0.5px solid rgba(50,215,75,0.25);
+            color:var(--ok);
+        }
+        .mesa-feedback.err{
+            display:flex;
+            background:rgba(255,69,58,0.1);
+            border:0.5px solid rgba(255,69,58,0.25);
+            color:var(--err);
+        }
+        .mesa-feedback.loading{
+            display:flex;
+            background:rgba(255,255,255,0.04);
+            border:0.5px solid var(--border);
+            color:var(--text-2);
+        }
+        /* Navbar brand — Podemos Perú colors */
+        .navbar-brand-wrap{
+            display:flex;align-items:center;gap:0.5rem;
+            background:linear-gradient(135deg,rgba(27,75,138,0.55),rgba(10,40,90,0.7));
+            border:1px solid rgba(59,130,246,0.55);
+            border-radius:22px;
+            padding:0.25rem 0.75rem 0.25rem 0.3rem;
+            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(255,255,255,0.1);
+            text-decoration:none;flex-shrink:0;
+        }
+        .navbar-brand-wrap:hover{
+            border-color:rgba(59,130,246,0.85);
+            box-shadow:0 0 28px rgba(27,75,138,0.65),inset 0 0.5px 0 rgba(255,255,255,0.15);
+        }
+        .navbar-logo{
+            width:28px;height:28px;border-radius:7px;
+            object-fit:cover;flex-shrink:0;
+            background:white;padding:1px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.5);
+        }
+        .navbar-brand-text{
+            display:flex;flex-direction:column;line-height:1.15;
+        }
+        .navbar-brand-main{
+            font-size:0.75rem;font-weight:900;letter-spacing:0.06em;
+            text-transform:uppercase;
+            color:#ffffff;
+            text-shadow:0 0 10px rgba(96,165,250,0.7);
+        }
+        .navbar-brand-sub{
+            font-size:0.55rem;font-weight:700;letter-spacing:0.08em;
+            text-transform:uppercase;
+            color:#93c5fd;
+            opacity:0.9;
+        }
+
+        
+        /* ── TABS ── */
+        .tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--t);
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            background: var(--surface-h);
+            color: var(--text);
+        }
+        .tab-btn.active {
+            background: var(--accent-light);
+            border-color: rgba(0,113,227,0.4);
+            color: var(--accent);
+        }
+        .tab-content {
+            display: none;
+            animation: feedIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar{
+            position:fixed;top:0;left:0;right:0;z-index:1000;
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 1.5rem;height:56px;
+            background:rgba(0,0,0,0.82);
+            backdrop-filter:saturate(180%) blur(24px);
+            -webkit-backdrop-filter:saturate(180%) blur(24px);
+            border-bottom:1px solid rgba(59,130,246,0.15);
+        }
+        .navbar-brand{
+            font-size:1rem;font-weight:800;letter-spacing:-0.02em;
+            background:linear-gradient(135deg,#60a5fa,#a78bfa);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            white-space:nowrap;
+        }
+        .navbar-links{
+            display:flex;align-items:center;gap:0.3rem;
+            position:absolute;left:50%;transform:translateX(-50%);
+            background:rgba(255,255,255,0.04);
+            border:0.5px solid rgba(255,255,255,0.09);
+            border-radius:26px;
+            padding:0.22rem 0.3rem;
+        }
+        .navbar-links a{
+            color:rgba(255,255,255,0.55);
+            text-decoration:none;
+            font-size:0.8rem;
+            font-weight:600;
+            letter-spacing:0.01em;
+            padding:0.38rem 0.9rem;
+            border-radius:20px;
+            border:0.5px solid transparent;
+            transition:var(--t);
+            white-space:nowrap;
+        }
+        .navbar-links a:hover{
+            color:white;
+            background:rgba(59,130,246,0.12);
+            border-color:rgba(59,130,246,0.35);
+            box-shadow:0 0 10px rgba(59,130,246,0.2);
+        }
+        .navbar-links a.active{
+            color:white;
+            background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8));
+            border-color:rgba(59,130,246,0.6);
+            box-shadow:0 0 14px rgba(27,75,138,0.5), inset 0 0.5px 0 rgba(255,255,255,0.1);
+            font-weight:700;
+        }
+        .navbar-user{display:flex;align-items:center;gap:0.75rem;}
+        .nav-user-name{
+            font-size:0.8rem;color:var(--text-2);
+            background:rgba(255,255,255,0.04);
+            border:0.5px solid rgba(255,255,255,0.09);
+            padding:0.3rem 0.75rem;border-radius:20px;
+        }
+        .btn-logout{
+            background:transparent;border:0.5px solid rgba(255,69,58,0.4);
+            color:var(--err);padding:0.35rem 0.85rem;border-radius:20px;
+            font-size:0.8rem;font-weight:600;cursor:pointer;transition:var(--t);
+            letter-spacing:0.02em;
+        }
+        .btn-logout:hover{background:var(--err);color:white;border-color:var(--err);box-shadow:0 0 12px rgba(255,69,58,0.4);}
+
+        /* ── PAGE WRAPPER ── */
+        .page{
+            position:relative;z-index:1;
+            max-width:960px;margin:0 auto;
+            padding:80px 1.5rem 5rem;
+        }
+
+        /* ── PAGE HEADER ── */
+        .page-eyebrow{
+            font-size:0.72rem;font-weight:700;letter-spacing:0.1em;
+            text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem;
+        }
+        .page-title{
+            font-size:2.2rem;font-weight:800;letter-spacing:-0.035em;
+            line-height:1.1;margin-bottom:0.35rem;
+        }
+        .page-sub{font-size:0.95rem;color:var(--text-2);margin-bottom:2.5rem;}
+
+        /* ── STEP INDICATOR ── */
+        .steps{
+            display:flex;gap:0;margin-bottom:2.5rem;
+            background:var(--surface);border:0.5px solid var(--border);
+            border-radius:var(--r-lg);overflow:hidden;
+        }
+        .step{
+            flex:1;padding:0.9rem 0.5rem;text-align:center;
+            font-size:0.75rem;font-weight:600;color:var(--text-3);
+            border-right:0.5px solid var(--border);transition:var(--t);
+            position:relative;
+        }
+        .step:last-child{border-right:none;}
+        .step.active{background:var(--accent-light);color:var(--accent);}
+        .step.done{color:var(--ok);}
+        .step-num{
+            display:block;width:22px;height:22px;border-radius:50%;
+            margin:0 auto 0.3rem;font-size:0.72rem;font-weight:800;
+            background:rgba(255,255,255,0.08);line-height:22px;
+        }
+        .step.active .step-num{background:var(--accent);color:white;}
+        .step.done .step-num{background:var(--ok);color:white;}
+
+        /* ── SECTION CARD ── */
+        .section-card{
+            background:var(--surface);border:0.5px solid var(--border);
+            border-radius:var(--r-lg);padding:1.75rem;margin-bottom:1.25rem;
+            transition:var(--t);
+        }
+        .section-card:hover{border-color:var(--border-h);}
+        .section-label{
+            font-size:0.7rem;font-weight:700;letter-spacing:0.1em;
+            text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;
+        }
+        .section-title{
+            font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;
+            margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;
+        }
+        .section-title-icon{
+            width:32px;height:32px;border-radius:9px;
+            background:var(--accent-light);display:flex;align-items:center;justify-content:center;
+            font-size:1rem;flex-shrink:0;
+        }
+
+        /* ── FORM FIELDS ── */
+        .fields-grid{
+            display:grid;grid-template-columns:1fr 1fr;gap:1rem;
+        }
+        @media(max-width:600px){.fields-grid{grid-template-columns:1fr;}}
+        .field-group{display:flex;flex-direction:column;gap:0.4rem;}
+        .field-group.full{grid-column:1/-1;}
+        .field-label{
+            font-size:0.72rem;font-weight:700;letter-spacing:0.07em;
+            text-transform:uppercase;color:var(--text-2);
+        }
+        .field-input{
+            background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.1);
+            border-radius:var(--r);padding:0.75rem 1rem;
+            color:var(--text);font-size:1rem;font-weight:500;
+            outline:none;transition:var(--t);width:100%;
+        }
+        .field-input::placeholder{color:var(--text-3);}
+        .field-input:focus{
+            border-color:var(--accent);background:rgba(0,113,227,0.07);
+            box-shadow:0 0 0 3px var(--accent-glow);
+        }
+        select.field-input{cursor:pointer;}
+        select.field-input option{background:#1c1c1e;color:var(--text);}
+
+        /* ── MESA INFO CHIP (carga desde API) ── */
+        .mesa-chip{
+            margin-top:0.75rem;padding:0.6rem 1rem;
+            background:var(--ok-light);border:0.5px solid rgba(50,215,75,0.22);
+            border-radius:var(--r);font-size:0.82rem;color:var(--ok);
+            display:none;align-items:center;gap:0.5rem;
+        }
+        .mesa-chip.visible{display:flex;}
+
+        /* ══════════════════════════════════════
+           PARTY CARDS — diseño con logo
+        ══════════════════════════════════════ */
+        .parties-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+            gap:0.9rem;
+        }
+
+        .party-card{
+            background:rgba(255,255,255,0.03);
+            border:0.5px solid var(--border);
+            border-radius:var(--r-lg);
+            padding:1rem 1rem 1rem 1rem;
+            display:flex;flex-direction:column;gap:0.85rem;
+            transition:var(--t);
+            position:relative;overflow:hidden;
+            animation:cardIn 0.35s cubic-bezier(0.34,1.4,0.64,1) both;
+        }
+        @keyframes cardIn{
+            from{opacity:0;transform:translateY(14px) scale(0.97);}
+            to{opacity:1;transform:translateY(0) scale(1);}
+        }
+        .party-card::before{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 55%);
+            pointer-events:none;
+        }
+        .party-card:hover{
+            border-color:rgba(255,255,255,0.15);
+            background:rgba(255,255,255,0.055);
+            transform:translateY(-2px);box-shadow:var(--shadow);
+        }
+        .party-card:focus-within{
+            border-color:rgba(0,113,227,0.45);
+            box-shadow:0 0 0 3px rgba(0,113,227,0.18);
+        }
+
+        /* Card header: logo + nombre */
+        .party-head{display:flex;align-items:center;gap:0.75rem;}
+        .party-logo{
+            flex-shrink:0;
+            width:52px;height:52px;border-radius:12px;
+            background:rgba(255,255,255,0.06);
+            border:0.5px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            overflow:hidden;
+        }
+        .party-logo img{
+            width:100%;height:100%;object-fit:contain;border-radius:10px;
+        }
+        .party-logo-placeholder{font-size:1.5rem;opacity:0.35;}
+        .party-meta{flex:1;min-width:0;}
+        .party-order{
+            font-size:0.65rem;font-weight:700;letter-spacing:0.08em;
+            text-transform:uppercase;color:var(--accent);margin-bottom:0.1rem;
+        }
+        .party-name{
+            font-size:0.88rem;font-weight:700;line-height:1.3;
+            color:var(--text);
+        }
+        .party-siglas{font-size:0.75rem;color:var(--text-2);margin-top:0.1rem;}
+
+        /* Vote counter */
+        .vote-counter{
+            display:flex;align-items:center;justify-content:space-between;
+            gap:0.5rem;
+            background:rgba(0,0,0,0.3);
+            border:0.5px solid rgba(255,255,255,0.08);
+            border-radius:var(--r);padding:0.3rem 0.4rem 0.3rem 0.75rem;
+        }
+        .vote-value{
+            flex:1;text-align:center;
+            font-size:1.75rem;font-weight:800;letter-spacing:-0.04em;
+            color:var(--text);background:transparent;border:none;
+            outline:none;width:100%;min-width:0;
+            -moz-appearance:textfield;
+        }
+        .vote-value::-webkit-outer-spin-button,
+        .vote-value::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+        .vote-value:focus{color:#60a5fa;}
+        .btn-step{
+            flex-shrink:0;width:36px;height:36px;border-radius:10px;
+            background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.1);
+            color:var(--text-2);font-size:1.2rem;font-weight:700;
+            cursor:pointer;transition:var(--t);
+            display:flex;align-items:center;justify-content:center;
+            line-height:1;user-select:none;
+        }
+        .btn-step:hover{background:var(--accent-light);color:var(--accent);border-color:rgba(0,113,227,0.3);}
+        .btn-step:active{transform:scale(0.9);}
+        .btn-step.minus:hover{background:var(--err-light);color:var(--err);border-color:rgba(255,69,58,0.3);}
+
+        /* Cuando el input tiene valor > 0 */
+        .party-card.has-votes{border-color:rgba(0,113,227,0.3);}
+        .party-card.has-votes .vote-value{color:#60a5fa;}
+
+        /* ── OTROS VOTOS (blancos, nulos, impugnados) ── */
+        .other-votes-grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.9rem;
+        }
+        .other-card{
+            border:0.5px solid var(--border);border-radius:var(--r);
+            padding:1rem;display:flex;flex-direction:column;gap:0.75rem;
+            background:rgba(255,255,255,0.03);transition:var(--t);
+        }
+        .other-card:focus-within{box-shadow:0 0 0 3px rgba(0,113,227,0.18);}
+        .other-label{
+            font-size:0.75rem;font-weight:700;letter-spacing:0.06em;
+            text-transform:uppercase;display:flex;align-items:center;gap:0.4rem;
+        }
+        .other-label.blanco{color:#94a3b8;}
+        .other-label.nulo{color:var(--err);}
+        .other-label.impugnado{color:var(--warn);}
+        .other-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+        .other-dot.blanco{background:#94a3b8;}
+        .other-dot.nulo{background:var(--err);}
+        .other-dot.impugnado{background:var(--warn);}
+
+        /* ── VALIDATION BANNER ── */
+        .validation-box{
+            border-radius:var(--r);padding:1rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem;
+            transition:var(--t);
+            border:0.5px solid rgba(255,255,255,0.08);
+            background:rgba(255,255,255,0.03);
+        }
+        .validation-box.ok{background:var(--ok-light);border-color:rgba(50,215,75,0.3);}
+        .validation-box.err{background:var(--err-light);border-color:rgba(255,69,58,0.3);}
+        .validation-box.warn{background:var(--warn-light);border-color:rgba(255,214,10,0.3);}
+        .validation-box.info{background:rgba(0,113,227,0.12);border-color:rgba(59,130,246,0.35);}
+        .val-left{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;}
+        .val-icon{font-size:1.2rem;}
+        .val-text{font-size:0.9rem;font-weight:600;}
+        .validation-box.ok   .val-text{color:var(--ok);}
+        .validation-box.err  .val-text{color:var(--err);}
+        .validation-box.warn .val-text{color:var(--warn);}
+        .validation-box.info .val-text{color:#93c5fd;}
+        .val-right{font-size:0.82rem;color:var(--text-2);font-weight:500;}
+        .val-right strong{color:var(--text);font-weight:700;}
+        .btn-val-sync{
+            background:linear-gradient(135deg,#0071e3,#005bb5);
+            border:none;color:#ffffff;
+            padding:0.25rem 0.65rem;border-radius:8px;
+            font-size:0.75rem;font-weight:700;cursor:pointer;
+            display:inline-flex;align-items:center;gap:0.3rem;
+            box-shadow:0 2px 8px rgba(0,113,227,0.35);
+            transition:all 0.15s ease;
+            vertical-align:middle;
+        }
+        .btn-val-sync:hover{
+            background:#0077ed;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,113,227,0.5);
+        }
+
+        /* Progress bar */
+        .vote-progress{
+            width:100%;height:4px;border-radius:2px;
+            background:rgba(255,255,255,0.07);
+            margin-top:0.75rem;overflow:hidden;
+        }
+        .vote-progress-fill{
+            height:100%;border-radius:2px;width:0%;
+            background:linear-gradient(90deg,var(--accent),#a78bfa);
+            transition:width 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        /* ── SUBMIT BUTTON ── */
+        .btn-submit{
+            width:100%;margin-top:1.5rem;padding:1rem;
+            background:var(--accent);border:none;border-radius:14px;
+            color:white;font-size:1rem;font-weight:700;letter-spacing:0.01em;
+            cursor:pointer;transition:var(--t);
+            display:flex;align-items:center;justify-content:center;gap:0.5rem;
+        }
+        .btn-submit:hover:not(:disabled){
+            background:var(--accent-h);transform:translateY(-1px);
+            box-shadow:0 6px 24px var(--accent-glow);
+        }
+        .btn-submit:disabled{
+            background:rgba(255,255,255,0.08);color:var(--text-3);
+            cursor:not-allowed;transform:none;box-shadow:none;
+        }
+
+        /* ── LOADING SKELETON ── */
+        .skeleton{
+            background:rgba(255,255,255,0.06);border-radius:var(--r-lg);
+            animation:shimmer 1.4s ease infinite;
+            height:120px;
+        }
+        @keyframes shimmer{
+            0%,100%{opacity:0.6;} 50%{opacity:1;}
+        }
+
+        /* ── TOAST ── */
+        .toast{
+            position:fixed;bottom:2rem;left:50%;
+            transform:translateX(-50%) translateY(120px);
+            background:rgba(28,28,30,0.96);backdrop-filter:blur(20px);
+            border:0.5px solid var(--border);border-radius:22px;
+            padding:0.75rem 1.25rem;
+            font-size:0.875rem;font-weight:500;color:var(--text);
+            z-index:9999;display:flex;align-items:center;gap:0.5rem;
+            transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            white-space:nowrap;box-shadow:var(--shadow);
+        }
+        .toast.show{transform:translateX(-50%) translateY(0);}
+        .toast.success{border-color:rgba(50,215,75,0.3);}
+        .toast.error{border-color:rgba(255,69,58,0.3);}
+
+        /* Spinner */
+        .spinner{
+            display:inline-block;width:16px;height:16px;
+            border:2px solid rgba(255,255,255,0.15);border-top-color:white;
+            border-radius:50%;animation:spin 0.7s linear infinite;
+        }
+        @keyframes spin{to{transform:rotate(360deg);}}
+
+        @media(max-width:768px){
+            .navbar-links{display:none;}
+            .page-title{font-size:1.7rem;}
+            .steps{display:none;}
+            .parties-grid{grid-template-columns:1fr 1fr;}
+        }
+        @media(max-width:480px){
+            .parties-grid{grid-template-columns:1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <a href="dashboard.html" class="navbar-brand-wrap">
+        <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú" class="navbar-logo">
+        <div class="navbar-brand-text">
+            <span class="navbar-brand-main">Sistema Electoral</span>
+            <span class="navbar-brand-sub">Podemos Perú &middot; ODPE Pasco</span>
+        </div>
+    </a>
+    <div class="navbar-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="reportes.html">Reportes</a>
+        <a href="mesas.html">Mesas</a>
+        <a href="organizaciones.html">Organizaciones</a>
+        <a href="index.html" class="active">Digitación</a>
+        <a href="usuarios.html">Usuarios</a>
+    </div>
+    <div class="navbar-user">
+        <span class="nav-user-name" id="navUsername">Usuario</span>
+        <button class="btn-logout" id="btnLogout">Salir</button>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- Header -->
+    <p class="page-eyebrow">Módulo Electoral</p>
+    <h1 class="page-title">Digitación de Actas</h1>
+    <p class="page-sub">Elecciones Regionales y Municipales 2026 · ODPE Pasco</p>
+
+    <!-- Steps -->
+    <div class="steps">
+        <div class="step active" id="step1">
+            <span class="step-num">1</span>Identificar Mesa
+        </div>
+        <div class="step" id="step2">
+            <span class="step-num">2</span>Ingresar Votos
+        </div>
+        <div class="step" id="step3">
+            <span class="step-num">3</span>Verificar &amp; Guardar
+        </div>
+    </div>
+
+    <form id="actaForm" novalidate>
+
+        <!-- ══ PASO 1: IDENTIFICACIÓN ══ -->
+        <div class="section-card">
+            <p class="section-label">Paso 1</p>
+            <h2 class="section-title">
+                <span class="section-title-icon">🗳</span>
+                Identificación de Mesa
+            </h2>
+            <div class="fields-grid">
+                <div class="field-group">
+                    <label class="field-label" for="id_mesa">Número de Mesa</label>
+                    <div style="position:relative;">
+                        <input type="text" class="field-input" id="id_mesa" name="id_mesa"
+                               placeholder="Ej: 068426" required maxlength="10"
+                               autocomplete="off" inputmode="numeric"
+                               style="padding-right:2.5rem;">
+                        <span id="mesaSpinner" style="position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);display:none;">
+                            <span class="spinner" style="width:14px;height:14px;border-width:1.5px;"></span>
+                        </span>
+                    </div>
+                    <div class="mesa-feedback" id="mesaFeedback"></div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="electores_habiles">
+                        Electores Hábiles (Padrón)
+                        <span style="font-size:0.6rem;font-weight:600;color:#0071e3;background:rgba(0,113,227,0.12);border:0.5px solid rgba(0,113,227,0.3);padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.4rem;vertical-align:middle;letter-spacing:0.04em;text-transform:none;">&#x21BA; Auto</span>
+                    </label>
+                    <div style="position:relative;">
+                        <input type="number" class="field-input" id="electores_habiles"
+                               placeholder="Se completa al validar la mesa"
+                               required min="1" inputmode="numeric" readonly
+                               style="padding-left:2.4rem;color:var(--ok);font-weight:700;cursor:not-allowed;opacity:0.85;">
+                        <span style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;">&#x1F4CB;</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Chip de mesa encontrada -->
+            <div class="mesa-chip" id="mesaChip">
+                <span>✓</span>
+                <span id="mesaChipText">Mesa verificada</span>
+            </div>
+        </div>
+
+        
+        <!-- ══ PASO 2: ESCRUTINIO ══ -->
+        <div class="section-card" id="escrutinioSection" style="display:none;">
+            <p class="section-label">Paso 2</p>
+            <h2 class="section-title">
+                <span class="section-title-icon">📝</span>
+                Ingreso de Escrutinio por Elección
+            </h2>
+            
+            <div class="tabs-container" id="tabsContainer">
+                <button type="button" class="tab-btn active" data-tab="1">1. Regional</button>
+                <button type="button" class="tab-btn" data-tab="2">2. Consejero</button>
+                <button type="button" class="tab-btn" data-tab="3">3. Provincial</button>
+                <button type="button" class="tab-btn" data-tab="4">4. Distrital</button>
+            </div>
+
+            <div class="tab-content active" id="tab-content-1">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_1">
+                        Ciudadanos que Votaron (Elección 1)
+                        <button type="button" class="btnAutoVotaron" data-target="1" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_1" data-tab="1"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_1" data-tab="1">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_1">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-2">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_2">
+                        Ciudadanos que Votaron (Elección 2)
+                        <button type="button" class="btnAutoVotaron" data-target="2" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_2" data-tab="2"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_2" data-tab="2">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_2">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-3">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_3">
+                        Ciudadanos que Votaron (Elección 3)
+                        <button type="button" class="btnAutoVotaron" data-target="3" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_3" data-tab="3"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_3" data-tab="3">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_3">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-4">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_4">
+                        Ciudadanos que Votaron (Elección 4)
+                        <button type="button" class="btnAutoVotaron" data-target="4" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_4" data-tab="4"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_4" data-tab="4">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_4">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ══ PASO 3: VALIDACIÓN ══ -->
+        <div class="section-card" id="validacionSection" style="display:none;">
+            <p class="section-label">Paso 3</p>
+            <h2 class="section-title">
+                <span class="section-title-icon">✓</span>
+                Verificación Consolidada
+            </h2>
+
+            <div id="validationsContainer">
+                <!-- Generado por JS: 4 cajas de validación -->
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17,21 17,13 7,13 7,21"/>
+                    <polyline points="7,3 7,8 15,8"/>
+                </svg>
+                Guardar Actas (4)
+            </button>
+        </div>
+
+    </form>
+
+    <!-- PANEL DE ADMINISTRACIÓN (SOLO ADMIN) -->
+    <div id="adminPanel" style="display: none; margin-top: 2rem; background: rgba(255,59,48,0.05); border: 1px solid rgba(255,59,48,0.2); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 800; color: #ff453a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                    <span>⚠️</span> Zona de Peligro: Reiniciar Proceso Electoral
+                </h3>
+                <p style="font-size: 0.85rem; color: #86868b;">Esta acción eliminará todas las actas digitadas y vaciará los votos. Se usa para iniciar un nuevo escrutinio desde cero.</p>
+            </div>
+            <button id="btnLimpiarProceso" style="background: rgba(255,69,58,0.15); color: #ff453a; border: 1px solid rgba(255,69,58,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                Limpiar Proceso Electoral
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <span id="toastMsg">Guardado</span>
+</div>
+
+<script src="js/auth.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
+</body>
+</html>
