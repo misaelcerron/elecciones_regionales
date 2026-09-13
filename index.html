@@ -571,8 +571,9 @@
     <div class="navbar-links">
         <a href="dashboard.html">Dashboard</a>
         <a href="reportes.html">Reportes</a>
-        <a href="mesas.html">Mesas</a>
+        <a href="mesas.html">Gestión Mesas</a>
         <a href="organizaciones.html">Organizaciones</a>
+        <a href="personeros.html">Personeros</a>
         <a href="index.html" class="active">Digitación</a>
         <a href="usuarios.html">Usuarios</a>
     </div>
@@ -637,6 +638,23 @@
                                required min="1" inputmode="numeric" readonly
                                style="padding-left:2.4rem;color:var(--ok);font-weight:700;cursor:not-allowed;opacity:0.85;">
                         <span style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;">&#x1F4CB;</span>
+                    </div>
+                </div>
+
+                <!-- Info del Personero (Se muestra dinámicamente) -->
+                <div class="field-group" id="personeroBox" style="display: none; grid-column: 1 / -1; background: rgba(50,215,75,0.08); border: 1px solid rgba(50,215,75,0.2); border-radius: var(--radius-md); padding: 1rem; margin-top: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="font-size: 2rem;">👤</div>
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--success); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                                Personero <span id="personeroTipoLabel">Titular</span> Asignado
+                            </div>
+                            <div id="personeroNombreLabel" style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); line-height: 1.2;"></div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                                DNI: <span id="personeroDniLabel" style="color: var(--text-primary); font-weight: 600;"></span> &nbsp;&middot;&nbsp; 
+                                Cel: <span id="personeroCelLabel" style="color: var(--text-primary); font-weight: 600;"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -896,6 +914,12 @@
             </button>
         </div>
     </div>
+    <!-- FOOTER -->
+    <div style="margin-top: 4rem; text-align: center; border-top: 0.5px solid rgba(255,255,255,0.09); padding-top: 2rem;">
+        <p style="font-size: 0.75rem; color: #86868b; letter-spacing: 0.02em;">
+            Diseñado por <strong>GRUPO YRLAND S.A.C</strong> &nbsp;|&nbsp; RUC: 20612537811 &nbsp;|&nbsp; YANAHUANCA &nbsp;|&nbsp; CEL: 943939128
+        </p>
+    </div>
 </div>
 
 <!-- Toast -->
@@ -904,6 +928,6 @@
 </div>
 
 <script src="js/auth.js?v=11"></script>
-<script src="js/app.js?v=11"></script>
+<script src="js/app.js?v=12"></script>
 </body>
 </html>

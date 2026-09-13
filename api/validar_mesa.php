@@ -23,10 +23,15 @@ try {
             IFNULL(u.departamento, 'PASCO')  AS departamento,
             IFNULL(u.provincia,   '')         AS provincia,
             IFNULL(u.distrito,    '')         AS distrito,
-            IFNULL(l.nombre_local,'')         AS local_votacion
+            IFNULL(l.nombre_local,'')         AS local_votacion,
+            p.nombres_apellidos               AS personero_nombre,
+            p.dni                             AS personero_dni,
+            p.celular                         AS personero_celular,
+            p.tipo                            AS personero_tipo
         FROM mesa_sufragio m
         LEFT JOIN local_votacion l ON m.id_local = l.id_local
         LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo
+        LEFT JOIN personero p ON m.id_mesa = p.id_mesa
         WHERE m.id_mesa = ?
         LIMIT 1
     ");

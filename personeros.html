@@ -6,8 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Organizaciones Políticas | Sistema Electoral Podemos Perú</title>
-    <meta name="description" content="Gestión de organizaciones políticas del sistema electoral ODPE PASCO. Registra, edita y administra partidos y agrupaciones políticas.">
+    <title>Gestión de Personeros | Sistema Electoral Podemos Perú</title>
+    <meta name="description" content="Gestión de personeros del sistema electoral ODPE PASCO.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=5">
@@ -266,23 +266,7 @@
         .field-input::placeholder { color: var(--text-tertiary); }
         .field-input:focus { border-color: var(--accent); background: rgba(0,113,227,0.06); box-shadow: 0 0 0 3px var(--accent-glow); }
 
-        /* Logo upload */
-        .logo-upload-zone {
-            border: 1.5px dashed rgba(255,255,255,0.12); border-radius: var(--radius-lg);
-            padding: 2rem 1.5rem; text-align: center; cursor: pointer;
-            transition: var(--transition); position: relative; overflow: hidden;
-        }
-        .logo-upload-zone:hover { border-color: rgba(0,113,227,0.5); background: var(--accent-light); }
-        .logo-upload-zone.drag-over { border-color: var(--accent); background: rgba(0,113,227,0.1); transform: scale(1.01); }
-        .logo-preview-container { display: none; align-items: center; gap: 1.25rem; }
-        .logo-preview-container.visible { display: flex; }
-        .logo-preview-img { width: 72px; height: 72px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,0.05); border: 0.5px solid var(--border); padding: 4px; }
-        .logo-preview-info { text-align: left; }
-        .logo-preview-name { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
-        .logo-preview-size { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; }
-        .btn-remove-logo { background: var(--danger-light); border: 0.5px solid rgba(255,69,58,0.3); color: var(--danger); padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: var(--transition); margin-top: 0.5rem; display: inline-block; }
-        .btn-remove-logo:hover { background: var(--danger); color: white; }
-        .logo-upload-hint { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+
         .logo-upload-icon { font-size: 2rem; opacity: 0.4; }
         .logo-upload-text { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
         .logo-upload-sub { font-size: 0.75rem; color: var(--text-tertiary); }
@@ -353,7 +337,7 @@
         <a href="dashboard.html">Dashboard</a>
         <a href="reportes.html">Reportes</a>
         <a href="mesas.html">Mesas</a>
-        <a href="organizaciones.html" class="active">Organizaciones</a>
+        <a href="personeros.html" class="active">Personeros</a>
         <a href="index.html">Digitación</a>
         <a href="usuarios.html">Usuarios</a>
     </div>
@@ -365,104 +349,92 @@
 
 <div class="page-wrapper">
     <header class="page-header">
-        <p class="page-eyebrow">Módulo Electoral</p>
-        <h1 class="page-title">Organizaciones Políticas</h1>
-        <p class="page-subtitle">Gestiona partidos y agrupaciones políticas con sus logos e información oficial.</p>
+        <p class="page-eyebrow">Gestión Electoral</p>
+        <h1 class="page-title">Directorio de Personeros</h1>
+        <p class="page-subtitle">Administra los personeros titulares y suplentes asignados a cada mesa de sufragio.</p>
     </header>
 
     <div class="toolbar">
         <div class="search-wrapper">
-            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Buscar organización…">
+            <span style="font-size:1.1rem; padding-left:0.5rem; display:flex; align-items:center;">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar por DNI, Nombres o N° Mesa..." autocomplete="off">
         </div>
         <div class="toolbar-right">
-            <span class="org-count" id="orgCount">— organizaciones</span>
-            <button class="btn-primary" id="btnNuevaOrg" onclick="abrirModalNueva()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M12 5v14M5 12h14"/>
-                </svg>
-                Nueva organización
+            <button class="btn-primary" id="btnNewPersonero">
+                <span>➕</span> Nuevo Personero
             </button>
         </div>
     </div>
 
-    <div class="orgs-grid" id="orgsGrid"></div>
+    <div style="margin-top: 2rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.02); border-bottom: 0.5px solid var(--border);">
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">N° Mesa</th>
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Apellidos y Nombres</th>
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">DNI</th>
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Celular</th>
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Tipo</th>
+                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; width: 150px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="personerosTableBody">
+                    <tr><td colspan="6" style="text-align: center; color: #86868b; padding: 2rem;">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- Modal Crear/Editar -->
-<div class="modal-overlay" id="modalOrg">
+<!-- Modal Crear/Editar Personero -->
+<div class="modal-overlay" id="personeroModal">
     <div class="modal-sheet">
         <div class="modal-handle"></div>
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">Nueva organización</h2>
-            <button class="modal-close" onclick="cerrarModal()">✕</button>
+            <h2 class="modal-title" id="modalTitle">Nuevo Personero</h2>
+            <button class="modal-close" id="btnCancel">✕</button>
         </div>
         <div class="modal-body">
-            <input type="hidden" id="fieldId">
-            <div class="field-group">
-                <label class="field-label" for="fieldNombre">Nombre de la organización</label>
-                <input type="text" class="field-input" id="fieldNombre"
-                       placeholder="Ej: Partido Democrático Somos Perú" maxlength="150">
-            </div>
-            <div class="field-group">
-                <label class="field-label" for="fieldSiglas">Siglas / abreviatura (opcional)</label>
-                <input type="text" class="field-input" id="fieldSiglas"
-                       placeholder="Ej: PDSP" maxlength="20">
-            </div>
-            <div class="current-logo-row" id="currentLogoRow">
-                <img src="" id="currentLogoThumb" class="current-logo-thumb" alt="Logo actual">
-                <span class="current-logo-text">✓ Logo actual guardado</span>
-            </div>
-            <div class="field-group">
-                <label class="field-label">Logo de la agrupación</label>
-                <div class="logo-upload-zone" id="logoDropZone">
-                    <input type="file" class="logo-file-input" id="logoFileInput"
-                           accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml">
-                    <div class="logo-preview-container" id="logoPreviewContainer">
-                        <img src="" id="logoPreviewImg" class="logo-preview-img" alt="Preview">
-                        <div class="logo-preview-info">
-                            <div class="logo-preview-name" id="logoPreviewName">archivo.png</div>
-                            <div class="logo-preview-size" id="logoPreviewSize">0 KB</div>
-                            <button type="button" class="btn-remove-logo" id="btnRemoveLogo">Quitar</button>
-                        </div>
+            <form id="personeroForm">
+                <input type="hidden" id="personeroId">
+
+                <div class="field-group">
+                    <label class="field-label">Apellidos y Nombres *</label>
+                    <input type="text" class="field-input" id="nombres" required placeholder="Ej. PÉREZ GARCÍA, JUAN">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="field-group">
+                        <label class="field-label">DNI *</label>
+                        <input type="text" class="field-input" id="dni" required maxlength="8" placeholder="8 dígitos">
                     </div>
-                    <div class="logo-upload-hint" id="logoUploadHint">
-                        <span class="logo-upload-icon">🖼</span>
-                        <span class="logo-upload-text">Arrastrar aquí o hacer clic para subir</span>
-                        <span class="logo-upload-sub">PNG, JPG, SVG o WEBP · Máx 2 MB</span>
+                    <div class="field-group">
+                        <label class="field-label">Celular</label>
+                        <input type="text" class="field-input" id="celular" placeholder="Opcional">
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
-            <button class="btn-save" id="btnGuardar" onclick="guardarOrganizacion()">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                    <polyline points="17,21 17,13 7,13 7,21"/>
-                    <polyline points="7,3 7,8 15,8"/>
-                </svg>
-                Guardar
-            </button>
-        </div>
-    </div>
-</div>
 
-<!-- Modal Eliminar -->
-<div class="modal-overlay modal-delete" id="modalDelete">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-body" style="padding-top:0.5rem;">
-            <span class="delete-icon">🗑</span>
-            <p class="delete-title">Eliminar organización</p>
-            <p class="delete-desc" id="deleteDesc">¿Estás seguro? Esta acción <strong>no se puede deshacer</strong>.</p>
-            <input type="hidden" id="deleteId">
-        </div>
-        <div class="modal-footer" style="justify-content:center;">
-            <button class="btn-cancel" onclick="cerrarDeleteModal()">Cancelar</button>
-            <button class="btn-delete-confirm" id="btnConfirmDelete" onclick="confirmarEliminar()">Eliminar</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="field-group">
+                        <label class="field-label">N° de Mesa *</label>
+                        <input type="text" class="field-input" id="mesa" required maxlength="6" placeholder="Ej. 068426">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Tipo de Personero *</label>
+                        <select class="field-input" id="tipo" required>
+                            <option value="TITULAR">Titular</option>
+                            <option value="SUPLENTE">Suplente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1; padding: 0.85rem; font-size: 0.95rem; justify-content: center;">
+                        <span id="btnSubmitText">Guardar Personero</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -473,13 +445,13 @@
 </div>
 
 
-    <!-- FOOTER -->
-    <div style="margin-top: 4rem; text-align: center; border-top: 0.5px solid rgba(255,255,255,0.09); padding-top: 2rem; margin-bottom: 2rem;">
-        <p style="font-size: 0.75rem; color: #86868b; letter-spacing: 0.02em;">
-            Diseñado por <strong>GRUPO YRLAND S.A.C</strong> &nbsp;|&nbsp; RUC: 20612537811 &nbsp;|&nbsp; YANAHUANCA &nbsp;|&nbsp; CEL: 943939128
-        </p>
-    </div>
+<!-- FOOTER -->
+<div style="margin-top: 4rem; text-align: center; border-top: 0.5px solid rgba(255,255,255,0.09); padding-top: 2rem; margin-bottom: 2rem;">
+    <p style="font-size: 0.75rem; color: #86868b; letter-spacing: 0.02em;">
+        Diseñado por <strong>GRUPO YRLAND S.A.C</strong> &nbsp;|&nbsp; RUC: 20612537811 &nbsp;|&nbsp; YANAHUANCA &nbsp;|&nbsp; CEL: 943939128
+    </p>
+</div>
 <script src="js/auth.js?v=5"></script>
-<script src="js/organizaciones.js?v=5"></script>
+<script src="js/personeros.js?v=1"></script>
 </body>
 </html>

@@ -223,13 +223,28 @@ async function validarMesa(nro) {
             setMesaFeedback('ok', `✓ Mesa ${m.id_mesa} — ${Number(m.electores_habiles).toLocaleString()} electores`);
             escrutinioSection.style.display = 'block';
             validacionSection.style.display = 'block';
+
+            // Personero UI
+            const pBox = document.getElementById('personeroBox');
+            if (m.personero_nombre) {
+                document.getElementById('personeroTipoLabel').textContent = m.personero_tipo || 'Titular';
+                document.getElementById('personeroNombreLabel').textContent = m.personero_nombre;
+                document.getElementById('personeroDniLabel').textContent = m.personero_dni;
+                document.getElementById('personeroCelLabel').textContent = m.personero_celular || 'No registrado';
+                pBox.style.display = 'block';
+            } else {
+                pBox.style.display = 'none';
+            }
+
             validateMath();
         } else {
             mesaValida = false;
+            document.getElementById('personeroBox').style.display = 'none';
             setMesaFeedback('err', `⚠️ ${json.message || 'Mesa no existe'}`);
         }
     } catch (e) {
         mesaValida = false;
+        document.getElementById('personeroBox').style.display = 'none';
         setMesaFeedback('err', '⚠️ Error de conexión');
     }
 }
@@ -243,6 +258,8 @@ function resetMesaState() {
     const fb = document.getElementById('mesaFeedback');
     fb.className = 'mesa-feedback';
     fb.textContent = '';
+    const pBox = document.getElementById('personeroBox');
+    if(pBox) pBox.style.display = 'none';
 }
 
 /* ════════════════════════════════════════════════════════════
