@@ -19,10 +19,10 @@ try {
 
     // 2. Gráfico: Votos por Partido
     $sqlPartidos = "
-        SELECT op.nombre, op.id_partido, SUM(vr.cantidad_votos) as total_votos
+        SELECT op.nombre, op.siglas, op.simbolo_url, op.id_partido, IFNULL(SUM(vr.cantidad_votos), 0) as total_votos
         FROM organizacion_politica op
         LEFT JOIN voto_resultado vr ON op.id_partido = vr.id_partido
-        GROUP BY op.id_partido, op.nombre
+        GROUP BY op.id_partido, op.nombre, op.siglas, op.simbolo_url
         ORDER BY total_votos DESC
     ";
     $stmtPartidos = $pdo->query($sqlPartidos);

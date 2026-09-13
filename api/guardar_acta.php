@@ -8,6 +8,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (($_SESSION['rol'] ?? '') === 'INVITADO') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Acceso denegado: El rol INVITADO solo tiene permisos de lectura de estadísticas.']);
+    exit;
+}
+
 // Leer el JSON recibido
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);

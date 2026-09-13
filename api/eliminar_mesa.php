@@ -9,6 +9,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (($_SESSION['rol'] ?? '') !== 'ADMIN') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Acceso denegado: se requieren permisos de Administrador.']);
+    exit;
+}
+
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 $id_mesa = trim($data['id_mesa'] ?? '');

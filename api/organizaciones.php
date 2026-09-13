@@ -43,12 +43,21 @@ if ($method === 'GET') {
 switch ($action) {
     case 'list':   listarOrganizaciones();   break;
     case 'get':    obtenerOrganizacion();    break;
-    case 'create': crearOrganizacion();      break;
-    case 'update': actualizarOrganizacion(); break;
-    case 'delete': eliminarOrganizacion();   break;
+    case 'create': verificarAdmin(); crearOrganizacion();      break;
+    case 'update': verificarAdmin(); actualizarOrganizacion(); break;
+    case 'delete': verificarAdmin(); eliminarOrganizacion();   break;
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Acción no reconocida: ' . $action]);
+}
+
+function verificarAdmin() {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (!isset($_SESSION['user_id']) || ($_SESSION['rol'] ?? '') !== 'ADMIN') {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Acceso denegado: se requieren permisos de Administrador.']);
+        exit;
+    }
 }
 
 /* ══════════════════════════════════════════════════════════

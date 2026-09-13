@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Gestión de Usuarios | Sistema Electoral Podemos Perú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <style>
+        /* ─── RESET & BASE ─── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #f5f5f7;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 500px;
+            background: radial-gradient(ellipse 70% 45% at 50% -5%, rgba(0, 113, 227, 0.16) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── NAVBAR APPLE DARK ─── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 1.5rem; height: 56px;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
+
+        .navbar-brand {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(27, 75, 138, 0.55), rgba(10, 40, 90, 0.7));
+            border: 1px solid rgba(59, 130, 246, 0.55);
+            border-radius: 22px;
+            padding: 0.25rem 0.75rem 0.25rem 0.3rem;
+            box-shadow: 0 0 18px rgba(27, 75, 138, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+            text-decoration: none; flex-shrink: 0;
+        }
+        .navbar-brand img {
+            width: 28px; height: 28px; border-radius: 7px;
+            object-fit: cover; background: white; padding: 1px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5); flex-shrink: 0;
+        }
+        .navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+        .navbar-brand-main {
+            font-size: 0.75rem; font-weight: 900; letter-spacing: 0.06em;
+            text-transform: uppercase; color: #fff;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+        }
+        .navbar-brand-sub {
+            font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: #93c5fd; opacity: 0.9;
+        }
+
+        .navbar-links {
+            display: flex; align-items: center; gap: 0.25rem;
+            position: absolute; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            border-radius: 26px; padding: 0.2rem 0.25rem;
+        }
+        .navbar-links a {
+            color: rgba(255, 255, 255, 0.55); text-decoration: none;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em;
+            padding: 0.36rem 0.85rem; border-radius: 20px;
+            border: 0.5px solid transparent;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+        }
+        .navbar-links a:hover {
+            color: white; background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.35);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+        .navbar-links a.active {
+            color: white;
+            background: linear-gradient(135deg, rgba(27, 75, 138, 0.65), rgba(10, 40, 90, 0.8));
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 14px rgba(27, 75, 138, 0.5), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+        }
+
+        .navbar-user { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+        .nav-username {
+            font-size: 0.78rem; color: #86868b;
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            padding: 0.28rem 0.7rem; border-radius: 20px; white-space: nowrap;
+        }
+        .btn-logout {
+            background: transparent; border: 0.5px solid rgba(255, 69, 58, 0.4);
+            color: #ff453a; padding: 0.32rem 0.8rem; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600; cursor: pointer;
+            transition: all 0.22s ease;
+        }
+        .btn-logout:hover {
+            background: #ff453a; color: white; border-color: #ff453a;
+            box-shadow: 0 0 12px rgba(255, 69, 58, 0.4);
+        }
+
+        /* ─── PAGE CONTAINER ─── */
+        .page {
+            position: relative; z-index: 1;
+            max-width: 1200px; margin: 0 auto;
+            padding: 76px 1.5rem 4rem;
+        }
+
+        /* Header block */
+        .header-row {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .page-eyebrow {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: #0071e3; margin-bottom: 0.4rem;
+        }
+        .page-title {
+            font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em;
+            color: #fff; margin-bottom: 0.35rem;
+        }
+        .page-sub { font-size: 0.92rem; color: #86868b; max-width: 600px; line-height: 1.5; }
+
+        /* Botón crear */
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: linear-gradient(135deg, #0071e3, #1B4B8A);
+            color: #ffffff; border: 1px solid rgba(96, 165, 250, 0.4);
+            padding: 0.65rem 1.4rem; border-radius: 24px;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer;
+            text-decoration: none; font-family: inherit;
+            box-shadow: 0 4px 18px rgba(0, 113, 227, 0.35);
+            transition: all 0.22s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(0, 113, 227, 0.55);
+            border-color: rgba(96, 165, 250, 0.8);
+        }
+
+        /* ─── KPI STATS GRID ─── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1rem; margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            border-radius: 18px; padding: 1.25rem 1.4rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.25s ease;
+            position: relative; overflow: hidden;
+        }
+        .stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--stat-accent, #0071e3); opacity: 0.7;
+        }
+        .stat-card-title {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: #86868b; margin-bottom: 0.4rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .stat-card-value {
+            font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em;
+            color: #fff; margin-bottom: 0.25rem;
+        }
+        .stat-card-sub { font-size: 0.78rem; color: #64748b; }
+
+        /* ─── CONTROLS (SEARCH & FILTER TABS) ─── */
+        .controls-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+        }
+        .search-box {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 0.45rem 1rem;
+            width: 100%; max-width: 360px;
+            transition: all 0.2s ease;
+        }
+        .search-box:focus-within {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .search-box input {
+            background: transparent; border: none; outline: none;
+            color: #fff; font-size: 0.85rem; font-family: inherit; width: 100%;
+        }
+        .search-box input::placeholder { color: #64748b; }
+
+        .filter-tabs { display: flex; gap: 0.35rem; }
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.035);
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            color: #86868b; padding: 0.4rem 0.95rem; border-radius: 18px;
+            font-size: 0.78rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; font-family: inherit;
+        }
+        .filter-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.07); }
+        .filter-btn.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(27, 75, 138, 0.6), rgba(10, 40, 90, 0.8));
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 12px rgba(27, 75, 138, 0.4);
+        }
+
+        /* ─── TABLE APPLE DARK ─── */
+        .table-wrap {
+            background: rgba(255, 255, 255, 0.03);
+            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: rgba(255, 255, 255, 0.04);
+            color: #86868b; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 0.9rem 1.2rem; text-align: left;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.88rem; color: #f5f5f7; vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255, 255, 255, 0.025); }
+
+        /* User badge info */
+        .user-cell { display: flex; align-items: center; gap: 0.8rem; }
+        .user-avatar {
+            width: 36px; height: 36px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(27, 75, 138, 0.5));
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .user-name { font-weight: 700; color: #fff; }
+        .user-id-tag { font-size: 0.72rem; color: #64748b; }
+
+        /* Role badges */
+        .role-pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.28rem 0.75rem; border-radius: 99px;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .role-pill.admin {
+            background: rgba(139, 92, 246, 0.16); color: #c084fc;
+            border: 0.5px solid rgba(139, 92, 246, 0.4);
+        }
+        .role-pill.digitador {
+            background: rgba(50, 215, 75, 0.16); color: #32d74b;
+            border: 0.5px solid rgba(50, 215, 75, 0.4);
+        }
+        .role-pill.invitado {
+            background: rgba(255, 214, 10, 0.16); color: #ffd60a;
+            border: 0.5px solid rgba(255, 214, 10, 0.4);
+        }
+
+        /* Permissions column */
+        .perm-tag {
+            font-size: 0.78rem; color: #94a3b8;
+            display: flex; align-items: center; gap: 0.35rem;
+        }
+
+        /* Action buttons */
+        .actions-cell { display: flex; align-items: center; gap: 0.4rem; }
+        .btn-action {
+            background: rgba(255, 255, 255, 0.05);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            color: #f5f5f7; padding: 0.35rem 0.75rem; border-radius: 14px;
+            font-size: 0.78rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; font-family: inherit;
+            display: inline-flex; align-items: center; gap: 0.3rem;
+        }
+        .btn-action:hover {
+            background: rgba(59, 130, 246, 0.18);
+            border-color: rgba(59, 130, 246, 0.45); color: #fff;
+        }
+        .btn-action.delete:hover {
+            background: rgba(255, 69, 58, 0.2);
+            border-color: rgba(255, 69, 58, 0.5); color: #ff453a;
+        }
+        .btn-action:disabled {
+            opacity: 0.3; cursor: not-allowed; pointer-events: none;
+        }
+
+        /* ─── MODAL APPLE GLASS ─── */
+        .modal-backdrop {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            padding: 1.5rem; opacity: 0; transition: opacity 0.25s ease;
+        }
+        .modal-backdrop.show { display: flex; opacity: 1; }
+        .modal-card {
+            background: rgba(18, 20, 26, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px; padding: 2rem;
+            width: 100%; max-width: 480px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 113, 227, 0.2);
+            transform: scale(0.96); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-backdrop.show .modal-card { transform: scale(1); }
+
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        .modal-title { font-size: 1.3rem; font-weight: 800; color: #fff; }
+        .modal-close {
+            background: rgba(255, 255, 255, 0.08); border: none; color: #86868b;
+            width: 30px; height: 30px; border-radius: 50%; font-size: 1.1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .modal-close:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
+
+        /* Form fields */
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label {
+            display: block; font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: #86868b; margin-bottom: 0.45rem;
+        }
+        .form-input, .form-select {
+            width: 100%; padding: 0.7rem 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px; color: #fff; font-size: 0.9rem;
+            font-family: inherit; outline: none; transition: all 0.2s ease;
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 12px rgba(0, 113, 227, 0.3);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .form-select option { background: #12141a; color: #fff; }
+        .form-hint { font-size: 0.75rem; color: #64748b; margin-top: 0.35rem; }
+
+        /* Role selector visual cards */
+        .role-cards {
+            display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-top: 0.4rem;
+        }
+        .role-option {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.75rem 1rem; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .role-option:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .role-option.selected {
+            border-color: #0071e3;
+            background: rgba(0, 113, 227, 0.12);
+            box-shadow: 0 0 14px rgba(0, 113, 227, 0.25);
+        }
+        .role-option input[type="radio"] { margin-top: 0.25rem; accent-color: #0071e3; }
+        .role-option-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.15rem; }
+        .role-option-desc { font-size: 0.75rem; color: #86868b; line-height: 1.35; }
+
+        .modal-footer {
+            display: flex; align-items: center; justify-content: flex-end;
+            gap: 0.75rem; margin-top: 1.75rem;
+        }
+        .btn-cancel {
+            background: transparent; border: 0.5px solid rgba(255, 255, 255, 0.15);
+            color: #86868b; padding: 0.6rem 1.2rem; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; font-family: inherit;
+        }
+        .btn-cancel:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: rgba(20, 24, 33, 0.95);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            color: #fff; padding: 0.85rem 1.4rem; border-radius: 16px;
+            font-size: 0.85rem; font-weight: 600;
+            display: flex; align-items: center; gap: 0.6rem;
+            z-index: 3000; transform: translateY(100px); opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-color: rgba(50, 215, 75, 0.5); }
+        .toast.error { border-color: rgba(255, 69, 58, 0.5); }
+
+        @media(max-width: 900px) {
+            .navbar-links { display: none; }
+            .header-row { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR APPLE DARK UNIFICADO -->
+    <nav class="navbar">
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú">
+            <div class="navbar-brand-text">
+                <span class="navbar-brand-main">Sistema Electoral</span>
+                <span class="navbar-brand-sub">Podemos Perú · ODPE Pasco</span>
+            </div>
+        </a>
+        <div class="navbar-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="reportes.html">Reportes</a>
+            <a href="mesas.html">Gestión Mesas</a>
+            <a href="organizaciones.html">Organizaciones</a>
+            <a href="index.html">Digitación</a>
+            <a href="usuarios.html" class="active">Usuarios</a>
+        </div>
+        <div class="navbar-user">
+            <span class="nav-username" id="navUsername">Usuario</span>
+            <button class="btn-logout" id="btnLogout">Salir</button>
+        </div>
+    </nav>
+
+    <!-- PÁGINA PRINCIPAL -->
+    <div class="page">
+        <div class="header-row">
+            <div>
+                <p class="page-eyebrow">Administración · Sistema Electoral</p>
+                <h1 class="page-title">Gestión de Usuarios</h1>
+                <p class="page-sub">Crea y administra cuentas con roles específicos: <strong>Digitadores</strong> (solo ingreso de votos), <strong>Invitados</strong> (solo estadísticas en barras) y <strong>Administradores</strong>.</p>
+            </div>
+            <button class="btn-primary" id="btnNuevoUsuario">
+                <span>➕</span> Nuevo Usuario
+            </button>
+        </div>
+
+        <!-- TARJETAS DE RESUMEN POR ROL -->
+        <div class="stats-grid">
+            <div class="stat-card" style="--stat-accent: #0071e3;">
+                <div class="stat-card-title">
+                    <span>Total Usuarios</span>
+                    <span>👥</span>
+                </div>
+                <div class="stat-card-value" id="kpiTotal">0</div>
+                <div class="stat-card-sub">Cuentas habilitadas en el sistema</div>
+            </div>
+            <div class="stat-card" style="--stat-accent: #32d74b;">
+                <div class="stat-card-title">
+                    <span>Digitadores</span>
+                    <span>✍️</span>
+                </div>
+                <div class="stat-card-value" style="color: #32d74b;" id="kpiDigitadores">0</div>
+                <div class="stat-card-sub">Acceso exclusivo a ingreso de votos</div>
+            </div>
+            <div class="stat-card" style="--stat-accent: #ffd60a;">
+                <div class="stat-card-title">
+                    <span>Invitados / Veedores</span>
+                    <span>📊</span>
+                </div>
+                <div class="stat-card-value" style="color: #ffd60a;" id="kpiInvitados">0</div>
+                <div class="stat-card-sub">Acceso exclusivo a resultados en barras</div>
+            </div>
+            <div class="stat-card" style="--stat-accent: #c084fc;">
+                <div class="stat-card-title">
+                    <span>Administradores</span>
+                    <span>🛡️</span>
+                </div>
+                <div class="stat-card-value" style="color: #c084fc;" id="kpiAdmins">0</div>
+                <div class="stat-card-sub">Control total del sistema electoral</div>
+            </div>
+        </div>
+
+        <!-- CONTROLES: BÚSQUEDA Y FILTRO -->
+        <div class="controls-bar">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por usuario o rol...">
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="TODOS">Todos</button>
+                <button class="filter-btn" data-filter="DIGITADOR">✍️ Digitadores</button>
+                <button class="filter-btn" data-filter="INVITADO">📊 Invitados</button>
+                <button class="filter-btn" data-filter="ADMIN">🛡️ Admins</button>
+            </div>
+        </div>
+
+        <!-- TABLA DE USUARIOS -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Rol de Acceso</th>
+                        <th>Permisos Asignados</th>
+                        <th>Fecha de Alta</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usuariosTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #64748b; padding: 2.5rem;">Cargando usuarios...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL CREAR / EDITAR USUARIO -->
+    <div class="modal-backdrop" id="userModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Usuario</h3>
+                <button class="modal-close" id="btnModalClose">&times;</button>
+            </div>
+            <form id="userForm">
+                <input type="hidden" id="userId" value="">
+
+                <div class="form-group">
+                    <label class="form-label" for="formUsername">Nombre de Usuario</label>
+                    <input type="text" id="formUsername" class="form-input" required placeholder="Ej: digitador_pasco" autocomplete="off">
+                    <div class="form-hint">Usado para iniciar sesión en el sistema.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="formPassword">Contraseña</label>
+                    <input type="password" id="formPassword" class="form-input" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+                    <div class="form-hint" id="passwordHint">Requerida al crear. Al editar, dejar en blanco para conservar la actual.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rol y Alcance de Permisos</label>
+                    <div class="role-cards">
+                        <!-- Opción DIGITADOR -->
+                        <label class="role-option selected" id="roleOptDigitador">
+                            <input type="radio" name="formRol" value="DIGITADOR" checked>
+                            <div>
+                                <div class="role-option-title">✍️ Digitador (Recomendado para operarios)</div>
+                                <div class="role-option-desc">Solo puede ingresar votos en el módulo de digitación. No tiene acceso a reportes, configuración ni mesas.</div>
+                            </div>
+                        </label>
+
+                        <!-- Opción INVITADO -->
+                        <label class="role-option" id="roleOptInvitado">
+                            <input type="radio" name="formRol" value="INVITADO">
+                            <div>
+                                <div class="role-option-title">📊 Invitado (Veedor / Observador)</div>
+                                <div class="role-option-desc">Solo puede visualizar los resultados electorales en gráficos de barras. No puede ingresar votos ni modificar datos.</div>
+                            </div>
+                        </label>
+
+                        <!-- Opción ADMIN -->
+                        <label class="role-option" id="roleOptAdmin">
+                            <input type="radio" name="formRol" value="ADMIN">
+                            <div>
+                                <div class="role-option-title">🛡️ Administrador General</div>
+                                <div class="role-option-desc">Acceso total a todos los módulos: Dashboard, Reportes, Mesas, Organizaciones, Digitación y Usuarios.</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="btnModalCancel">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btnSubmitForm">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICACIONES -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMsg">Operación completada</span>
+    </div>
+
+    <script src="js/auth.js?v=4"></script>
+    <script src="js/usuarios.js?v=4"></script>
+</body>
+</html>

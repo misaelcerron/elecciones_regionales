@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Sistema Electoral</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Estadísticas y Dashboard | Sistema Electoral Podemos Perú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=4">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* ─── RESET & TOKENS ─── */
@@ -162,6 +166,7 @@
             <a href="mesas.html">Gestión Mesas</a>
             <a href="organizaciones.html">Organizaciones</a>
             <a href="index.html">Digitación</a>
+            <a href="usuarios.html">Usuarios</a>
         </div>
         <div class="navbar-user">
             <span class="nav-username" id="navUsername">Usuario</span>
@@ -170,9 +175,9 @@
     </nav>
 
     <div class="page">
-        <p class="page-eyebrow">Módulo Electoral</p>
-        <h1 class="page-title">Dashboard en Tiempo Real</h1>
-        <p class="page-sub">Monitoreo del procesamiento de actas y conteo de votos</p>
+        <p class="page-eyebrow">Módulo Electoral · Resultados en Tiempo Real</p>
+        <h1 class="page-title">Estadísticas y Dashboard</h1>
+        <p class="page-sub">Monitoreo y análisis estadístico en barras de votos por organización política y avance de actas.</p>
 
         <div class="kpi-grid">
             <div class="kpi-card">
@@ -191,7 +196,7 @@
 
         <div class="charts-grid">
             <div class="chart-card">
-                <h3 class="chart-title">Votos por Organización Política</h3>
+                <h3 class="chart-title">Estadística de Votos por Organización Política</h3>
                 <canvas id="barChart"></canvas>
             </div>
             <div class="chart-card">
@@ -199,9 +204,22 @@
                 <canvas id="pieChart"></canvas>
             </div>
         </div>
+
+        <!-- LISTA Y RANKING EN BARRAS POR ORGANIZACIÓN POLÍTICA -->
+        <div style="margin-top: 2rem; background: rgba(255,255,255,0.035); border: 0.5px solid rgba(255,255,255,0.09); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊</span> Resumen Detallado de Votos por Organización Política
+                </h3>
+                <span style="font-size: 0.78rem; color: #86868b; font-weight: 600;" id="rankingUpdateTag">Actualizado</span>
+            </div>
+            <div id="partyRankingList" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                <p style="color: #86868b; text-align: center; padding: 1rem;">Cargando estadísticas en barras...</p>
+            </div>
+        </div>
     </div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/auth.js?v=4"></script>
+    <script src="js/dashboard.js?v=4"></script>
 </body>
 </html>
