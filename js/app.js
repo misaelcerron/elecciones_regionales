@@ -85,7 +85,7 @@ function buildPartidoCard(org, idx, tab) {
     const siglasHtml = org.siglas ? `<div class="party-siglas">${esc(org.siglas)}</div>` : '';
 
     return `
-    <div class="party-card" id="card_${t}_${org.id_partido}">
+    <div class="party-card" id="card_${tab}_${org.id_partido}">
         <div class="party-head">
             <div class="party-logo">${logoHtml}</div>
             <div class="party-meta">
