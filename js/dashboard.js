@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─────────────────────────────────────────────────────────────
     // UPDATE ELECTION HEADER
     // ─────────────────────────────────────────────────────────────
-    function updateElectionHeader(idTipo, mesasProcesadas, totalMesas = 106) {
+    function updateElectionHeader(idTipo, mesasProcesadas, totalMesas = 106, distrito = '') {
         const cfg = ELECTION_CONFIG[idTipo] || ELECTION_CONFIG[1];
 
         const elHeader    = document.getElementById('electionHeader');
@@ -91,8 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const rankSub     = document.getElementById('rankingSubtitle');
 
         if (elHeader) {
-            elHeader.style.background = `linear-gradient(135deg, ${cfg.gradFrom} 0%, ${cfg.gradTo} 100%)`;
+            elHeader.style.background = `linear-gradient(135deg, ${cfg.gradFrom} 0%, rgba(0,0,0,0.2) 100%)`;
             elHeader.style.borderColor = cfg.pillBorder;
+            elHeader.style.boxShadow = `
+                0 0 0 1px ${cfg.pillBorder},
+                0 8px 32px rgba(0,0,0,0.5),
+                0 0 40px ${cfg.gradFrom},
+                inset 0 1px 0 rgba(255,255,255,0.08)
+            `;
         }
         if (elIcon)     elIcon.textContent = cfg.icon;
         if (elPill) {
@@ -102,7 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
             elPill.style.borderColor = cfg.pillBorder;
         }
         if (elTitle)    elTitle.textContent = cfg.title;
-        if (elSub)      elSub.textContent   = cfg.sub;
+
+        // Sub: add district if selected
+        let subText = cfg.sub;
+        if (distrito && distrito !== 'TODOS' && distrito !== '') {
+            subText = `${cfg.sub} · 📍 Distrito: ${distrito}`;
+        }
+        if (elSub) {
+            elSub.innerHTML = `<span style="color: rgba(255,255,255,0.5);">${cfg.sub.split('·')[0].trim()}</span>` +
+                (distrito && distrito !== 'TODOS' && distrito !== ''
+                    ? ` <span style="display:inline-flex;align-items:center;gap:0.3rem;background:${cfg.pillBg};border:1px solid ${cfg.pillBorder};border-radius:20px;padding:0.15rem 0.65rem;font-size:0.72rem;font-weight:700;color:${cfg.pillColor};margin-left:0.5rem;">📍 ${distrito}</span>`
+                    : `<span style="color:rgba(255,255,255,0.35);"> · ODPE Pasco 2026</span>`);
+        }
         if (elMesasNum) {
             elMesasNum.textContent = Number(mesasProcesadas).toLocaleString();
             elMesasNum.style.color = cfg.color;
@@ -114,8 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
             elBar.style.background = `linear-gradient(90deg, ${cfg.color}, ${cfg.pillColor})`;
             elBar.title = `${pct}% de mesas procesadas`;
         }
-        if (barTitle)   barTitle.textContent = `Votos por Organización Política · ${cfg.title}`;
-        if (rankSub)    rankSub.textContent  = `Ranking · ${cfg.title} · ODPE Pasco 2026`;
+        const distritoLabel = (distrito && distrito !== 'TODOS' && distrito !== '') ? ` · ${distrito}` : '';
+        if (barTitle)   barTitle.textContent = `Votos · ${cfg.title}${distritoLabel}`;
+        if (rankSub)    rankSub.textContent  = `${cfg.title}${distritoLabel} · ODPE Pasco 2026`;
     }
 
     const tipoEleccionSelect  = document.getElementById('tipoEleccionSelect');
@@ -359,10 +377,13 @@ document.addEventListener('DOMContentLoaded', () => {
             updateKPI('kpiObservadas', data.kpis.observadas       || 0);
 
             // ── Election Type Header ──
+            const distritoActual = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none')
+                ? distritoFilterSelect.value : '';
             updateElectionHeader(
                 parseInt(idTipoEleccion),
                 parseInt(data.kpis.mesas_procesadas || 0),
-                parseInt(data.kpis.total_mesas || 106)
+                parseInt(data.kpis.total_mesas || 106),
+                distritoActual
             );
 
             // ── Prepare chart data ──

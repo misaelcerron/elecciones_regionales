@@ -157,42 +157,64 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding: 1.25rem 1.5rem;
-            background: rgba(255,255,255,0.03);
-            border: 0.5px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            backdrop-filter: blur(12px);
-            transition: all 0.4s ease;
+            margin-bottom: 1rem;
+            padding: 1.5rem 1.75rem;
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04),
+                0 8px 32px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .election-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
         }
         .election-type-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
             font-size: 0.68rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            padding: 0.35rem 1rem;
+            padding: 0.4rem 1.1rem;
             border-radius: 30px;
-            border: 1px solid;
+            border: 1.5px solid;
             transition: all 0.4s ease;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
         .election-type-icon {
-            font-size: 1.4rem;
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
             transition: all 0.3s ease;
         }
         .election-main-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
             color: #fff;
+            text-shadow: 0 2px 16px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
+            line-height: 1.1;
         }
         .election-sub {
             font-size: 0.8rem;
-            color: #86868b;
-            margin-top: 0.15rem;
+            color: rgba(255,255,255,0.45);
+            margin-top: 0.35rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.4rem;
         }
         .election-mesas-badge {
             display: flex;
@@ -201,31 +223,38 @@
             gap: 0.2rem;
         }
         .election-mesas-num {
-            font-size: 1.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.06em;
             line-height: 1;
             transition: all 0.3s ease;
+            text-shadow: 0 0 30px currentColor;
         }
         .election-mesas-label {
             font-size: 0.65rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #86868b;
+            color: rgba(255,255,255,0.4);
+        }
+        .election-mesas-total {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
         }
         .election-progress-wrap {
             width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.07);
+            height: 5px;
+            background: rgba(255,255,255,0.06);
             border-radius: 99px;
             overflow: hidden;
-            margin-top: 0.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
         }
         .election-progress-bar {
             height: 100%;
             border-radius: 99px;
-            transition: width 1s cubic-bezier(0.16,1,0.3,1), background 0.4s ease;
+            transition: width 1.2s cubic-bezier(0.16,1,0.3,1), background 0.4s ease;
+            box-shadow: 0 0 10px currentColor;
         }
     </style>
 </head>
@@ -359,8 +388,8 @@
             </div>
         </div>
     </div>
-<script src="js/auth.js?v=17"></script>
-    <script src="js/dashboard.js?v=17"></script>
+<script src="js/auth.js?v=18"></script>
+    <script src="js/dashboard.js?v=18"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
