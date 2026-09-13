@@ -126,6 +126,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             rankingContainer.innerHTML = `<p style="color:#ff453a;text-align:center;">Error al cargar datos estadísticos: ${e.message}</p>`;
         }
     }
+
+    // Lógica para Limpiar Proceso Electoral (Solo Admin)
+    const btnLimpiar = document.getElementById('btnLimpiarProceso');
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', async () => {
+            const confirmacion = prompt("⚠️ ZONA DE PELIGRO\n\nEsta acción eliminará de forma irreversible TODAS las actas y votos registrados hasta el momento.\n\nPara confirmar, escribe la palabra CONFIRMAR en mayúsculas:");
+            if (confirmacion !== 'CONFIRMAR') {
+                if (confirmacion !== null) alert("Operación cancelada. Palabra incorrecta.");
+                return;
+            }
+
+            if (!confirm("¿Estás absolutamente seguro de empezar un nuevo escrutinio desde cero?")) return;
+
+            btnLimpiar.disabled = true;
+            btnLimpiar.innerHTML = 'Limpiando...';
+
+            try {
+                const res = await fetch('api/limpiar_proceso.php', { method: 'POST' });
+                const json = await res.json();
+                if (json.success) {
+                    alert("✅ Proceso electoral limpiado correctamente.");
+                    window.location.reload();
+                } else {
+                    alert("❌ Error: " + (json.message || "No se pudo limpiar."));
+                }
+            } catch (e) {
+                alert("❌ Error de red.");
+            } finally {
+                btnLimpiar.disabled = false;
+                btnLimpiar.innerHTML = 'Limpiar Proceso Electoral';
+            }
+        });
+    }
 });
 
 function renderRankingBarras(partidos, totalValidos, colores) {

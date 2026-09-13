@@ -45,6 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        if (rol === 'ADMIN') {
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) adminPanel.style.display = 'block';
+        }
+
         // 3. Adaptar Navbar según el Rol
         // ─────────────────────────────────────────────────────────────
         adaptNavbarForRole(rol, currentPage, authData.username);
