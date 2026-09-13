@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarOrganizaciones();
     bindTabs();
     bindMesaLookup();
+    bindLimpiarProceso();
     document.getElementById('actaForm').addEventListener('submit', handleSubmit);
 });
 
@@ -382,4 +383,41 @@ function mostrarToast(msg, tipo = 'success') {
 }
 function esc(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ════════════════════════════════════════════════════════════
+   LIMPIEZA DE PROCESO (SOLO ADMIN)
+════════════════════════════════════════════════════════════ */
+function bindLimpiarProceso() {
+    const btnLimpiar = document.getElementById('btnLimpiarProceso');
+    if (!btnLimpiar) return;
+    
+    btnLimpiar.addEventListener('click', async () => {
+        const confirmacion = prompt("⚠️ ZONA DE PELIGRO\n\nEsta acción eliminará de forma irreversible TODAS las actas y votos registrados hasta el momento.\n\nPara confirmar, escribe la palabra CONFIRMAR en mayúsculas:");
+        if (confirmacion !== 'CONFIRMAR') {
+            if (confirmacion !== null) alert("Operación cancelada. Palabra incorrecta.");
+            return;
+        }
+
+        if (!confirm("¿Estás absolutamente seguro de empezar un nuevo escrutinio desde cero?")) return;
+
+        btnLimpiar.disabled = true;
+        btnLimpiar.innerHTML = 'Limpiando...';
+
+        try {
+            const res = await fetch('api/limpiar_proceso.php', { method: 'POST' });
+            const json = await res.json();
+            if (json.success) {
+                alert("✅ Proceso electoral limpiado correctamente.");
+                window.location.reload();
+            } else {
+                alert("❌ Error: " + (json.message || "No se pudo limpiar."));
+            }
+        } catch (e) {
+            alert("❌ Error de red.");
+        } finally {
+            btnLimpiar.disabled = false;
+            btnLimpiar.innerHTML = 'Limpiar Proceso Electoral';
+        }
+    });
 }

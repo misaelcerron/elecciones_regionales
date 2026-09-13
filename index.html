@@ -881,6 +881,21 @@
         </div>
 
     </form>
+
+    <!-- PANEL DE ADMINISTRACIÓN (SOLO ADMIN) -->
+    <div id="adminPanel" style="display: none; margin-top: 2rem; background: rgba(255,59,48,0.05); border: 1px solid rgba(255,59,48,0.2); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 800; color: #ff453a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                    <span>⚠️</span> Zona de Peligro: Reiniciar Proceso Electoral
+                </h3>
+                <p style="font-size: 0.85rem; color: #86868b;">Esta acción eliminará todas las actas digitadas y vaciará los votos. Se usa para iniciar un nuevo escrutinio desde cero.</p>
+            </div>
+            <button id="btnLimpiarProceso" style="background: rgba(255,69,58,0.15); color: #ff453a; border: 1px solid rgba(255,69,58,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                Limpiar Proceso Electoral
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Toast -->
@@ -888,7 +903,7 @@
     <span id="toastMsg">Guardado</span>
 </div>
 
-<script src="js/auth.js?v=8"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/auth.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
 </body>
 </html>
