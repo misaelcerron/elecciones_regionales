@@ -20,10 +20,13 @@ const valIcon       = document.getElementById('valIcon');
 const valText       = document.getElementById('valText');
 const sumVotosEl    = document.getElementById('sumVotos');
 const txtVotantes   = document.getElementById('txtVotantes');
+const txtPadron     = document.getElementById('txtPadron');
 const progressFill  = document.getElementById('progressFill');
 const btnSubmit     = document.getElementById('btnSubmit');
 const mesaChip      = document.getElementById('mesaChip');
 const mesaChipText  = document.getElementById('mesaChipText');
+const btnAutoVotaron    = document.getElementById('btnAutoVotaron');
+const btnAutoVotaronNum = document.getElementById('btnAutoVotaronNum');
 
 // ─── Estado ────────────────────────────────────────────
 let orgsData    = [];   // [{id_partido, nombre, siglas, simbolo_url}]
@@ -156,7 +159,28 @@ function bindFormInputs() {
         inp.addEventListener('input', validateMath);
         inp.addEventListener('focus', function() { this.select(); });
     });
+
+    if (btnAutoVotaron) {
+        btnAutoVotaron.addEventListener('click', () => {
+            let sumPartidos = 0;
+            document.querySelectorAll('.party-input').forEach(inp => {
+                sumPartidos += parseInt(inp.value) || 0;
+            });
+            const suma = sumPartidos + (parseInt(inputBlancos.value) || 0) + (parseInt(inputNulos.value) || 0) + (parseInt(inputImpug.value) || 0);
+            window.fijarVotantes(suma);
+        });
+    }
 }
+
+// Función global para fijar "Ciudadanos que Votaron" con 1 clic
+window.fijarVotantes = function(n) {
+    if (inputVotaron) {
+        inputVotaron.value = n;
+        inputVotaron.dispatchEvent(new Event('input'));
+        inputVotaron.focus();
+        mostrarToast(`✓ "Ciudadanos que Votaron" fijado en ${n}`, 'success');
+    }
+};
 
 // Botones + y − para todos los inputs con data-target
 function bindStepButtons() {
@@ -302,10 +326,24 @@ function validateMath() {
     const sumaTotalVotos = sumPartidos + blancos + nulos + impugnados;
     sumVotosEl.textContent  = sumaTotalVotos.toLocaleString();
     txtVotantes.textContent = totalVotaron.toLocaleString();
+    if (txtPadron) {
+        txtPadron.textContent = electoresHab > 0 ? electoresHab.toLocaleString() : '—';
+    }
+
+    // Botón de autocompletado en Paso 1 (mostrar si hay votos sumados pero falta fijar votantes)
+    if (btnAutoVotaron && btnAutoVotaronNum) {
+        if (sumaTotalVotos > 0 && totalVotaron !== sumaTotalVotos) {
+            btnAutoVotaron.style.display = 'inline-block';
+            btnAutoVotaronNum.textContent = sumaTotalVotos.toLocaleString();
+        } else {
+            btnAutoVotaron.style.display = 'none';
+        }
+    }
 
     // Progreso de cuadre
-    const pct = totalVotaron > 0
-        ? Math.min(100, Math.round((sumaTotalVotos / totalVotaron) * 100))
+    const baseProg = totalVotaron > 0 ? totalVotaron : (electoresHab > 0 ? electoresHab : 0);
+    const pct = baseProg > 0
+        ? Math.min(100, Math.round((sumaTotalVotos / baseProg) * 100))
         : 0;
     progressFill.style.width = pct + '%';
 
@@ -314,45 +352,65 @@ function validateMath() {
 
     // Bloquear si la mesa no fue validada
     if (!mesaValida && inputMesa.value.trim().length > 0) {
-        setVal('err', '\u26A0\uFE0F', 'Primero debes ingresar un número de mesa válido del padrón.');
+        setVal('err', '⚠️', 'Primero debes ingresar un número de mesa válido del padrón.');
         btnSubmit.disabled = true;
         return;
     }
 
-    // Estado neutro
+    // Estado neutro (nada ingresado aún)
     if (totalVotaron === 0 && sumaTotalVotos === 0) {
-        setVal('neutral', '\u23F3', 'Esperando datos…');
+        setVal('neutral', '⏳', 'Esperando datos de la mesa y conteo de votos…');
         btnSubmit.disabled = true;
         return;
     }
 
-    // Error: excede padrón
+    // CASO CLAVE: Se ingresaron votos (ej: 120), pero aún no se escribió "Ciudadanos que Votaron"
+    // No decir "Hay 120 votos de más". Indicar amablemente que falta completar el campo o usar el botón con 1 clic.
+    if (totalVotaron === 0 && sumaTotalVotos > 0) {
+        const padronTxt = electoresHab > 0 ? ` de <strong>${electoresHab.toLocaleString()}</strong> electores hábiles (Padrón)` : '';
+        setVal('info', 'ℹ️', `Votos sumados: <strong>${sumaTotalVotos.toLocaleString()}</strong>${padronTxt}. Falta ingresar "Ciudadanos que Votaron" en el Paso 1. <button type="button" class="btn-val-sync" onclick="window.fijarVotantes(${sumaTotalVotos})">⚡ Usar ${sumaTotalVotos.toLocaleString()} votantes</button>`);
+        btnSubmit.disabled = true;
+        return;
+    }
+
+    // Error: los votantes superan el padrón oficial
     if (electoresHab > 0 && totalVotaron > electoresHab) {
-        setVal('err', '\u26A0\uFE0F', `Los votantes (${totalVotaron.toLocaleString()}) exceden el padrón (${electoresHab.toLocaleString()}).`);
+        setVal('err', '⚠️', `Los ciudadanos que votaron (${totalVotaron.toLocaleString()}) no pueden superar los electores del padrón (${electoresHab.toLocaleString()}).`);
         btnSubmit.disabled = true;
         return;
     }
 
-    // Error: no cuadran
+    // Error: la suma de votos supera el padrón oficial
+    if (electoresHab > 0 && sumaTotalVotos > electoresHab) {
+        setVal('err', '⚠️', `La suma total de votos (${sumaTotalVotos.toLocaleString()}) excede el padrón total de la mesa (${electoresHab.toLocaleString()}).`);
+        btnSubmit.disabled = true;
+        return;
+    }
+
+    // Error: no cuadra la suma de votos con los ciudadanos que votaron
     if (sumaTotalVotos !== totalVotaron) {
-        const diff = totalVotaron - sumaTotalVotos;
-        const msg  = diff > 0
-            ? `Faltan ${diff.toLocaleString()} votos por asignar.`
-            : `Hay ${Math.abs(diff).toLocaleString()} votos de más.`;
-        setVal('err', '\u2717', msg);
+        if (sumaTotalVotos < totalVotaron) {
+            const diff = totalVotaron - sumaTotalVotos;
+            setVal('err', '✗', `Faltan ${diff.toLocaleString()} votos por asignar en las listas para alcanzar los ${totalVotaron.toLocaleString()} ciudadanos que votaron.`);
+        } else {
+            const diff = sumaTotalVotos - totalVotaron;
+            setVal('err', '✗', `La suma de votos (${sumaTotalVotos.toLocaleString()}) supera en ${diff.toLocaleString()} a los ${totalVotaron.toLocaleString()} ciudadanos que votaron.`);
+        }
         btnSubmit.disabled = true;
         return;
     }
 
     // ¡Cuadra perfecto!
-    setVal('ok', '\u2713', '¡Cuadre aritmético perfecto! El acta está lista para guardar.');
+    const partPct = electoresHab > 0 ? Math.round((totalVotaron / electoresHab) * 100) : null;
+    const partInfo = partPct !== null ? ` (${partPct}% de participación sobre ${electoresHab.toLocaleString()} electores)` : '';
+    setVal('ok', '✓', `¡Cuadre aritmético perfecto! Votaron ${totalVotaron.toLocaleString()} ciudadanos${partInfo}. Acta lista para guardar.`);
     btnSubmit.disabled = false;
 }
 
 function setVal(state, icon, text) {
     valBox.className  = 'validation-box ' + (state === 'neutral' ? '' : state);
     valIcon.textContent = icon;
-    valText.textContent = text;
+    valText.innerHTML   = text;
 }
 
 function updateSteps(sum, votaron) {

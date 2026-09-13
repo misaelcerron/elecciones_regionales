@@ -420,14 +420,29 @@
         .validation-box.ok{background:var(--ok-light);border-color:rgba(50,215,75,0.3);}
         .validation-box.err{background:var(--err-light);border-color:rgba(255,69,58,0.3);}
         .validation-box.warn{background:var(--warn-light);border-color:rgba(255,214,10,0.3);}
-        .val-left{display:flex;align-items:center;gap:0.6rem;}
+        .validation-box.info{background:rgba(0,113,227,0.12);border-color:rgba(59,130,246,0.35);}
+        .val-left{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;}
         .val-icon{font-size:1.2rem;}
         .val-text{font-size:0.9rem;font-weight:600;}
         .validation-box.ok   .val-text{color:var(--ok);}
         .validation-box.err  .val-text{color:var(--err);}
         .validation-box.warn .val-text{color:var(--warn);}
+        .validation-box.info .val-text{color:#93c5fd;}
         .val-right{font-size:0.82rem;color:var(--text-2);font-weight:500;}
         .val-right strong{color:var(--text);font-weight:700;}
+        .btn-val-sync{
+            background:linear-gradient(135deg,#0071e3,#005bb5);
+            border:none;color:#ffffff;
+            padding:0.25rem 0.65rem;border-radius:8px;
+            font-size:0.75rem;font-weight:700;cursor:pointer;
+            display:inline-flex;align-items:center;gap:0.3rem;
+            box-shadow:0 2px 8px rgba(0,113,227,0.35);
+            transition:all 0.15s ease;
+            vertical-align:middle;
+        }
+        .btn-val-sync:hover{
+            background:#0077ed;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,113,227,0.5);
+        }
 
         /* Progress bar */
         .vote-progress{
@@ -594,7 +609,10 @@
                     </div>
                 </div>
                 <div class="field-group">
-                    <label class="field-label" for="total_votaron">Ciudadanos que Votaron</label>
+                    <label class="field-label" for="total_votaron">
+                        Ciudadanos que Votaron
+                        <button type="button" id="btnAutoVotaron" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span id="btnAutoVotaronNum">0</span>)</button>
+                    </label>
                     <input type="number" class="field-input" id="total_votaron"
                            placeholder="0" required min="0" inputmode="numeric">
                 </div>
@@ -678,8 +696,9 @@
                     <span class="val-text" id="valText">Esperando datos…</span>
                 </div>
                 <div class="val-right">
-                    Votos sumados: <strong id="sumVotos">0</strong> &nbsp;/&nbsp;
-                    Votantes: <strong id="txtVotantes">0</strong>
+                    Votos sumados: <strong id="sumVotos">0</strong> &nbsp;|&nbsp;
+                    Votantes: <strong id="txtVotantes">0</strong> &nbsp;|&nbsp;
+                    Padrón: <strong id="txtPadron">0</strong>
                 </div>
             </div>
 
@@ -706,7 +725,7 @@
     <span id="toastMsg">Guardado</span>
 </div>
 
-<script src="js/auth.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/auth.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>
