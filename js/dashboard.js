@@ -130,7 +130,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Lógica para Limpiar Proceso Electoral (Solo Admin)
     const btnLimpiar = document.getElementById('btnLimpiarProceso');
     if (btnLimpiar) {
-        btnLimpiar.addEventListener('click', async () => {
+        btnLimpiar.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
             const confirmacion = prompt("⚠️ ZONA DE PELIGRO\n\nEsta acción eliminará de forma irreversible TODAS las actas y votos registrados hasta el momento.\n\nPara confirmar, escribe la palabra CONFIRMAR en mayúsculas:");
             if (confirmacion !== 'CONFIRMAR') {
                 if (confirmacion !== null) alert("Operación cancelada. Palabra incorrecta.");
@@ -144,7 +146,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             try {
                 const res = await fetch('api/limpiar_proceso.php', { method: 'POST' });
-                const json = await res.json();
+                
+                const textResponse = await res.text();
+                let json;
+                try {
+                    json = JSON.parse(textResponse);
+                } catch (parseError) {
+                    console.error("Respuesta cruda del servidor:", textResponse);
+                    alert("❌ Error: El servidor devolvió una respuesta no válida. Presiona F12 para ver la consola.");
+                    return;
+                }
+                
                 if (json.success) {
                     alert("✅ Proceso electoral limpiado correctamente.");
                     window.location.reload();
@@ -152,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     alert("❌ Error: " + (json.message || "No se pudo limpiar."));
                 }
             } catch (e) {
-                alert("❌ Error de red.");
+                alert("❌ Error de red: " + e.message);
             } finally {
                 btnLimpiar.disabled = false;
                 btnLimpiar.innerHTML = 'Limpiar Proceso Electoral';
