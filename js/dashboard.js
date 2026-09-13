@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 2. Preparar Datos para Gráfico de Barras (Partidos)
         const labelsPartidos = [];
         const datosPartidos = [];
+        const logoImages = [];
         const coloresBarras = [
             '#0071e3', '#32d74b', '#ff9f0a', '#ff453a',
             '#af52de', '#5e5ce6', '#64d2ff', '#ffd60a',
@@ -66,6 +67,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const label = p.siglas ? `${p.siglas} - ${p.nombre}` : p.nombre;
             labelsPartidos.push(label);
             datosPartidos.push(v);
+
+            const img = new Image();
+            img.src = p.simbolo_url || 'img/podemos_peru_logo.jpg';
+            img.onload = () => { if (barChartInstance) barChartInstance.draw(); };
+            logoImages.push(img);
         });
 
         if (barChartInstance) {
@@ -77,6 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'bar',
             data: {
                 labels: labelsPartidos,
+                logoImages: logoImages,
                 datasets: [{
                     label: 'Votos Obtenidos',
                     data: datosPartidos,
@@ -98,6 +105,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         titleFont: { weight: 'bold' }
                     }
                 },
+                layout: {
+                    padding: {
+                        bottom: 30 // Make room for the logos
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -107,14 +119,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                     x: {
                         grid: { display: false },
                         ticks: {
-                            color: '#86868b',
-                            font: { size: 11 },
-                            maxRotation: 45,
-                            minRotation: 0
+                            color: 'transparent' // Hide text labels
                         }
                     }
                 }
-            }
+            },
+            plugins: [{
+                id: 'partyLogos',
+                afterDraw: (chart) => {
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const y = xAxis.bottom - 25; // Draw near the bottom padding
+                    
+                    if (!chart.config.data.logoImages) return;
+
+                    chart.config.data.logoImages.forEach((img, index) => {
+                        if (img.complete && img.naturalHeight !== 0) {
+                            const x = xAxis.getPixelForTick(index);
+                            const size = 32;
+                            ctx.save();
+                            ctx.fillStyle = '#fff';
+                            ctx.beginPath();
+                            if (ctx.roundRect) {
+                                ctx.roundRect(x - size/2, y, size, size, 6);
+                            } else {
+                                ctx.rect(x - size/2, y, size, size);
+                            }
+                            ctx.fill();
+                            ctx.drawImage(img, x - size/2 + 2, y + 2, size - 4, size - 4);
+                            ctx.restore();
+                        }
+                    });
+                }
+            }]
         });
 
         // 4. Dibujar Gráfico de Pastel / Dona (Distribución)
