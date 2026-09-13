@@ -89,26 +89,41 @@
             border:0.5px solid var(--border);
             color:var(--text-2);
         }
-        /* Navbar logo */
+        /* Navbar brand — Podemos Perú colors */
+        .navbar-brand-wrap{
+            display:flex;align-items:center;gap:0.65rem;
+            background:linear-gradient(135deg,rgba(27,75,138,0.55),rgba(10,40,90,0.7));
+            border:1px solid rgba(59,130,246,0.55);
+            border-radius:22px;
+            padding:0.3rem 0.85rem 0.3rem 0.4rem;
+            box-shadow:0 0 18px rgba(27,75,138,0.4), inset 0 0.5px 0 rgba(255,255,255,0.1);
+            transition:all 0.25s ease;
+            text-decoration:none;
+        }
+        .navbar-brand-wrap:hover{
+            border-color:rgba(59,130,246,0.85);
+            box-shadow:0 0 28px rgba(27,75,138,0.65), inset 0 0.5px 0 rgba(255,255,255,0.15);
+        }
         .navbar-logo{
-            width:28px;height:28px;border-radius:7px;
+            width:30px;height:30px;border-radius:8px;
             object-fit:contain;flex-shrink:0;
             background:white;padding:2px;
-        }
-        .navbar-brand-wrap{
-            display:flex;align-items:center;gap:0.6rem;
+            box-shadow:0 2px 8px rgba(0,0,0,0.4);
         }
         .navbar-brand-text{
-            display:flex;flex-direction:column;line-height:1.1;
+            display:flex;flex-direction:column;line-height:1.15;
         }
         .navbar-brand-main{
-            font-size:0.85rem;font-weight:800;letter-spacing:-0.01em;
-            background:linear-gradient(135deg,#60a5fa,#a78bfa);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            font-size:0.82rem;font-weight:900;letter-spacing:0.04em;
+            text-transform:uppercase;
+            color:#ffffff;
+            text-shadow:0 0 12px rgba(96,165,250,0.8);
         }
         .navbar-brand-sub{
-            font-size:0.62rem;font-weight:600;letter-spacing:0.08em;
-            text-transform:uppercase;color:var(--text-3);
+            font-size:0.6rem;font-weight:700;letter-spacing:0.1em;
+            text-transform:uppercase;
+            color:#93c5fd;
+            opacity:0.9;
         }
 
         /* ── NAVBAR ── */
@@ -534,11 +549,17 @@
                     </select>
                 </div>
                 <div class="field-group">
-                    <label class="field-label" for="electores_habiles">Electores Hábiles (Padrón)</label>
-                    <input type="number" class="field-input" id="electores_habiles"
-                           placeholder="Se carga automáticamente" required min="1"
-                           inputmode="numeric" readonly
-                           style="cursor:not-allowed;opacity:0.7;" id="electores_habiles">
+                    <label class="field-label" for="electores_habiles">
+                        Electores Hábiles (Padrón)
+                        <span style="font-size:0.6rem;font-weight:600;color:#0071e3;background:rgba(0,113,227,0.12);border:0.5px solid rgba(0,113,227,0.3);padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.4rem;vertical-align:middle;letter-spacing:0.04em;text-transform:none;">&#x21BA; Auto</span>
+                    </label>
+                    <div style="position:relative;">
+                        <input type="number" class="field-input" id="electores_habiles"
+                               placeholder="Se completa al validar la mesa"
+                               required min="1" inputmode="numeric" readonly
+                               style="padding-left:2.4rem;color:var(--ok);font-weight:700;cursor:not-allowed;opacity:0.85;">
+                        <span style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;">&#x1F4CB;</span>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label class="field-label" for="total_votaron">Ciudadanos que Votaron</label>
