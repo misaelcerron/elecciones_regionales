@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
-        .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:var(--glass-bg); backdrop-filter:blur(10px); border-bottom:1px solid var(--glass-border); position:fixed; top:0; width:100%; z-index:100; }
-        .navbar a { color:white; text-decoration:none; margin-right:1.5rem; font-weight:600; transition:color 0.3s; }
-        .navbar a:hover { color:var(--primary-color); }
-        .navbar-user { display:flex; align-items:center; gap:1rem; }
-        .btn-logout { background:transparent; border:1px solid var(--error-color); color:var(--error-color); padding:0.5rem 1rem; border-radius:8px; cursor:pointer; transition:all 0.3s; }
-        .btn-logout:hover { background:var(--error-color); color:white; }
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:0 1.5rem; height:56px; background:rgba(0,0,0,0.82); backdrop-filter:saturate(180%) blur(24px); -webkit-backdrop-filter:saturate(180%) blur(24px); border-bottom:1px solid rgba(59,130,246,0.15); position:fixed; top:0; width:100%; z-index:100; }
+        .navbar-links { display:flex; align-items:center; gap:0.3rem; position:absolute; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.09); border-radius:26px; padding:0.22rem 0.3rem; }
+        .navbar a { color:rgba(255,255,255,0.55); text-decoration:none; font-size:0.8rem; font-weight:600; letter-spacing:0.01em; padding:0.38rem 0.9rem; border-radius:20px; border:0.5px solid transparent; transition:all 0.22s cubic-bezier(0.4,0,0.2,1); white-space:nowrap; }
+        .navbar a:hover { color:white; background:rgba(59,130,246,0.12); border-color:rgba(59,130,246,0.35); box-shadow:0 0 10px rgba(59,130,246,0.2); }
+        .navbar a[style*="primary"], .navbar a.active { color:white !important; background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8)) !important; border-color:rgba(59,130,246,0.6) !important; box-shadow:0 0 14px rgba(27,75,138,0.5),inset 0 0.5px 0 rgba(255,255,255,0.1) !important; font-weight:700 !important; -webkit-text-fill-color:white !important; }
+        .navbar-user { display:flex; align-items:center; gap:0.75rem; }
+        .navbar #navUsername { font-size:0.8rem; color:#86868b; background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.09); padding:0.3rem 0.75rem; border-radius:20px; }
+        .btn-logout { background:transparent; border:0.5px solid rgba(255,69,58,0.4); color:#ff453a; padding:0.35rem 0.85rem; border-radius:20px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.22s ease; letter-spacing:0.02em; }
+        .btn-logout:hover { background:#ff453a; color:white; border-color:#ff453a; box-shadow:0 0 12px rgba(255,69,58,0.4); }
 
         .page-wrapper { margin-top:90px; max-width:1300px; margin-left:auto; margin-right:auto; padding:1rem 1.5rem; }
 
