@@ -417,7 +417,7 @@ function bindLimpiarProceso() {
                 json = JSON.parse(textResponse);
             } catch (parseError) {
                 console.error("Respuesta cruda del servidor:", textResponse);
-                alert("❌ Error: El servidor devolvió una respuesta no válida. Presiona F12 para ver la consola.");
+                alert("❌ Respuesta inválida del servidor:\n" + textResponse.substring(0, 200));
                 return;
             }
 
