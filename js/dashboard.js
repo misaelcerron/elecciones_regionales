@@ -469,6 +469,14 @@ document.addEventListener('DOMContentLoaded', () => {
         autoRefreshTimer = setTimeout(async () => {
             const tipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
             await loadDashboard(tipo, true); // silent = true (no error alerts)
+
+            // También refrescar el panel distrital si hay un distrito activo
+            const distActivo = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none')
+                ? distritoFilterSelect.value : '';
+            if (distActivo && distActivo !== 'TODOS') {
+                await loadDistritoPanel(distActivo);
+            }
+
             scheduleRefresh(); // schedule next
         }, REFRESH_INTERVAL * 1000);
     }
