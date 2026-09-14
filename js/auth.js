@@ -94,6 +94,7 @@ function adaptNavbarForRole(rol, currentPage, username) {
                 <a href="reportes.html" class="${currentPage === 'reportes.html' ? 'active' : ''}">Reportes</a>
                 <a href="mesas.html" class="${currentPage === 'mesas.html' ? 'active' : ''}">Gestión Mesas</a>
                 <a href="organizaciones.html" class="${currentPage === 'organizaciones.html' ? 'active' : ''}">Organizaciones</a>
+                <a href="personeros.html" class="${currentPage === 'personeros.html' ? 'active' : ''}">Personeros</a>
                 <a href="index.html" class="${currentPage === 'index.html' ? 'active' : ''}">Digitación</a>
                 <a href="usuarios.html" class="${currentPage === 'usuarios.html' ? 'active' : ''}">Usuarios</a>
             `;
@@ -130,6 +131,7 @@ function adaptNavbarForRole(rol, currentPage, username) {
                 <a href="reportes.html" class="${currentPage === 'reportes.html' ? 'active' : ''}">📑 Reportes de Escrutinio</a>
                 <a href="mesas.html" class="${currentPage === 'mesas.html' ? 'active' : ''}">🗳️ Gestión Mesas</a>
                 <a href="organizaciones.html" class="${currentPage === 'organizaciones.html' ? 'active' : ''}">🏛️ Organizaciones Políticas</a>
+                <a href="personeros.html" class="${currentPage === 'personeros.html' ? 'active' : ''}">👤 Gestión Personeros</a>
                 <a href="index.html" class="${currentPage === 'index.html' ? 'active' : ''}">✍️ Digitación de Actas</a>
                 <a href="usuarios.html" class="${currentPage === 'usuarios.html' ? 'active' : ''}">👥 Gestión de Usuarios</a>
             `;
