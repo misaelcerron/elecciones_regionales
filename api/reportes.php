@@ -42,9 +42,9 @@ try {
         $totalVotantes = 0;
 
         foreach ($data as $r) {
-            $st = strtoupper($r['estado'] ?? '');
-            if ($st === 'CONTABILIZADA') $contabilizadas++;
-            elseif ($st === 'DIGITADA') $digitadas++;
+            $st = strtoupper(trim($r['estado'] ?? ''));
+            // DIGITADA y CONTABILIZADA se consideran "procesadas"
+            if ($st === 'CONTABILIZADA' || $st === 'DIGITADA') $contabilizadas++;
             elseif ($st === 'OBSERVADA') $observadas++;
             else $falta++;
 
@@ -52,7 +52,7 @@ try {
             $totalVotantes += (int)($r['votantes'] ?? 0);
         }
 
-        $pctAvance = $totalMesas > 0 ? round((($contabilizadas + $digitadas) / $totalMesas) * 100, 1) : 0;
+        $pctAvance = $totalMesas > 0 ? round(($contabilizadas / $totalMesas) * 100, 1) : 0;
 
         echo json_encode([
             'success' => true,

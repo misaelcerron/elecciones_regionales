@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentTipo === 'mesas') {
                 rawData.forEach(r => {
-                    const st = (r.estado || '').toUpperCase();
-                    if (st === 'CONTABILIZADA') contab++;
+                    const st = (r.estado || '').toUpperCase().trim();
+                    if (st === 'CONTABILIZADA' || st === 'DIGITADA') contab++;
                     else if (st === 'OBSERVADA') obs++;
                     elect += parseInt(r.electores_habiles || 0);
                     vot += parseInt(r.votantes || 0);
