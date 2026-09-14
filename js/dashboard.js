@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isLoading       = false;
     let lastData        = null;
 
-    const REFRESH_INTERVAL = 15; // seconds
+    const REFRESH_INTERVAL = 8; // seconds
 
     // ─────────────────────────────────────────────────────────────
     // ELECTION TYPE CONFIG
