@@ -220,7 +220,14 @@ async function validarMesa(nro) {
             const m = json.data;
             mesaValida = true;
             inputElect.value = m.electores_habiles;
-            setMesaFeedback('ok', `✓ Mesa ${m.id_mesa} — ${Number(m.electores_habiles).toLocaleString()} electores`);
+
+            // Build location string
+            const distParts = [m.distrito, m.provincia, m.departamento].filter(Boolean);
+            const distLabel = distParts.length > 0 ? distParts[0] : '';
+            const localLabel = m.local_votacion ? ` · ${m.local_votacion}` : '';
+            const distritoTag = distLabel ? ` · 📍 ${distLabel}${localLabel}` : '';
+
+            setMesaFeedback('ok', `✓ Mesa ${m.id_mesa} — ${Number(m.electores_habiles).toLocaleString()} electores${distritoTag}`);
             escrutinioSection.style.display = 'block';
             validacionSection.style.display = 'block';
 
