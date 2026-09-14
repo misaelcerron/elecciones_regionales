@@ -46,10 +46,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Cambiar estilo de selección de tarjetas de rol
-    roleRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            roleOptions.forEach(opt => opt.classList.remove('selected'));
-            radio.closest('.role-option').classList.add('selected');
+    roleOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            // Uncheck all, then check the one inside this option
+            roleRadios.forEach(r => r.checked = false);
+            roleOptions.forEach(o => o.classList.remove('selected'));
+
+            const radio = opt.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
+            opt.classList.add('selected');
         });
     });
 
@@ -61,8 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const username = formUsername.value.trim();
         const password = formPassword.value.trim();
-        const selectedRadio = document.querySelector('input[name="formRol"]:checked');
+        // Read role from checked radio — fallback to selected class
+        let selectedRadio = document.querySelector('input[name="formRol"]:checked');
+        if (!selectedRadio) {
+            // Fallback: find the .role-option.selected and get its radio
+            const selectedOpt = document.querySelector('.role-option.selected');
+            if (selectedOpt) selectedRadio = selectedOpt.querySelector('input[type="radio"]');
+        }
         const rol = selectedRadio ? selectedRadio.value : 'DIGITADOR';
+        console.log('[Usuarios] Submit — rol seleccionado:', rol, '| isEditing:', isEditing);
 
         if (!username) {
             showToast('El nombre de usuario es requerido.', 'error');
