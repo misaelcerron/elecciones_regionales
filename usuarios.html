@@ -557,34 +557,23 @@
 
                 <div class="form-group">
                     <label class="form-label">Rol y Alcance de Permisos</label>
-                    <div class="role-cards">
-                        <!-- Opción DIGITADOR -->
-                        <label class="role-option selected" id="roleOptDigitador">
-                            <input type="radio" name="formRol" value="DIGITADOR" checked>
-                            <div>
-                                <div class="role-option-title">✍️ Digitador (Recomendado para operarios)</div>
-                                <div class="role-option-desc">Solo puede ingresar votos en el módulo de digitación. No tiene acceso a reportes, configuración ni mesas.</div>
-                            </div>
-                        </label>
-
-                        <!-- Opción INVITADO -->
-                        <label class="role-option" id="roleOptInvitado">
-                            <input type="radio" name="formRol" value="INVITADO">
-                            <div>
-                                <div class="role-option-title">📊 Invitado (Veedor / Observador)</div>
-                                <div class="role-option-desc">Solo puede visualizar los resultados electorales en gráficos de barras. No puede ingresar votos ni modificar datos.</div>
-                            </div>
-                        </label>
-
-                        <!-- Opción ADMIN -->
-                        <label class="role-option" id="roleOptAdmin">
-                            <input type="radio" name="formRol" value="ADMIN">
-                            <div>
-                                <div class="role-option-title">🛡️ Administrador General</div>
-                                <div class="role-option-desc">Acceso total a todos los módulos: Dashboard, Reportes, Mesas, Organizaciones, Digitación y Usuarios.</div>
-                            </div>
-                        </label>
-                    </div>
+                    <select id="formRolSelect" name="formRolSelect" style="
+                        width:100%; padding:0.75rem 1rem;
+                        background: rgba(255,255,255,0.06);
+                        border: 1px solid rgba(255,255,255,0.15);
+                        border-radius: 10px;
+                        color: #fff;
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        outline: none;
+                        appearance: auto;
+                    ">
+                        <option value="DIGITADOR" style="background:#1c1c1e;">&#x270D;&#xFE0F; Digitador — Solo ingreso de votos</option>
+                        <option value="INVITADO" style="background:#1c1c1e;">&#x1F4CA; Invitado / Veedor — Solo ver resultados</option>
+                        <option value="ADMIN" style="background:#1c1c1e;">&#x1F6E1;&#xFE0F; Administrador — Acceso total</option>
+                    </select>
+                    <div style="font-size:0.75rem;color:#86868b;margin-top:0.4rem;" id="rolDesc">Solo puede ingresar votos en el módulo de digitación.</div>
                 </div>
 
                 <div class="modal-footer">
@@ -600,8 +589,8 @@
         <span id="toastIcon">✅</span>
         <span id="toastMsg">Operación completada</span>
     </div>
-<script src="js/auth.js?v=5"></script>
-    <script src="js/usuarios.js?v=5"></script>
+<script src="js/auth.js?v=10"></script>
+    <script src="js/usuarios.js?v=10"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->

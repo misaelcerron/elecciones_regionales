@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const formUsername = document.getElementById('formUsername');
     const formPassword = document.getElementById('formPassword');
     const passwordHint = document.getElementById('passwordHint');
-    const roleRadios = document.querySelectorAll('input[name="formRol"]');
-    const roleOptions = document.querySelectorAll('.role-option');
+    const roleSelect   = document.getElementById('formRolSelect');
+    const rolDesc      = document.getElementById('rolDesc');
 
     // Inicializar
     cargarUsuarios();
@@ -45,20 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) cerrarModal();
     });
 
-    // Cambiar estilo de selección de tarjetas de rol
-    roleOptions.forEach(opt => {
-        opt.addEventListener('click', () => {
-            // Uncheck all, then check the one inside this option
-            roleRadios.forEach(r => r.checked = false);
-            roleOptions.forEach(o => o.classList.remove('selected'));
-
-            const radio = opt.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-            }
-            opt.classList.add('selected');
+    // Descripción dinámica al cambiar el select
+    const rolDescTexts = {
+        'DIGITADOR': 'Solo puede ingresar votos en el módulo de digitación. Sin acceso a reportes ni configuración.',
+        'INVITADO':  'Solo visualiza resultados electorales en gráficos. No puede ingresar ni modificar datos.',
+        'ADMIN':     'Acceso total a todos los módulos: Dashboard, Reportes, Mesas, Organizaciones, Digitación y Usuarios.',
+    };
+    if (roleSelect) {
+        roleSelect.addEventListener('change', () => {
+            if (rolDesc) rolDesc.textContent = rolDescTexts[roleSelect.value] || '';
         });
-    });
+    }
 
     // Enviar Formulario
     userForm.addEventListener('submit', async (e) => {
@@ -68,14 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const username = formUsername.value.trim();
         const password = formPassword.value.trim();
-        // Read role from checked radio — fallback to selected class
-        let selectedRadio = document.querySelector('input[name="formRol"]:checked');
-        if (!selectedRadio) {
-            // Fallback: find the .role-option.selected and get its radio
-            const selectedOpt = document.querySelector('.role-option.selected');
-            if (selectedOpt) selectedRadio = selectedOpt.querySelector('input[type="radio"]');
-        }
-        const rol = selectedRadio ? selectedRadio.value : 'DIGITADOR';
+        // Read role from select
+        const rol = roleSelect ? roleSelect.value : 'DIGITADOR';
         console.log('[Usuarios] Submit — rol seleccionado:', rol, '| isEditing:', isEditing);
 
         if (!username) {
@@ -285,11 +276,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function seleccionarRol(rol) {
-        roleOptions.forEach(opt => opt.classList.remove('selected'));
-        const radio = document.querySelector(`input[name="formRol"][value="${rol}"]`);
-        if (radio) {
-            radio.checked = true;
-            radio.closest('.role-option').classList.add('selected');
+        if (roleSelect) {
+            roleSelect.value = rol || 'DIGITADOR';
+            if (rolDesc) rolDesc.textContent = {
+                'DIGITADOR': 'Solo puede ingresar votos en el módulo de digitación. Sin acceso a reportes ni configuración.',
+                'INVITADO':  'Solo visualiza resultados electorales en gráficos. No puede ingresar ni modificar datos.',
+                'ADMIN':     'Acceso total a todos los módulos: Dashboard, Reportes, Mesas, Organizaciones, Digitación y Usuarios.',
+            }[roleSelect.value] || '';
         }
     }
 
