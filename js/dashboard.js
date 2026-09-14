@@ -488,7 +488,12 @@ document.addEventListener('DOMContentLoaded', () => {
         distritoFilterSelect.addEventListener('change', () => {
             clearTimeout(autoRefreshTimer);
             clearInterval(countdownTimer);
-            loadDashboard(tipoEleccionSelect ? tipoEleccionSelect.value : 1).then(scheduleRefresh);
+            const tipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
+            const dist = distritoFilterSelect.value;
+            loadDashboard(tipo).then(() => {
+                loadDistritoPanel(dist);
+                scheduleRefresh();
+            });
         });
     }
 
@@ -496,7 +501,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // INIT
     // ─────────────────────────────────────────────────────────────
     loadDashboard(tipoEleccionSelect ? tipoEleccionSelect.value : 1)
-        .then(scheduleRefresh);
+        .then(() => {
+            const dist = distritoFilterSelect ? distritoFilterSelect.value : '';
+            if (dist && dist !== 'TODOS') loadDistritoPanel(dist);
+            scheduleRefresh();
+        });
+
+    // ─────────────────────────────────────────────────────────────
+    // LOAD DISTRITO PANEL
+    // ─────────────────────────────────────────────────────────────
+    async function loadDistritoPanel(distrito) {
+        const wrap = document.getElementById('distritoPanelWrap');
+        const grid = document.getElementById('distritoPanelGrid');
+        const sub  = document.getElementById('distritoPanelSub');
+
+        if (!distrito || distrito === 'TODOS') {
+            if (wrap) wrap.style.display = 'none';
+            return;
+        }
+
+        if (wrap) wrap.style.display = 'block';
+        if (grid) grid.innerHTML = `<div style="color:#86868b;padding:1.5rem;text-align:center;grid-column:1/-1;">Cargando comparativo...</div>`;
+        if (sub)  sub.textContent = `Resumen de votos en ${distrito} por todos los tipos de elección`;
+
+        try {
+            const res  = await fetch(`api/resumen_distrito.php?distrito=${encodeURIComponent(distrito)}&_=${Date.now()}`);
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+
+            if (!json.data || json.data.length === 0) {
+                if (grid) grid.innerHTML = `<p style="color:#86868b;text-align:center;padding:1.5rem;grid-column:1/-1;">Sin datos para ${distrito}</p>`;
+                return;
+            }
+
+            renderDistritoPanel(json.data, distrito);
+        } catch (e) {
+            if (grid) grid.innerHTML = `<p style="color:#ff453a;text-align:center;grid-column:1/-1;">Error: ${e.message}</p>`;
+        }
+    }
 
     // ─────────────────────────────────────────────────────────────
     // LIMPIAR PROCESO ELECTORAL (solo admin)
@@ -591,4 +633,114 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RENDER DISTRICT COMPARISON PANEL
+// ─────────────────────────────────────────────────────────────────
+function renderDistritoPanel(data, distrito) {
+    const grid = document.getElementById('distritoPanelGrid');
+    if (!grid) return;
+
+    const colorMap = {
+        '#0071e3': 'rgba(0,113,227,',
+        '#af52de': 'rgba(175,82,222,',
+        '#ff9f0a': 'rgba(255,159,10,',
+        '#32d74b': 'rgba(50,215,75,',
+    };
+
+    let html = '';
+
+    data.forEach(item => {
+        const base  = colorMap[item.color] || 'rgba(255,255,255,';
+        const votos = Number(item.total_votos || 0);
+        const mesas = Number(item.mesas_procesadas || 0);
+        const blancos = Number(item.blancos || 0);
+        const nulos   = Number(item.nulos   || 0);
+        const validos = Math.max(0, votos - blancos - nulos);
+        const hayDatos = votos > 0 || mesas > 0;
+
+        // Top 3 partidos
+        let top3Html = '';
+        if (item.top3 && item.top3.length > 0) {
+            item.top3.forEach((p, idx) => {
+                const logoUrl = p.simbolo_url || 'img/podemos_peru_logo.jpg';
+                const medals = ['🥇','🥈','🥉'];
+                top3Html += `
+                    <div style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0;${idx < item.top3.length - 1 ? 'border-bottom:0.5px solid rgba(255,255,255,0.06);' : ''}">
+                        <span style="font-size:0.9rem;">${medals[idx] || ''}</span>
+                        <img src="${logoUrl}" style="width:26px;height:26px;border-radius:7px;background:#fff;padding:2px;object-fit:contain;flex-shrink:0;" onerror="this.src='img/podemos_peru_logo.jpg'">
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:0.78rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.siglas || p.nombre)}</div>
+                        </div>
+                        <div style="font-size:0.85rem;font-weight:800;color:${item.color};">${Number(p.votos || 0).toLocaleString()}</div>
+                    </div>`;
+            });
+        } else {
+            top3Html = `<p style="font-size:0.75rem;color:#86868b;text-align:center;padding:0.5rem 0;">Sin votos registrados</p>`;
+        }
+
+        html += `
+        <div style="
+            background: linear-gradient(145deg, ${base}0.12) 0%, ${base}0.04) 100%);
+            border: 1.5px solid ${base}0.3);
+            border-radius: 18px;
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 30px ${base}0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        " onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,0.4), 0 0 40px ${base}0.15)';"
+           onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.3), 0 0 30px ${base}0.08)';">
+
+            <!-- Shimmer top line -->
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${item.color},transparent);"></div>
+
+            <!-- Header -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+                <div style="display:flex;align-items:center;gap:0.6rem;">
+                    <span style="font-size:1.5rem;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">${item.icono}</span>
+                    <div>
+                        <div style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:${item.color};margin-bottom:0.1rem;">Tipo de Elección</div>
+                        <div style="font-size:0.88rem;font-weight:800;color:#fff;line-height:1.2;">${escapeHtml(item.nombre)}</div>
+                    </div>
+                </div>
+                <div style="
+                    background:${base}0.15);
+                    border:1px solid ${base}0.35);
+                    border-radius:10px;
+                    padding:0.4rem 0.65rem;
+                    text-align:center;
+                ">
+                    <div style="font-size:1.4rem;font-weight:900;color:${item.color};letter-spacing:-0.04em;line-height:1;text-shadow:0 0 16px ${item.color};">${mesas}</div>
+                    <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.4);">mesas</div>
+                </div>
+            </div>
+
+            <!-- Total Votos KPI -->
+            <div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:0.75rem 1rem;margin-bottom:0.85rem;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.15rem;">Total Votos Emitidos</div>
+                    <div style="font-size:1.75rem;font-weight:900;color:${item.color};letter-spacing:-0.05em;line-height:1;text-shadow:0 0 20px ${item.color}80;">${votos.toLocaleString()}</div>
+                </div>
+                <div style="text-align:right;font-size:0.7rem;color:rgba(255,255,255,0.4);">
+                    <div>Válidos: <span style="color:rgba(255,255,255,0.7);font-weight:700;">${validos.toLocaleString()}</span></div>
+                    <div>Blancos: <span style="font-weight:700;">${blancos.toLocaleString()}</span></div>
+                    <div>Nulos: <span style="font-weight:700;">${nulos.toLocaleString()}</span></div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.5rem;">Top 3 Partidos</div>
+
+            <!-- Top 3 -->
+            <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:0.5rem 0.75rem;">
+                ${top3Html}
+            </div>
+
+            ${!hayDatos ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);border-radius:18px;display:flex;align-items:center;justify-content:center;"><span style="font-size:0.8rem;color:#86868b;font-weight:600;">Sin datos aún</span></div>` : ''}
+        </div>`;
+    });
+
+    grid.innerHTML = html;
 }
