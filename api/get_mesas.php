@@ -16,7 +16,10 @@ try {
             IFNULL(u.departamento, 'PASCO') as departamento,
             IFNULL(u.provincia, '') as provincia,
             IFNULL(u.distrito, '') as distrito,
-            REPLACE(IFNULL(l.nombre_local, ''), CONCAT('LOCAL GENERICO - ', IFNULL(u.distrito, '')), '') as centro_poblado,
+            IF(l.direccion IS NULL OR l.direccion = 'Sin Dirección', 
+               REPLACE(IFNULL(l.nombre_local, ''), CONCAT('LOCAL GENERICO - ', IFNULL(u.distrito, '')), ''),
+               l.direccion) as centro_poblado,
+            l.nombre_local as local_votacion,
             m.electores_habiles,
             u.id_ubigeo,
             l.id_local

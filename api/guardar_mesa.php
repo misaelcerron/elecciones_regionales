@@ -24,6 +24,7 @@ $departamento = strtoupper(trim($data['departamento'] ?? 'PASCO'));
 $provincia = strtoupper(trim($data['provincia'] ?? ''));
 $distrito = strtoupper(trim($data['distrito'] ?? ''));
 $centro_poblado = strtoupper(trim($data['centro_poblado'] ?? ''));
+$local_votacion = strtoupper(trim($data['local_votacion'] ?? ''));
 $electores_habiles = (int)($data['electores_habiles'] ?? 0);
 
 if (empty($id_mesa_nuevo)) {
@@ -41,8 +42,9 @@ try {
     $pdo->prepare("INSERT IGNORE INTO ubigeo (id_ubigeo, departamento, provincia, distrito) VALUES (?, ?, ?, ?)")
         ->execute([$id_ubigeo, $departamento, $provincia, $distrito]);
 
-    // 2. Nombre del local: si hay centro poblado lo usa, si no usa el nombre genérico
-    $nombre_local = !empty($centro_poblado) ? $centro_poblado : 'LOCAL GENERICO - ' . $distrito;
+    // 2. Nombre del local y centro poblado
+    $nombre_local = !empty($local_votacion) ? $local_votacion : (!empty($centro_poblado) ? $centro_poblado : 'LOCAL GENERICO - ' . $distrito);
+    $direccion = !empty($centro_poblado) ? $centro_poblado : 'Sin Dirección';
 
     // 3. Buscar si ya existe un local con ese nombre en ese ubigeo
     $stmtLocal = $pdo->prepare("SELECT id_local FROM local_votacion WHERE id_ubigeo = ? AND nombre_local = ?");
@@ -51,9 +53,10 @@ try {
 
     if ($localRow) {
         $id_local = $localRow['id_local'];
+        // Podríamos actualizar la dirección aquí si quisiéramos, pero por ahora conservamos la lógica
     } else {
-        $pdo->prepare("INSERT INTO local_votacion (id_ubigeo, nombre_local, direccion) VALUES (?, ?, 'Sin Dirección')")
-            ->execute([$id_ubigeo, $nombre_local]);
+        $pdo->prepare("INSERT INTO local_votacion (id_ubigeo, nombre_local, direccion) VALUES (?, ?, ?)")
+            ->execute([$id_ubigeo, $nombre_local, $direccion]);
         $id_local = $pdo->lastInsertId();
     }
 

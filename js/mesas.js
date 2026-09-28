@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td style="font-size:0.83rem;">${m.provincia}</td>
                 <td>${m.distrito}</td>
                 <td style="color:var(--text-muted);font-size:0.83rem;">${m.centro_poblado || '—'}</td>
+                <td style="font-size:0.83rem;font-weight:600;">${m.local_votacion || '—'}</td>
                 <td>${m.electores_habiles}</td>
                 <td style="white-space:nowrap;">
                     <button class="btn-accion btn-editar" onclick='abrirModalEditar(${JSON.stringify(m)})'>✏ Editar</button>
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mProvincia').value = '';
         document.getElementById('mDistrito').value = '';
         document.getElementById('mCentroPoblado').value = '';
+        document.getElementById('mLocalVotacion').value = '';
         document.getElementById('mElectores').value = '';
         document.getElementById('modalMesa').classList.add('visible');
     };
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mProvincia').value = mesa.provincia || '';
         document.getElementById('mDistrito').value = mesa.distrito || '';
         document.getElementById('mCentroPoblado').value = mesa.centro_poblado || '';
+        document.getElementById('mLocalVotacion').value = mesa.local_votacion || '';
         document.getElementById('mElectores').value = mesa.electores_habiles;
         document.getElementById('modalMesa').classList.add('visible');
     };
@@ -104,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             provincia: document.getElementById('mProvincia').value.trim(),
             distrito: document.getElementById('mDistrito').value.trim(),
             centro_poblado: document.getElementById('mCentroPoblado').value.trim(),
+            local_votacion: document.getElementById('mLocalVotacion').value.trim(),
             electores_habiles: parseInt(document.getElementById('mElectores').value) || 0
         };
 
