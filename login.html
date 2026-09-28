@@ -125,6 +125,13 @@
         .password-wrapper .form-input {
             padding-right: 2.8rem;
         }
+        
+        /* Ocultar icono nativo de Edge/IE */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+
         .btn-toggle-password {
             position: absolute;
             right: 0.8rem;
@@ -137,6 +144,7 @@
             align-items: center;
             justify-content: center;
             transition: color 0.2s ease;
+            z-index: 10;
         }
         .btn-toggle-password:hover {
             color: #ffffff;
