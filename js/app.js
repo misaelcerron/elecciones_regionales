@@ -269,6 +269,24 @@ async function validarMesa(nro) {
                 
                 const isLocked = lockedTabs.includes(t);
                 
+                if (isLocked && m.actas_data && m.actas_data[t]) {
+                    const d = m.actas_data[t];
+                    document.getElementById(`total_votaron_${t}`).value = d.total_votaron;
+                    document.getElementById(`votos_blancos_${t}`).value = d.votos_blancos;
+                    document.getElementById(`votos_nulos_${t}`).value = d.votos_nulos;
+                    document.getElementById(`votos_impugnados_${t}`).value = d.votos_impugnados;
+                    
+                    if (d.resultados) {
+                        for (const [id_partido, votos] of Object.entries(d.resultados)) {
+                            const inp = document.getElementById(`voto_${t}_${id_partido}`);
+                            if (inp) {
+                                inp.value = votos;
+                                updateCardState(inp);
+                            }
+                        }
+                    }
+                }
+                
                 // Bloquear inputs
                 tabContent.querySelectorAll('input, button').forEach(el => {
                     el.disabled = isLocked;
@@ -321,7 +339,7 @@ function validateMath() {
 
     for (let t = 1; t <= 4; t++) {
         if (lockedTabs.includes(t)) {
-            setValBox(t, 'ok', '🔒', 'Registrada');
+            setValBox(t, 'ok', '🔒', `Registrada <button type="button" onclick="window.unlockTab(${t})" style="cursor:pointer;font-size:0.75rem;padding:2px 8px;margin-left:10px;border:1px solid rgba(255,159,10,0.6);border-radius:12px;background:rgba(255,159,10,0.15);color:#ff9f0a;font-weight:700;">Editar</button>`);
             continue;
         }
 
@@ -383,6 +401,34 @@ function setValBox(t, state, icon, text) {
     document.getElementById(`valIcon_${t}`).textContent = icon;
     document.getElementById(`valText_${t}`).innerHTML = text;
 }
+
+window.unlockTab = function(t) {
+    // Eliminar de lockedTabs
+    lockedTabs = lockedTabs.filter(x => x !== t);
+    
+    // Desbloquear UI
+    const tabBtn = document.querySelector(`.tab-btn[data-tab="${t}"]`);
+    const tabContent = document.getElementById(`tab-content-${t}`);
+    
+    if (tabBtn) {
+        tabBtn.style.opacity = '1';
+        const lockIcon = tabBtn.querySelector('.lock-icon');
+        if (lockIcon) lockIcon.remove();
+    }
+    
+    if (tabContent) {
+        tabContent.querySelectorAll('input, button').forEach(el => {
+            el.disabled = false;
+        });
+    }
+    
+    // Forzar foco a la pestaña
+    if (tabBtn) tabBtn.click();
+    
+    // Recalcular
+    validateMath();
+    mostrarToast(`✏️ Modo edición habilitado para ${nombresEleccion[t]}`, 'warning');
+};
 
 /* ════════════════════════════════════════════════════════════
    SUBMIT — GUARDAR ACTAS MÚLTIPLES

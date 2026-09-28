@@ -72,12 +72,37 @@ try {
 
     if ($mesa) {
         // Buscar qué tipos de elección ya están registrados para esta mesa
-        $sqlActas = "SELECT id_tipo_eleccion FROM acta_electoral WHERE id_mesa = ?";
+        $sqlActas = "SELECT id_acta, id_tipo_eleccion, total_ciudadanos_votaron, votos_blancos, votos_nulos, votos_impugnados 
+                     FROM acta_electoral WHERE id_mesa = ?";
         $stmtActas = $pdo->prepare($sqlActas);
         $stmtActas->execute([$id_mesa]);
-        $actasRegistradas = $stmtActas->fetchAll(PDO::FETCH_COLUMN);
+        $actasRow = $stmtActas->fetchAll();
 
-        $mesa['actas_registradas'] = array_map('intval', $actasRegistradas);
+        $actasData = [];
+        $actasRegistradas = [];
+        
+        foreach ($actasRow as $row) {
+            $tipo = (int)$row['id_tipo_eleccion'];
+            $actasRegistradas[] = $tipo;
+            
+            // Fetch resultados para esta acta
+            $sqlRes = "SELECT id_partido, cantidad_votos FROM voto_resultado WHERE id_acta = ?";
+            $stmtRes = $pdo->prepare($sqlRes);
+            $stmtRes->execute([$row['id_acta']]);
+            // PDO::FETCH_KEY_PAIR devuelve un array asociativo [id_partido => cantidad_votos]
+            $resPartidos = $stmtRes->fetchAll(PDO::FETCH_KEY_PAIR);
+            
+            $actasData[$tipo] = [
+                'total_votaron' => (int)$row['total_ciudadanos_votaron'],
+                'votos_blancos' => (int)$row['votos_blancos'],
+                'votos_nulos' => (int)$row['votos_nulos'],
+                'votos_impugnados' => (int)$row['votos_impugnados'],
+                'resultados' => $resPartidos
+            ];
+        }
+
+        $mesa['actas_registradas'] = $actasRegistradas;
+        $mesa['actas_data'] = $actasData;
 
         echo json_encode([
             'success' => true,
