@@ -340,12 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show/hide district filter
         if (distritoFilterSelect) {
-            if (idTipoEleccion == 4) {
-                distritoFilterSelect.style.display = 'inline-block';
-            } else {
-                distritoFilterSelect.style.display = 'none';
-                distritoFilterSelect.value = 'TODOS';
-            }
+            distritoFilterSelect.style.display = 'inline-block';
         }
 
         const distritoSeleccionado = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none')
