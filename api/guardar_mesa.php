@@ -53,7 +53,9 @@ try {
 
     if ($localRow) {
         $id_local = $localRow['id_local'];
-        // Podríamos actualizar la dirección aquí si quisiéramos, pero por ahora conservamos la lógica
+        // Actualizar la dirección (Centro Poblado) para asegurar que refleje los cambios
+        $pdo->prepare("UPDATE local_votacion SET direccion = ? WHERE id_local = ?")
+            ->execute([$direccion, $id_local]);
     } else {
         $pdo->prepare("INSERT INTO local_votacion (id_ubigeo, nombre_local, direccion) VALUES (?, ?, ?)")
             ->execute([$id_ubigeo, $nombre_local, $direccion]);
