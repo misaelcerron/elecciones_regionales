@@ -138,6 +138,12 @@ function bindInputsEscuchadores() {
         inp.addEventListener('focus', function() { this.select(); });
     });
 
+    const inpElectores = document.getElementById('electores_habiles');
+    if (inpElectores) {
+        inpElectores.addEventListener('input', () => { sanitizeInput(inpElectores); validateMath(); });
+        inpElectores.addEventListener('focus', function() { this.select(); });
+    }
+
     document.querySelectorAll('.btnAutoVotaron').forEach(btn => {
         btn.addEventListener('click', () => {
             const t = btn.dataset.target;

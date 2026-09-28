@@ -38,6 +38,10 @@ try {
         $pdo->query("INSERT IGNORE INTO local_votacion (id_local, id_ubigeo, nombre_local, direccion) VALUES (1, '190101', 'Local Generico', 'Sin Direccion')");
         $stmtInsMesa = $pdo->prepare("INSERT INTO mesa_sufragio (id_mesa, id_local, electores_habiles) VALUES (?, 1, ?)");
         $stmtInsMesa->execute([$id_mesa, $electores_habiles]);
+    } else {
+        // Actualizar el número de electores hábiles ingresado por el digitador
+        $stmtUpdateMesa = $pdo->prepare("UPDATE mesa_sufragio SET electores_habiles = ? WHERE id_mesa = ?");
+        $stmtUpdateMesa->execute([$electores_habiles, $id_mesa]);
     }
 
     $pdo->query("INSERT IGNORE INTO tipo_eleccion (id_tipo_eleccion, nombre) VALUES (1, 'REGIONAL'), (2, 'CONSEJERO'), (3, 'PROVINCIAL'), (4, 'DISTRITAL')");
