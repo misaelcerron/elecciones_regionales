@@ -50,9 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('searchInput').addEventListener('input', function() {
         const q = this.value.toLowerCase();
         const fil = todasLasMesas.filter(m =>
-            m.id_mesa.includes(q) ||
-            m.distrito.toLowerCase().includes(q) ||
-            m.provincia.toLowerCase().includes(q)
+            (m.id_mesa || '').includes(q) ||
+            (m.distrito || '').toLowerCase().includes(q) ||
+            (m.provincia || '').toLowerCase().includes(q) ||
+            (m.local_votacion || '').toLowerCase().includes(q) ||
+            (m.centro_poblado || '').toLowerCase().includes(q)
         );
         document.getElementById('mesaCount').textContent = `Mostrando: ${fil.length} / ${todasLasMesas.length}`;
         renderTabla(fil);
