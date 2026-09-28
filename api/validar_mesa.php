@@ -71,6 +71,14 @@ try {
     $mesa = $stmt->fetch();
 
     if ($mesa) {
+        // Buscar qué tipos de elección ya están registrados para esta mesa
+        $sqlActas = "SELECT id_tipo_eleccion FROM acta_electoral WHERE id_mesa = ?";
+        $stmtActas = $pdo->prepare($sqlActas);
+        $stmtActas->execute([$id_mesa]);
+        $actasRegistradas = $stmtActas->fetchAll(PDO::FETCH_COLUMN);
+
+        $mesa['actas_registradas'] = array_map('intval', $actasRegistradas);
+
         echo json_encode([
             'success' => true,
             'data'    => $mesa

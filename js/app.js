@@ -19,6 +19,7 @@ const validacionSection = document.getElementById('validacionSection');
 let orgsData    = [];   
 let toastTimer  = null;
 let mesaValida  = false; 
+let lockedTabs  = []; // Array de tipos de elección bloqueados 
 
 // Nombres de elección para UI
 const nombresEleccion = {
@@ -249,6 +250,40 @@ async function validarMesa(nro) {
                 pBox.style.display = 'none';
             }
 
+            // Bloquear pestañas ya registradas
+            lockedTabs = m.actas_registradas || [];
+            if (lockedTabs.length > 0) {
+                const nombresBloqueados = lockedTabs.map(t => nombresEleccion[t]).join(', ');
+                mostrarToast(`⚠️ Ya hay datos registrados para: ${nombresBloqueados}`, 'warning');
+            }
+
+            for (let t = 1; t <= 4; t++) {
+                const tabBtn = document.querySelector(`.tab-btn[data-tab="${t}"]`);
+                const tabContent = document.getElementById(`tab-content-${t}`);
+                if (!tabBtn || !tabContent) continue;
+                
+                // Reiniciar estado visual
+                tabBtn.style.opacity = '1';
+                const lockIcon = tabBtn.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                
+                const isLocked = lockedTabs.includes(t);
+                
+                // Bloquear inputs
+                tabContent.querySelectorAll('input, button').forEach(el => {
+                    el.disabled = isLocked;
+                });
+                
+                if (isLocked) {
+                    tabBtn.innerHTML += ' <span class="lock-icon" style="font-size:0.75rem;">🔒</span>';
+                    tabBtn.style.opacity = '0.7';
+                }
+            }
+
+            // Asegurar que la primera pestaña activa no esté bloqueada, si es posible
+            const firstUnlocked = [1,2,3,4].find(t => !lockedTabs.includes(t)) || 1;
+            document.querySelector(`.tab-btn[data-tab="${firstUnlocked}"]`)?.click();
+
             validateMath();
         } else {
             mesaValida = false;
@@ -285,6 +320,11 @@ function validateMath() {
     let allOk = true;
 
     for (let t = 1; t <= 4; t++) {
+        if (lockedTabs.includes(t)) {
+            setValBox(t, 'ok', '🔒', 'Registrada');
+            continue;
+        }
+
         const totalVotaron = parseInt(document.getElementById(`total_votaron_${t}`).value) || 0;
         const blancos      = parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0;
         const nulos        = parseInt(document.getElementById(`votos_nulos_${t}`).value) || 0;
@@ -326,6 +366,14 @@ function validateMath() {
         }
     }
     
+    // Si las 4 están bloqueadas, no se puede enviar nada
+    if (lockedTabs.length === 4) {
+        allOk = false;
+        btnSubmit.innerHTML = 'Mesa Completada 🔒';
+    } else {
+        btnSubmit.innerHTML = 'Guardar Actas Verificadas';
+    }
+
     btnSubmit.disabled = !allOk;
 }
 
@@ -349,6 +397,8 @@ async function handleSubmit(e) {
 
     const actas = [];
     for (let t = 1; t <= 4; t++) {
+        if (lockedTabs.includes(t)) continue; // Omitir las que ya están en DB
+
         const resultados = [];
         document.querySelectorAll(`.party-input[data-tab="${t}"]`).forEach(inp => {
             resultados.push({
