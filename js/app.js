@@ -252,9 +252,13 @@ async function validarMesa(nro) {
 
             // Bloquear pestañas ya registradas
             lockedTabs = m.actas_registradas || [];
+            const alertLockContainer = document.getElementById('alertLockContainer');
             if (lockedTabs.length > 0) {
                 const nombresBloqueados = lockedTabs.map(t => nombresEleccion[t]).join(', ');
-                mostrarToast(`⚠️ Ya hay datos registrados para: ${nombresBloqueados}`, 'warning');
+                document.getElementById('alertLockText').innerHTML = `Ya existen datos guardados en el servidor para: <strong style="color:white;font-weight:900;">${nombresBloqueados}</strong>.<br>Hemos bloqueado temporalmente esas pestañas por seguridad. Si necesitas corregirlas, desplázate hasta abajo a la caja verde de "Verificación Consolidada" y haz clic en el botón <strong style="color:#ff9f0a;background:rgba(255,159,10,0.15);padding:1px 6px;border-radius:4px;border:0.5px solid rgba(255,159,10,0.5);">Editar</strong>.`;
+                alertLockContainer.style.display = 'flex';
+            } else {
+                alertLockContainer.style.display = 'none';
             }
 
             for (let t = 1; t <= 4; t++) {
@@ -326,6 +330,8 @@ function resetMesaState() {
     fb.textContent = '';
     const pBox = document.getElementById('personeroBox');
     if(pBox) pBox.style.display = 'none';
+    const alertLock = document.getElementById('alertLockContainer');
+    if(alertLock) alertLock.style.display = 'none';
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -338,11 +344,6 @@ function validateMath() {
     let allOk = true;
 
     for (let t = 1; t <= 4; t++) {
-        if (lockedTabs.includes(t)) {
-            setValBox(t, 'ok', '🔒', `Registrada <button type="button" onclick="window.unlockTab(${t})" style="cursor:pointer;font-size:0.75rem;padding:2px 8px;margin-left:10px;border:1px solid rgba(255,159,10,0.6);border-radius:12px;background:rgba(255,159,10,0.15);color:#ff9f0a;font-weight:700;">Editar</button>`);
-            continue;
-        }
-
         const totalVotaron = parseInt(document.getElementById(`total_votaron_${t}`).value) || 0;
         const blancos      = parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0;
         const nulos        = parseInt(document.getElementById(`votos_nulos_${t}`).value) || 0;
@@ -356,7 +357,12 @@ function validateMath() {
         
         document.getElementById(`sumVotos_${t}`).textContent = sumaTotalVotos;
         document.getElementById(`txtVotantes_${t}`).textContent = totalVotaron;
-        
+
+        if (lockedTabs.includes(t)) {
+            setValBox(t, 'ok', '🔒', `Registrada <button type="button" onclick="window.unlockTab(${t})" style="cursor:pointer;font-size:0.75rem;padding:2px 8px;margin-left:10px;border:1px solid rgba(255,159,10,0.6);border-radius:12px;background:rgba(255,159,10,0.15);color:#ff9f0a;font-weight:700;">Editar</button>`);
+            continue;
+        }
+
         const btnAuto = document.querySelector(`.btnAutoVotaron[data-target="${t}"]`);
         if (btnAuto) {
             if (sumaTotalVotos > 0 && totalVotaron !== sumaTotalVotos) {
