@@ -351,6 +351,15 @@ function resetMesaState() {
     if(pBox) pBox.style.display = 'none';
     const alertLock = document.getElementById('alertLockContainer');
     if(alertLock) alertLock.style.display = 'none';
+
+    // Limpiar todos los campos de votos
+    document.querySelectorAll('.party-input, .other-input').forEach(inp => {
+        inp.value = 0;
+        updateCardState(inp);
+    });
+    document.querySelectorAll('.total-votaron-input').forEach(inp => {
+        inp.value = '';
+    });
 }
 
 /* ════════════════════════════════════════════════════════════
