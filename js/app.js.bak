@@ -67,39 +67,40 @@ function usarOrganizacionesPorDefecto() {
 }
 
 function renderPartidosTodasLasTabs() {
-    const cont1 = document.getElementById('partidosContainer_1');
-    const cont2 = document.getElementById('partidosContainer_2');
-    
-    if (!orgsData || orgsData.length === 0) {
-        if (cont1) cont1.innerHTML = '<tr><td colspan="3">No hay organizaciones</td></tr>';
-        if (cont2) cont2.innerHTML = '<tr><td colspan="3">No hay organizaciones</td></tr>';
-    } else {
-        if (cont1) cont1.innerHTML = orgsData.map((org, i) => buildPartidoRow(org, i, 1, 2)).join('');
-        if (cont2) cont2.innerHTML = orgsData.map((org, i) => buildPartidoRow(org, i, 3, 4)).join('');
+    for (let t = 1; t <= 4; t++) {
+        const container = document.getElementById(`partidosContainer_${t}`);
+        if (!container) continue;
+        
+        if (!orgsData || orgsData.length === 0) {
+            container.innerHTML = '<div>No hay organizaciones</div>';
+            continue;
+        }
+        container.innerHTML = orgsData.map((org, i) => buildPartidoCard(org, i, t)).join('');
     }
     bindInputsEscuchadores();
 }
 
-function buildPartidoRow(org, idx, tabA, tabB) {
+function buildPartidoCard(org, idx, tab) {
     const logoHtml = org.simbolo_url
-        ? `<img src="${esc(org.simbolo_url)}" alt="${esc(org.nombre)}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px; background: rgba(255,255,255,0.1);" onerror="this.parentElement.innerHTML='<span class=\\'party-logo-placeholder\\'>🏛</span>'">`
-        : `<span class="party-logo-placeholder" style="font-size: 1.5rem;">🏛</span>`;
+        ? `<img src="${esc(org.simbolo_url)}" alt="${esc(org.nombre)}" onerror="this.parentElement.innerHTML='<span class=\'party-logo-placeholder\'>🏛</span>'">`
+        : `<span class="party-logo-placeholder">🏛</span>`;
+    const siglasHtml = org.siglas ? `<div class="party-siglas">${esc(org.siglas)}</div>` : '';
 
     return `
-    <tr style="border-bottom: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-        <td style="padding: 0.5rem 1rem;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${logoHtml}</div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: var(--text);">${esc(org.nombre)}</div>
+    <div class="party-card" id="card_${tab}_${org.id_partido}">
+        <div class="party-head">
+            <div class="party-logo">${logoHtml}</div>
+            <div class="party-meta">
+                <div class="party-name">${esc(org.nombre)}</div>
+                ${siglasHtml}
             </div>
-        </td>
-        <td style="padding: 0.5rem; border-left: 1px solid var(--border); text-align: center; vertical-align: middle;">
-            <input type="number" class="vote-value party-input" id="voto_${tabA}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabA}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-        </td>
-        <td style="padding: 0.5rem; border-left: 1px solid var(--border); text-align: center; vertical-align: middle;">
-            <input type="number" class="vote-value party-input" id="voto_${tabB}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabB}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-        </td>
-    </tr>`;
+        </div>
+        <div class="vote-counter">
+            <button type="button" class="btn-step minus" data-target="voto_${tab}_${org.id_partido}">−</button>
+            <input type="number" class="vote-value party-input" id="voto_${tab}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tab}" value="0" min="0" inputmode="numeric">
+            <button type="button" class="btn-step plus" data-target="voto_${tab}_${org.id_partido}">+</button>
+        </div>
+    </div>`;
 }
 
 function crearCajasValidacion() {
@@ -151,16 +152,6 @@ function bindInputsEscuchadores() {
         });
     });
 
-    // Sincronizar campos de total votaron
-    document.getElementById('total_votaron_1')?.addEventListener('input', function() {
-        const p = document.getElementById('total_votaron_2');
-        if (p) p.value = this.value;
-    });
-    document.getElementById('total_votaron_3')?.addEventListener('input', function() {
-        const p = document.getElementById('total_votaron_4');
-        if (p) p.value = this.value;
-    });
-
     document.addEventListener('click', (e) => {
         const btn = e.target.closest('.btn-step');
         if (!btn) return;
@@ -180,16 +171,6 @@ function windowFijarVotantes(t, n) {
     if (inp) {
         inp.value = n;
         inp.dispatchEvent(new Event('input'));
-        
-        let pair = (t == 1) ? 2 : (t == 3 ? 4 : null);
-        if (pair) {
-            const pInp = document.getElementById('total_votaron_' + pair);
-            if (pInp) {
-                pInp.value = n;
-                pInp.dispatchEvent(new Event('input'));
-            }
-        }
-        
         mostrarToast(`✓ "Votaron" fijado en ${n} para ${nombresEleccion[t]}`, 'success');
     }
 }

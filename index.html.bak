@@ -676,8 +676,10 @@
             </h2>
             
             <div class="tabs-container" id="tabsContainer">
-                <button type="button" class="tab-btn active" data-tab="1">1. Acta Regional</button>
-                <button type="button" class="tab-btn" data-tab="2">2. Acta Municipal</button>
+                <button type="button" class="tab-btn active" data-tab="1">1. Regional</button>
+                <button type="button" class="tab-btn" data-tab="2">2. Consejero</button>
+                <button type="button" class="tab-btn" data-tab="3">3. Provincial</button>
+                <button type="button" class="tab-btn" data-tab="4">4. Distrital</button>
             </div>
 
             <!-- Banner llamativo de bloqueo -->
@@ -690,130 +692,194 @@
             </div>
 
             <div class="tab-content active" id="tab-content-1">
-                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem; text-align: center; color: var(--accent);">
-                    ELECCIONES REGIONALES
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_1">
+                        Ciudadanos que Votaron (Elección 1)
+                        <button type="button" class="btnAutoVotaron" data-target="1" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_1" data-tab="1"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
                 </h3>
-                
-                <div class="table-responsive" style="overflow-x: auto; margin-bottom: 1rem;">
-                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
-                        <thead>
-                            <tr>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: left; width: 40%;">ORGANIZACIONES POLÍTICAS</th>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: center; border-left: 1px solid var(--border);">GOB. Y VICEGOB.</th>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: center; border-left: 1px solid var(--border);">CONSEJERO REGIONAL</th>
-                            </tr>
-                        </thead>
-                        <tbody id="partidosContainer_1">
-                            <!-- Filas generadas por JS -->
-                        </tbody>
-                        <tbody>
-                            <!-- Otros votos -->
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS EN BLANCO</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS NULOS</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS IMPUGNADOS</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.05); font-weight: 800;">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border);">TOTAL DE VOTOS EMITIDOS</td>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_1">0</td>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_2">0</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">TOTAL DE CIUDADANOS QUE VOTARON</td>
-                                <td colspan="2" style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="field-input total-votaron-input" id="total_votaron_1" data-tab="1" placeholder="0" required min="0" inputmode="numeric" style="width: 200px; text-align: center; margin: 0 auto; display: block; border-color: rgba(59,130,246,0.5); font-size: 1.5rem; padding: 0.5rem;">
-                                    <input type="hidden" class="total-votaron-input" id="total_votaron_2" data-tab="2" value="0">
-                                    <button type="button" class="btnAutoVotaron" data-target="1" style="display:inline-block;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.25rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer;margin-top:0.75rem;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="parties-grid partidosContainer" id="partidosContainer_1" data-tab="1">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_1">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_1">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_1">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="tab-content" id="tab-content-2">
-                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem; text-align: center; color: #a78bfa;">
-                    ELECCIONES MUNICIPALES
+            <div class="tab-content " id="tab-content-2">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_2">
+                        Ciudadanos que Votaron (Elección 2)
+                        <button type="button" class="btnAutoVotaron" data-target="2" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_2" data-tab="2"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
                 </h3>
-                
-                <div class="table-responsive" style="overflow-x: auto; margin-bottom: 1rem;">
-                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
-                        <thead>
-                            <tr>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: left; width: 40%;">ORGANIZACIONES POLÍTICAS</th>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: center; border-left: 1px solid var(--border);">PROVINCIAL</th>
-                                <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: center; border-left: 1px solid var(--border);">DISTRITAL</th>
-                            </tr>
-                        </thead>
-                        <tbody id="partidosContainer_2">
-                            <!-- Filas generadas por JS -->
-                        </tbody>
-                        <tbody>
-                            <!-- Otros votos -->
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS EN BLANCO</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS NULOS</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS IMPUGNADOS</td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
-                                </td>
-                            </tr>
-                            <tr style="background: rgba(255,255,255,0.05); font-weight: 800;">
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border);">TOTAL DE VOTOS EMITIDOS</td>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_3">0</td>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_4">0</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">TOTAL DE CIUDADANOS QUE VOTARON</td>
-                                <td colspan="2" style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="field-input total-votaron-input" id="total_votaron_3" data-tab="3" placeholder="0" required min="0" inputmode="numeric" style="width: 200px; text-align: center; margin: 0 auto; display: block; border-color: rgba(59,130,246,0.5); font-size: 1.5rem; padding: 0.5rem;">
-                                    <input type="hidden" class="total-votaron-input" id="total_votaron_4" data-tab="4" value="0">
-                                    <button type="button" class="btnAutoVotaron" data-target="3" style="display:inline-block;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.25rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer;margin-top:0.75rem;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="parties-grid partidosContainer" id="partidosContainer_2" data-tab="2">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_2">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_2">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_2">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-3">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_3">
+                        Ciudadanos que Votaron (Elección 3)
+                        <button type="button" class="btnAutoVotaron" data-target="3" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_3" data-tab="3"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_3" data-tab="3">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_3">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_3">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_3">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content " id="tab-content-4">
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label class="field-label" for="total_votaron_4">
+                        Ciudadanos que Votaron (Elección 4)
+                        <button type="button" class="btnAutoVotaron" data-target="4" style="display:none;background:rgba(0,113,227,0.18);border:0.5px solid rgba(59,130,246,0.45);color:#93c5fd;padding:0.12rem 0.5rem;border-radius:10px;font-size:0.68rem;font-weight:700;cursor:pointer;margin-left:0.4rem;vertical-align:middle;text-transform:none;transition:all 0.2s ease;">⚡ Usar suma (<span class="btnAutoVotaronNum">0</span>)</button>
+                    </label>
+                    <input type="number" class="field-input total-votaron-input" id="total_votaron_4" data-tab="4"
+                           placeholder="0" required min="0" inputmode="numeric">
+                </div>
+
+                <h3 class="section-title" style="font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🏛</span> Votos por Organización
+                </h3>
+                <div class="parties-grid partidosContainer" id="partidosContainer_4" data-tab="4">
+                    <!-- Partidos generados por JS -->
+                </div>
+
+                <h3 class="section-title" style="margin-top:1.75rem; font-size: 0.95rem; margin-bottom: 1rem;">
+                    <span class="section-title-icon">🗂</span> Otros Votos
+                </h3>
+                <div class="other-votes-grid">
+                    <div class="other-card">
+                        <span class="other-label blanco"><span class="other-dot blanco"></span>Votos en Blanco</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_blancos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_blancos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label nulo"><span class="other-dot nulo"></span>Votos Nulos</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_nulos_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_nulos_4">+</button>
+                        </div>
+                    </div>
+                    <div class="other-card">
+                        <span class="other-label impugnado"><span class="other-dot impugnado"></span>Votos Impugnados</span>
+                        <div class="vote-counter">
+                            <button type="button" class="btn-step minus" data-target="votos_impugnados_4">−</button>
+                            <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric">
+                            <button type="button" class="btn-step plus" data-target="votos_impugnados_4">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
