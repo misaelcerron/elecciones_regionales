@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
                     <td>${escapeHtml(p.celular || '-')}</td>
                     <td><span style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(p.tipo)}</span></td>
-                    <td>
+                    <td style="white-space: nowrap;">
                         <button class="btn-edit" data-id="${p.id_personero}" style="margin-right: 0.5rem;">✏️ Editar</button>
                         <button class="btn-delete" data-id="${p.id_personero}">🗑️ Eliminar</button>
                     </td>
@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
                     <td>-</td>
                     <td>-</td>
-                    <td>
-                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">➕ Asignar</button>
+                    <td style="white-space: nowrap;">
+                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.5rem 1rem;">➕ Asignar</button>
                     </td>
                 `;
             }
