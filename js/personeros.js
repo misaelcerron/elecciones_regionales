@@ -7,8 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
     const toastMsg = document.getElementById('toastMsg');
     const searchInput = document.getElementById('searchInput');
+    const filterDistrito = document.getElementById('filterDistrito');
+    const filterLocal = document.getElementById('filterLocal');
+    const btnExportarExcel = document.getElementById('btnExportarExcel');
 
     let personerosData = [];
+    let filtradosActuales = [];
 
     // Cargar personeros
     async function loadPersoneros() {
@@ -17,17 +21,49 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = await res.json();
             if (json.error) throw new Error(json.error);
             personerosData = json.data || [];
+            populateFilters();
             renderTable();
         } catch (e) {
             alert('Error al cargar personeros: ' + e.message);
         }
     }
 
+    function populateFilters() {
+        if (!filterDistrito || !filterLocal) return;
+        const distritos = [...new Set(personerosData.map(p => p.distrito).filter(Boolean))].sort();
+        filterDistrito.innerHTML = '<option value="">Todos los Distritos</option>' + distritos.map(d => `<option value="${d}">${escapeHtml(d)}</option>`).join('');
+        
+        const locales = [...new Set(personerosData.map(p => p.local_votacion).filter(Boolean))].sort();
+        filterLocal.innerHTML = '<option value="">Todos los Locales</option>' + locales.map(l => `<option value="${l}">${escapeHtml(l)}</option>`).join('');
+    }
+
+    if (filterDistrito) {
+        filterDistrito.addEventListener('change', () => {
+            const dist = filterDistrito.value;
+            let locales = [];
+            if (dist) {
+                locales = [...new Set(personerosData.filter(p => p.distrito === dist).map(p => p.local_votacion).filter(Boolean))].sort();
+            } else {
+                locales = [...new Set(personerosData.map(p => p.local_votacion).filter(Boolean))].sort();
+            }
+            filterLocal.innerHTML = '<option value="">Todos los Locales</option>' + locales.map(l => `<option value="${l}">${escapeHtml(l)}</option>`).join('');
+            renderTable();
+        });
+    }
+    
+    if (filterLocal) filterLocal.addEventListener('change', renderTable);
+    searchInput.addEventListener('input', renderTable);
+
     function renderTable() {
         const query = searchInput.value.toLowerCase();
+        const dist = filterDistrito ? filterDistrito.value : '';
+        const loc = filterLocal ? filterLocal.value : '';
         tableBody.innerHTML = '';
 
-        const filtrados = personerosData.filter(p => {
+        filtradosActuales = personerosData.filter(p => {
+            if (dist && p.distrito !== dist) return false;
+            if (loc && p.local_votacion !== loc) return false;
+
             const searchStr = [
                 p.id_mesa || '',
                 p.nombres_apellidos || '',
@@ -40,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return searchStr.includes(query);
         });
 
-        if (filtrados.length === 0) {
+        if (filtradosActuales.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#86868b;padding:2rem;">No se encontraron personeros</td></tr>`;
             return;
         }
 
-        filtrados.forEach(p => {
+        filtradosActuales.forEach(p => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${escapeHtml(p.id_mesa)}</td>
@@ -71,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    searchInput.addEventListener('input', renderTable);
+    // searchInput.addEventListener ya se agregó arriba
 
     // Modal
     btnNew.addEventListener('click', () => openModal());
@@ -302,6 +338,72 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.display = msg ? 'inline-block' : 'none';
         el.className = 'import-feedback ' + tipo;
         el.textContent = msg;
+    }
+
+    if (btnExportarExcel) {
+        btnExportarExcel.addEventListener('click', () => {
+            if (!filtradosActuales || filtradosActuales.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarExcel;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Generando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const rows = [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO']];
+                    filtradosActuales.forEach(p => {
+                        rows.push([
+                            p.id_mesa || '',
+                            p.distrito || '',
+                            p.local_votacion || '',
+                            p.nombres_apellidos || '',
+                            p.dni || '',
+                            p.celular || '',
+                            p.tipo || ''
+                        ]);
+                    });
+
+                    const ws = XLSX.utils.aoa_to_sheet(rows);
+                    
+                    const headerStyle = {
+                        font: { bold: true, color: { rgb: "FFFFFF" } },
+                        fill: { fgColor: { rgb: "10B981" } }, // Verde esmeralda para el reporte
+                        alignment: { horizontal: "center", vertical: "center" },
+                        border: { top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } }, left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } } }
+                    };
+                    const cellStyle = {
+                        alignment: { vertical: "center" },
+                        border: { top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } }, left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } } }
+                    };
+
+                    const range = XLSX.utils.decode_range(ws['!ref']);
+                    for(let R = range.s.r; R <= range.e.r; ++R) {
+                        for(let C = range.s.c; C <= range.e.c; ++C) {
+                            const cell_ref = XLSX.utils.encode_cell({c:C, r:R});
+                            if(!ws[cell_ref]) ws[cell_ref] = {t:'s', v:''};
+                            ws[cell_ref].s = R === 0 ? headerStyle : cellStyle;
+                        }
+                    }
+
+                    ws['!cols'] = [{wch:10}, {wch:20}, {wch:35}, {wch:35}, {wch:12}, {wch:15}, {wch:15}];
+
+                    const wb = XLSX.utils.book_new();
+                    let distName = filterDistrito ? filterDistrito.value : '';
+                    let sheetName = distName ? distName.substring(0,30) : 'Reporte Personeros';
+                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                    
+                    XLSX.writeFile(wb, `Reporte_Personeros${distName ? '_' + distName : ''}.xlsx`);
+                } catch(e) {
+                    alert('Error al exportar: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
+        });
     }
 
     loadPersoneros();

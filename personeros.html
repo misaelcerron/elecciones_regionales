@@ -371,9 +371,20 @@
     </header>
 
     <div class="toolbar">
-        <div class="search-wrapper">
-            <span style="font-size:1.1rem; padding-left:0.5rem; display:flex; align-items:center;">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Buscar por DNI, Nombres, Mesa, Distrito, Local, Tipo..." autocomplete="off">
+        <div class="search-wrapper" style="display:flex; gap:0.5rem; max-width: 100%; flex: 1;">
+            <div style="position:relative; flex: 1; max-width: 300px;">
+                <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none;">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar DNI, Nombre..." autocomplete="off" style="width: 100%;">
+            </div>
+            <select class="search-input" id="filterDistrito" style="padding-left: 1rem; width: auto; background: var(--surface);">
+                <option value="">Todos los Distritos</option>
+            </select>
+            <select class="search-input" id="filterLocal" style="padding-left: 1rem; width: auto; background: var(--surface); max-width: 250px;">
+                <option value="">Todos los Locales</option>
+            </select>
+            <button class="btn-primary" id="btnExportarExcel" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399; margin-left: auto;">
+                <span>📊</span> Exportar Reporte
+            </button>
         </div>
         <div class="toolbar-right">
             <div class="import-bar">
@@ -470,8 +481,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=34"></script>
-<script src="js/personeros.js?v=34"></script>
+<script src="js/auth.js?v=35"></script>
+<script src="js/personeros.js?v=35"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
