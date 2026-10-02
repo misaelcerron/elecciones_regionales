@@ -432,6 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCancelCoordinador = document.getElementById('btnCancelCoordinador');
     const formCoordinador = document.getElementById('formCoordinador');
     const titleCoordinadorForm = document.getElementById('titleCoordinadorForm');
+    const coordDistritoSelect = document.getElementById('coordDistritoSelect');
     const coordLocalSelect = document.getElementById('coordLocalSelect');
 
     let coordinadoresData = [];
@@ -443,11 +444,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('api/get_locales.php');
             const json = await res.json();
             localesData = json.data || [];
-            coordLocalSelect.innerHTML = '<option value="">Seleccione un local...</option>' + 
-                localesData.map(l => `<option value="${l.id_local}">${escapeHtml(l.nombre_local)}</option>`).join('');
+            
+            const distritos = [...new Set(localesData.map(l => l.distrito).filter(Boolean))].sort();
+            coordDistritoSelect.innerHTML = '<option value="">Seleccione un distrito...</option>' + 
+                distritos.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
         } catch(e) {
             console.error('Error al cargar locales:', e);
         }
+    }
+
+    if (coordDistritoSelect) {
+        coordDistritoSelect.addEventListener('change', () => {
+            const dist = coordDistritoSelect.value;
+            if (!dist) {
+                coordLocalSelect.innerHTML = '<option value="">Primero seleccione distrito</option>';
+                coordLocalSelect.disabled = true;
+                return;
+            }
+            const filteredLocales = localesData.filter(l => l.distrito === dist);
+            coordLocalSelect.innerHTML = '<option value="">Seleccione un local...</option>' + 
+                filteredLocales.map(l => `<option value="${l.id_local}">${escapeHtml(l.nombre_local)}</option>`).join('');
+            coordLocalSelect.disabled = false;
+        });
     }
 
     if (btnNewCoordinador) {
@@ -468,6 +486,10 @@ document.addEventListener('DOMContentLoaded', () => {
         titleCoordinadorForm.textContent = 'Nuevo Coordinador';
         await loadLocales();
 
+        coordDistritoSelect.value = '';
+        coordLocalSelect.innerHTML = '<option value="">Primero seleccione distrito</option>';
+        coordLocalSelect.disabled = true;
+
         if (id) {
             const c = coordinadoresData.find(x => x.id_coordinador == id);
             if (c) {
@@ -475,7 +497,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('coordNombres').value = c.nombres_apellidos;
                 document.getElementById('coordDni').value = c.dni;
                 document.getElementById('coordCelular').value = c.celular || '';
-                document.getElementById('coordLocalSelect').value = c.id_local;
+                
+                const localInfo = localesData.find(l => l.id_local == c.id_local);
+                if (localInfo) {
+                    coordDistritoSelect.value = localInfo.distrito;
+                    const filteredLocales = localesData.filter(l => l.distrito === localInfo.distrito);
+                    coordLocalSelect.innerHTML = '<option value="">Seleccione un local...</option>' + 
+                        filteredLocales.map(l => `<option value="${l.id_local}">${escapeHtml(l.nombre_local)}</option>`).join('');
+                    coordLocalSelect.disabled = false;
+                    coordLocalSelect.value = c.id_local;
+                }
+                
                 titleCoordinadorForm.textContent = 'Editar Coordinador';
             }
         }

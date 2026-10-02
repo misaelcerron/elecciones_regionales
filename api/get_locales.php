@@ -10,7 +10,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
-    $stmt = $pdo->query("SELECT id_local, nombre_local FROM local_votacion ORDER BY nombre_local ASC");
+    $stmt = $pdo->query("
+        SELECT l.id_local, l.nombre_local, IFNULL(u.distrito, '') as distrito 
+        FROM local_votacion l
+        LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo
+        ORDER BY u.distrito ASC, l.nombre_local ASC
+    ");
     echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
 } catch (Exception $e) {
     http_response_code(500);

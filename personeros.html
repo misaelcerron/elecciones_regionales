@@ -554,11 +554,19 @@
                         <input type="text" class="field-input" id="coordCelular">
                     </div>
                 </div>
-                <div class="field-group">
-                    <label class="field-label">Local de Votación *</label>
-                    <select class="field-input" id="coordLocalSelect" required>
-                        <option value="">Seleccione un local...</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="field-group">
+                        <label class="field-label">Distrito *</label>
+                        <select class="field-input" id="coordDistritoSelect" required>
+                            <option value="">Seleccione un distrito...</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Local de Votación *</label>
+                        <select class="field-input" id="coordLocalSelect" required disabled>
+                            <option value="">Primero seleccione distrito</option>
+                        </select>
+                    </div>
                 </div>
                 <div style="margin-top: 1.5rem;">
                     <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
@@ -573,8 +581,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=39"></script>
-<script src="js/personeros.js?v=39"></script>
+<script src="js/auth.js?v=40"></script>
+<script src="js/personeros.js?v=40"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->

@@ -30,6 +30,14 @@ try {
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }
+} catch (PDOException $e) {
+    if ($e->getCode() == 23000 && strpos($e->getMessage(), '1062') !== false) {
+        http_response_code(400);
+        echo json_encode(['error' => 'El DNI ingresado ya se encuentra registrado para otro coordinador.']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Error de base de datos: ' . $e->getMessage()]);
+    }
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
