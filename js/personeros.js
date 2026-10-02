@@ -377,18 +377,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     doc.setFontSize(14);
                     doc.setTextColor(80, 80, 80);
-                    let subtitle = "REPORTE DE PERSONEROS";
-                    if (distName) subtitle += ` - DISTRITO: ${distName.toUpperCase()}`;
-                    if (locName) subtitle += ` - LOCAL: ${locName.toUpperCase()}`;
+                    let subtitleLine1 = "REPORTE DE PERSONEROS";
+                    if (distName) subtitleLine1 += ` - DISTRITO: ${distName.toUpperCase()}`;
                     
-                    // Si hay un local seleccionado, mostramos al coordinador en el subtítulo
-                    if (locName && filtradosActuales.length > 0) {
-                        const coord = filtradosActuales[0].coordinador;
-                        if (coord && coord !== 'Sin Asignar') {
-                            subtitle += ` | COORDINADOR: ${coord}`;
+                    let subtitleLine2 = "";
+                    if (locName) {
+                        subtitleLine2 = `LOCAL: ${locName.toUpperCase()}`;
+                        if (filtradosActuales.length > 0) {
+                            const coord = filtradosActuales[0].coordinador;
+                            if (coord && coord !== 'Sin Asignar') {
+                                subtitleLine2 += `   |   COORDINADOR: ${coord}`;
+                            }
                         }
                     }
-                    doc.text(subtitle, startX, 30);
+                    
+                    doc.text(subtitleLine1, startX, 30);
+                    let tableStartY = 36;
+                    if (subtitleLine2) {
+                        doc.setFontSize(11);
+                        doc.setTextColor(100, 100, 100);
+                        doc.text(subtitleLine2, startX, 37);
+                        tableStartY = 43;
+                    }
 
                     const tableData = [];
                     filtradosActuales.forEach(p => {
@@ -405,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     doc.autoTable({
-                        startY: 38,
+                        startY: tableStartY,
                         head: [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO', 'COORDINADOR']],
                         body: tableData,
                         styles: { fontSize: 8, cellPadding: 2, textColor: [40, 40, 40] },
