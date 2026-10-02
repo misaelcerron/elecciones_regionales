@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterLocal = document.getElementById('filterLocal');
     const filterEstado = document.getElementById('filterEstado');
     const btnExportarExcel = document.getElementById('btnExportarExcel');
+    const btnExportarPDF = document.getElementById('btnExportarPDF');
 
     let personerosData = [];
     let filtradosActuales = [];
@@ -369,6 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
         el.textContent = msg;
     }
 
+    // ══════════════════════════════════════
+    //  EXPORTAR EXCEL
+    // ══════════════════════════════════════
     if (btnExportarExcel) {
         btnExportarExcel.addEventListener('click', () => {
             if (!filtradosActuales || filtradosActuales.length === 0) {
@@ -376,6 +380,197 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const btn = btnExportarExcel;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Generando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const distName = filterDistrito ? filterDistrito.value || 'TODOS' : 'TODOS';
+                    const locName  = filterLocal   ? filterLocal.value   || 'TODOS' : 'TODOS';
+                    const now = new Date();
+                    const fechaStr = now.toLocaleDateString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+                    // ── Cabecera de título (filas 0-2) ──
+                    const titleRows = [
+                        ['SISTEMA ELECTORAL – PODEMOS PERÚ | ODPE PASCO'],
+                        [`REPORTE DE PERSONEROS   |   DISTRITO: ${distName}   |   LOCAL: ${locName}`],
+                        [`Fecha de exportación: ${fechaStr}   |   Total de registros: ${filtradosActuales.length}`],
+                        [] // fila en blanco
+                    ];
+
+                    // ── Cabeceras de columnas (fila 4) ──
+                    const headers = ['#', 'N° MESA', 'APELLIDOS Y NOMBRES', 'DNI', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'CELULAR', 'TIPO', 'ESTADO'];
+
+                    // ── Filas de datos ──
+                    const dataRows = filtradosActuales.map((p, i) => [
+                        i + 1,
+                        p.id_mesa || '',
+                        p.nombres_apellidos || 'FALTA ASIGNAR',
+                        p.dni || '-',
+                        p.distrito || '-',
+                        p.local_votacion || '-',
+                        p.celular || '-',
+                        p.tipo || '-',
+                        p.id_personero ? 'ASIGNADO' : 'FALTA ASIGNAR'
+                    ]);
+
+                    const aoa = [...titleRows, headers, ...dataRows];
+                    const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+                    // ── Estilos ──
+                    const DARK_BLUE  = '1B4B8A';
+                    const MED_BLUE   = '2563EB';
+                    const HEADER_FG  = 'FFFFFF';
+                    const ALT_ROW    = 'EEF4FF';
+                    const BORDER_CLR = 'B0C4DE';
+                    const GREEN_BG   = 'D1FAE5';
+                    const GREEN_FG   = '065F46';
+                    const RED_BG     = 'FEE2E2';
+                    const RED_FG     = '991B1B';
+
+                    const border = (style = 'thin') => ({
+                        top:    { style, color: { rgb: BORDER_CLR } },
+                        bottom: { style, color: { rgb: BORDER_CLR } },
+                        left:   { style, color: { rgb: BORDER_CLR } },
+                        right:  { style, color: { rgb: BORDER_CLR } }
+                    });
+
+                    // Fila 0 – Título principal
+                    const cell00 = XLSX.utils.encode_cell({ r: 0, c: 0 });
+                    if (!ws[cell00]) ws[cell00] = { t: 's', v: '' };
+                    ws[cell00].s = {
+                        font: { bold: true, sz: 14, color: { rgb: HEADER_FG } },
+                        fill: { fgColor: { rgb: DARK_BLUE } },
+                        alignment: { horizontal: 'center', vertical: 'center' }
+                    };
+
+                    // Fila 1 – Subtítulo
+                    const cell10 = XLSX.utils.encode_cell({ r: 1, c: 0 });
+                    if (!ws[cell10]) ws[cell10] = { t: 's', v: '' };
+                    ws[cell10].s = {
+                        font: { bold: true, sz: 11, color: { rgb: HEADER_FG } },
+                        fill: { fgColor: { rgb: MED_BLUE } },
+                        alignment: { horizontal: 'center', vertical: 'center' }
+                    };
+
+                    // Fila 2 – Metadatos
+                    const cell20 = XLSX.utils.encode_cell({ r: 2, c: 0 });
+                    if (!ws[cell20]) ws[cell20] = { t: 's', v: '' };
+                    ws[cell20].s = {
+                        font: { italic: true, sz: 10, color: { rgb: '4B5563' } },
+                        fill: { fgColor: { rgb: 'EFF6FF' } },
+                        alignment: { horizontal: 'center', vertical: 'center' }
+                    };
+
+                    // Merge celdas del encabezado (cols 0-8)
+                    ws['!merges'] = [
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
+                        { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: headers.length - 1 } }
+                    ];
+
+                    const headerRowIdx = 4; // titleRows(4) = fila 4
+
+                    // Estilo de cabeceras de tabla
+                    headers.forEach((_, c) => {
+                        const ref = XLSX.utils.encode_cell({ r: headerRowIdx, c });
+                        if (!ws[ref]) ws[ref] = { t: 's', v: headers[c] };
+                        ws[ref].s = {
+                            font: { bold: true, sz: 10, color: { rgb: HEADER_FG } },
+                            fill: { fgColor: { rgb: DARK_BLUE } },
+                            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+                            border: border('medium')
+                        };
+                    });
+
+                    // Estilos de filas de datos
+                    dataRows.forEach((row, ri) => {
+                        const rIdx = headerRowIdx + 1 + ri;
+                        const isAlt = ri % 2 === 1;
+                        row.forEach((val, c) => {
+                            const ref = XLSX.utils.encode_cell({ r: rIdx, c });
+                            if (!ws[ref]) ws[ref] = { t: 's', v: String(val) };
+
+                            let cellStyle = {
+                                font: { sz: 9 },
+                                fill: { fgColor: { rgb: isAlt ? ALT_ROW : 'FFFFFF' } },
+                                alignment: { vertical: 'center', horizontal: c === 0 ? 'center' : 'left', wrapText: false },
+                                border: border()
+                            };
+
+                            // Columna ESTADO con color
+                            if (c === 8) {
+                                const estado = String(val);
+                                if (estado === 'ASIGNADO') {
+                                    cellStyle.font = { sz: 9, bold: true, color: { rgb: GREEN_FG } };
+                                    cellStyle.fill = { fgColor: { rgb: GREEN_BG } };
+                                    cellStyle.alignment = { horizontal: 'center', vertical: 'center' };
+                                } else {
+                                    cellStyle.font = { sz: 9, bold: true, color: { rgb: RED_FG } };
+                                    cellStyle.fill = { fgColor: { rgb: RED_BG } };
+                                    cellStyle.alignment = { horizontal: 'center', vertical: 'center' };
+                                }
+                            }
+
+                            // Columna TIPO con negrita
+                            if (c === 7 && val && val !== '-') {
+                                cellStyle.font = { sz: 9, bold: true };
+                                cellStyle.alignment = { horizontal: 'center', vertical: 'center' };
+                            }
+
+                            ws[ref].s = cellStyle;
+                        });
+                    });
+
+                    // Anchos de columna
+                    ws['!cols'] = [
+                        { wch: 4  },  // #
+                        { wch: 9  },  // Mesa
+                        { wch: 32 },  // Nombres
+                        { wch: 11 },  // DNI
+                        { wch: 16 },  // Distrito
+                        { wch: 38 },  // Local
+                        { wch: 13 },  // Celular
+                        { wch: 10 },  // Tipo
+                        { wch: 14 }   // Estado
+                    ];
+
+                    // Alto de filas de cabecera
+                    ws['!rows'] = [
+                        { hpt: 24 }, // título
+                        { hpt: 18 }, // subtítulo
+                        { hpt: 14 }, // metadatos
+                        { hpt: 6  }, // en blanco
+                        { hpt: 22 }  // headers tabla
+                    ];
+
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'PERSONEROS');
+
+                    const fname = `Reporte_Personeros${distName !== 'TODOS' ? '_' + distName : ''}_${fechaStr.replace(/\//g,'-')}.xlsx`;
+                    XLSX.writeFile(wb, fname);
+                    showToast('✅ Excel exportado correctamente');
+                } catch (e) {
+                    alert('Error al exportar Excel: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
+        });
+    }
+
+    // ══════════════════════════════════════
+    //  EXPORTAR PDF
+    // ══════════════════════════════════════
+    if (btnExportarPDF) {
+        btnExportarPDF.addEventListener('click', () => {
+            if (!filtradosActuales || filtradosActuales.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarPDF;
             const originalText = btn.innerHTML;
             btn.innerHTML = '<span>⏳</span> Generando...';
             btn.disabled = true;
@@ -401,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     doc.setFont("helvetica", "bold");
                     doc.setFontSize(22);
-                    doc.setTextColor(27, 75, 138); // Azul Podemos Perú
+                    doc.setTextColor(27, 75, 138);
                     doc.text("PODEMOS PERÚ", startX, 22);
                     
                     doc.setFontSize(14);
