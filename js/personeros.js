@@ -152,5 +152,88 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
+    // ══════════════════════════════════════
+    //  IMPORTACIÓN EXCEL
+    // ══════════════════════════════════════
+    const fileInput = document.getElementById('fileInput');
+    const fileNameEl = document.getElementById('fileName');
+    const btnImportar = document.getElementById('btnImportar');
+    const feedback = document.getElementById('importFeedback');
+    let archivoExcel = null;
+
+    if(fileInput) {
+        fileInput.addEventListener('change', () => {
+            archivoExcel = fileInput.files[0] || null;
+            fileNameEl.textContent = archivoExcel ? archivoExcel.name : 'Ningún archivo seleccionado';
+            btnImportar.disabled = !archivoExcel;
+        });
+
+        document.getElementById('btnDescargarPlantilla').addEventListener('click', () => {
+            const wb = XLSX.utils.book_new();
+            const datos = [
+                ['N° MESA','APELLIDOS Y NOMBRES','DNI','CELULAR','TIPO (TITULAR/SUPLENTE)'],
+                ['068426','PEREZ GARCIA, JUAN','12345678','999888777','TITULAR'],
+                ['068427','GOMEZ DIAZ, MARIA','87654321','','SUPLENTE']
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(datos);
+            ws['!cols'] = [{wch:10},{wch:30},{wch:12},{wch:12},{wch:22}];
+            XLSX.utils.book_append_sheet(wb, ws, 'PERSONEROS');
+            XLSX.writeFile(wb, 'Plantilla_Personeros.xlsx');
+        });
+
+        btnImportar.addEventListener('click', () => { if (archivoExcel) procesarExcel(archivoExcel); });
+    }
+
+    async function procesarExcel(file) {
+        btnImportar.disabled = true;
+        btnImportar.textContent = '⏳...';
+        mostrarFeedback('', '');
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
+                if (rows.length < 2) { mostrarFeedback('err', 'Archivo sin datos.'); return; }
+                const personeros = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const r = rows[i];
+                    const mesa = String(r[0] ?? '').trim().padStart(6,'0');
+                    const nombres = String(r[1] ?? '').trim();
+                    const dni = String(r[2] ?? '').trim();
+                    if (!mesa || !nombres || !dni || mesa === '000000') continue;
+                    
+                    personeros.push({ 
+                        id_mesa: mesa, 
+                        nombres_apellidos: nombres, 
+                        dni: dni, 
+                        celular: String(r[3] ?? '').trim(), 
+                        tipo: String(r[4] || 'TITULAR').trim().toUpperCase() 
+                    });
+                }
+                if (!personeros.length) { mostrarFeedback('err', 'No se encontraron personeros válidos.'); return; }
+                
+                const res = await fetch('api/importar_personeros.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ personeros }) });
+                const result = await res.json();
+                
+                if (result.success) {
+                    mostrarFeedback('ok', '✅ ' + result.message);
+                    loadPersoneros();
+                    fileInput.value = '';
+                    fileNameEl.textContent = 'Ningún archivo seleccionado';
+                    archivoExcel = null;
+                } else { mostrarFeedback('err', '❌ ' + result.message); }
+            } catch (err) { mostrarFeedback('err', 'Error: ' + err.message); }
+            finally { btnImportar.disabled = true; btnImportar.textContent = '⬆ Importar'; }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function mostrarFeedback(tipo, msg) {
+        const el = feedback;
+        el.style.display = msg ? 'inline-block' : 'none';
+        el.className = 'import-feedback ' + tipo;
+        el.textContent = msg;
+    }
+
     loadPersoneros();
 });
