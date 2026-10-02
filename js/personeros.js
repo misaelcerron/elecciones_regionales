@@ -380,6 +380,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     let subtitle = "REPORTE DE PERSONEROS";
                     if (distName) subtitle += ` - DISTRITO: ${distName.toUpperCase()}`;
                     if (locName) subtitle += ` - LOCAL: ${locName.toUpperCase()}`;
+                    
+                    // Si hay un local seleccionado, mostramos al coordinador en el subtítulo
+                    if (locName && filtradosActuales.length > 0) {
+                        const coord = filtradosActuales[0].coordinador;
+                        if (coord && coord !== 'Sin Asignar') {
+                            subtitle += ` | COORDINADOR: ${coord}`;
+                        }
+                    }
                     doc.text(subtitle, startX, 30);
 
                     const tableData = [];
@@ -391,13 +399,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             p.nombres_apellidos || '',
                             p.dni || '',
                             p.celular || '',
-                            p.tipo || ''
+                            p.tipo || '',
+                            p.coordinador || '-'
                         ]);
                     });
 
                     doc.autoTable({
                         startY: 38,
-                        head: [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO']],
+                        head: [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO', 'COORDINADOR']],
                         body: tableData,
                         styles: { fontSize: 8, cellPadding: 2, textColor: [40, 40, 40] },
                         headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },

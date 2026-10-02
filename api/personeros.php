@@ -14,11 +14,13 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
     switch ($method) {
         case 'GET':
-            $stmt = $pdo->query("SELECT p.*, u.distrito, l.nombre_local as local_votacion 
+            $stmt = $pdo->query("SELECT p.*, u.distrito, l.nombre_local as local_votacion,
+                                        IFNULL(c.nombres_apellidos, 'Sin Asignar') as coordinador
                                  FROM personero p 
                                  LEFT JOIN mesa_sufragio m ON p.id_mesa = m.id_mesa 
                                  LEFT JOIN local_votacion l ON m.id_local = l.id_local 
                                  LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo 
+                                 LEFT JOIN coordinador_local c ON l.id_local = c.id_local
                                  ORDER BY p.id_personero DESC");
             $personeros = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['data' => $personeros]);
