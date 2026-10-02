@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
             [1,'PASCO','PASCO','DANIEL ALCIDES CARRION','CHACAYAN','','068426'],
             [2,'PASCO','PASCO','DANIEL ALCIDES CARRION','CHACAYAN','','068427'],
             [3,'PASCO','PASCO','DANIEL ALCIDES CARRION','CHACAYAN','CHANGO','903878'],
-            [4,'PASCO','PASCO','DANIEL ALCIDES CARRION','GOLLLARISQUIZGA','','068434'],
+            [4,'PASCO','PASCO','DANIEL ALCIDES CARRION','GOYLLARISQUIZGA','','068434'],
             [5,'PASCO','PASCO','DANIEL ALCIDES CARRION','PAUCAR','','068437'],
         ];
         const ws = XLSX.utils.aoa_to_sheet(datos);
