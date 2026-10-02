@@ -27,11 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
         tableBody.innerHTML = '';
 
-        const filtrados = personerosData.filter(p => 
-            p.nombres_apellidos.toLowerCase().includes(query) ||
-            p.dni.toLowerCase().includes(query) ||
-            p.id_mesa.toLowerCase().includes(query)
-        );
+        const filtrados = personerosData.filter(p => {
+            const searchStr = [
+                p.id_mesa || '',
+                p.nombres_apellidos || '',
+                p.dni || '',
+                p.distrito || '',
+                p.local_votacion || '',
+                p.celular || '',
+                p.tipo || ''
+            ].join(' ').toLowerCase();
+            return searchStr.includes(query);
+        });
 
         if (filtrados.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#86868b;padding:2rem;">No se encontraron personeros</td></tr>`;
