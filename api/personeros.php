@@ -15,12 +15,18 @@ try {
     switch ($method) {
         case 'GET':
             $stmt = $pdo->query("SELECT m.id_mesa, u.distrito, l.nombre_local as local_votacion,
-                                        IFNULL(c.nombres_apellidos, 'Sin Asignar') as coordinador,
+                                        IFNULL(
+                                            (SELECT c2.nombres_apellidos 
+                                             FROM coordinador_local c2 
+                                             WHERE c2.id_local = l.id_local 
+                                             ORDER BY c2.id_coordinador ASC 
+                                             LIMIT 1),
+                                            'Sin Asignar'
+                                        ) as coordinador,
                                         p.id_personero, p.nombres_apellidos, p.dni, p.celular, p.tipo
                                  FROM mesa_sufragio m 
                                  LEFT JOIN local_votacion l ON m.id_local = l.id_local 
                                  LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo 
-                                 LEFT JOIN coordinador_local c ON l.id_local = c.id_local
                                  LEFT JOIN personero p ON m.id_mesa = p.id_mesa
                                  ORDER BY CAST(m.id_mesa AS UNSIGNED) ASC, p.tipo ASC");
             $personeros = $stmt->fetchAll(PDO::FETCH_ASSOC);
