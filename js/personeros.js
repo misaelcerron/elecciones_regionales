@@ -353,9 +353,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 try {
-                    const rows = [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO']];
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
+
+                    const distName = filterDistrito ? filterDistrito.value : '';
+                    const locName = filterLocal ? filterLocal.value : '';
+
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(22);
+                    doc.setTextColor(27, 75, 138); // Azul Podemos Perú
+                    doc.text("PODEMOS PERÚ", 14, 22);
+                    
+                    doc.setFontSize(14);
+                    doc.setTextColor(80, 80, 80);
+                    let subtitle = "REPORTE DE PERSONEROS";
+                    if (distName) subtitle += ` - DISTRITO: ${distName.toUpperCase()}`;
+                    if (locName) subtitle += ` - LOCAL: ${locName.toUpperCase()}`;
+                    doc.text(subtitle, 14, 30);
+
+                    const tableData = [];
                     filtradosActuales.forEach(p => {
-                        rows.push([
+                        tableData.push([
                             p.id_mesa || '',
                             p.distrito || '',
                             p.local_votacion || '',
@@ -366,36 +384,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         ]);
                     });
 
-                    const ws = XLSX.utils.aoa_to_sheet(rows);
-                    
-                    const headerStyle = {
-                        font: { bold: true, color: { rgb: "FFFFFF" } },
-                        fill: { fgColor: { rgb: "10B981" } }, // Verde esmeralda para el reporte
-                        alignment: { horizontal: "center", vertical: "center" },
-                        border: { top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } }, left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } } }
-                    };
-                    const cellStyle = {
-                        alignment: { vertical: "center" },
-                        border: { top: { style: "thin", color: { rgb: "000000" } }, bottom: { style: "thin", color: { rgb: "000000" } }, left: { style: "thin", color: { rgb: "000000" } }, right: { style: "thin", color: { rgb: "000000" } } }
-                    };
+                    doc.autoTable({
+                        startY: 38,
+                        head: [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO']],
+                        body: tableData,
+                        styles: { fontSize: 8, cellPadding: 2, textColor: [40, 40, 40] },
+                        headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
+                        alternateRowStyles: { fillColor: [245, 248, 252] },
+                        theme: 'grid'
+                    });
 
-                    const range = XLSX.utils.decode_range(ws['!ref']);
-                    for(let R = range.s.r; R <= range.e.r; ++R) {
-                        for(let C = range.s.c; C <= range.e.c; ++C) {
-                            const cell_ref = XLSX.utils.encode_cell({c:C, r:R});
-                            if(!ws[cell_ref]) ws[cell_ref] = {t:'s', v:''};
-                            ws[cell_ref].s = R === 0 ? headerStyle : cellStyle;
-                        }
-                    }
-
-                    ws['!cols'] = [{wch:10}, {wch:20}, {wch:35}, {wch:35}, {wch:12}, {wch:15}, {wch:15}];
-
-                    const wb = XLSX.utils.book_new();
-                    let distName = filterDistrito ? filterDistrito.value : '';
-                    let sheetName = distName ? distName.substring(0,30) : 'Reporte Personeros';
-                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
-                    
-                    XLSX.writeFile(wb, `Reporte_Personeros${distName ? '_' + distName : ''}.xlsx`);
+                    doc.save(`Reporte_Personeros${distName ? '_' + distName : ''}.pdf`);
                 } catch(e) {
                     alert('Error al exportar: ' + e.message);
                 } finally {
