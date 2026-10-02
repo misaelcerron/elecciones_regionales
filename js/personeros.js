@@ -359,17 +359,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     const distName = filterDistrito ? filterDistrito.value : '';
                     const locName = filterLocal ? filterLocal.value : '';
 
+                    const logoImg = document.querySelector('img[alt="Podemos Perú"]');
+                    let startX = 14;
+                    if (logoImg) {
+                        try {
+                            doc.addImage(logoImg, 'JPEG', 14, 14, 16, 16);
+                            startX = 34;
+                        } catch (err) {
+                            console.warn('No se pudo agregar el logo al PDF:', err);
+                        }
+                    }
+
                     doc.setFont("helvetica", "bold");
                     doc.setFontSize(22);
                     doc.setTextColor(27, 75, 138); // Azul Podemos Perú
-                    doc.text("PODEMOS PERÚ", 14, 22);
+                    doc.text("PODEMOS PERÚ", startX, 22);
                     
                     doc.setFontSize(14);
                     doc.setTextColor(80, 80, 80);
                     let subtitle = "REPORTE DE PERSONEROS";
                     if (distName) subtitle += ` - DISTRITO: ${distName.toUpperCase()}`;
                     if (locName) subtitle += ` - LOCAL: ${locName.toUpperCase()}`;
-                    doc.text(subtitle, 14, 30);
+                    doc.text(subtitle, startX, 30);
 
                     const tableData = [];
                     filtradosActuales.forEach(p => {
