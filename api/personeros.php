@@ -22,7 +22,7 @@ try {
                                  LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo 
                                  LEFT JOIN coordinador_local c ON l.id_local = c.id_local
                                  LEFT JOIN personero p ON m.id_mesa = p.id_mesa
-                                 ORDER BY u.distrito ASC, l.nombre_local ASC, m.id_mesa ASC, p.tipo ASC");
+                                 ORDER BY CAST(m.id_mesa AS UNSIGNED) ASC, p.tipo ASC");
             $personeros = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['data' => $personeros]);
             break;
