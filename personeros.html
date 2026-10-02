@@ -394,6 +394,9 @@
             </button>
         </div>
         <div class="toolbar-right">
+            <button class="btn-primary" id="btnOpenCoordinadores" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); color: #818cf8; margin-right: 0.5rem;">
+                <span>👔</span> Coordinadores Local
+            </button>
             <div class="import-bar">
                 <label>📥 Importar Personeros:</label>
                 <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
@@ -485,6 +488,41 @@
 </div>
 
 <!-- Toast -->
+<!-- Modal Coordinadores -->
+<div class="modal" id="modalCoordinadores">
+    <div class="modal-content" style="max-width: 900px; height: 80vh; display:flex; flex-direction:column; padding: 0;">
+        <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+            <h2>👔 Coordinadores de Local</h2>
+            <button class="close-btn" id="btnCloseCoordinadores">&times;</button>
+        </div>
+        <div class="modal-body" style="flex:1; overflow:hidden; display:flex; flex-direction:column; padding:0;">
+            <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display:flex; gap: 1rem; align-items:center; background: var(--bg-primary);">
+                <input type="file" id="fileCoordinadores" accept=".xlsx,.xls" style="display:none;">
+                <button class="btn-primary" onclick="document.getElementById('fileCoordinadores').click()" style="background:var(--surface); color: var(--text-primary); border: 1px solid var(--border);">📁 Archivo Excel</button>
+                <span id="coordFileName" style="color:var(--text-secondary); font-size:0.9rem;">Ningún archivo</span>
+                <button class="btn-primary" id="btnImportarCoordinadores" disabled style="background: #1B4B8A;">⬆ Importar</button>
+                <button class="btn-primary" id="btnPlantillaCoordinadores" style="margin-left:auto; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399;">⬇ Plantilla Excel</button>
+            </div>
+            <div id="coordFeedback" style="padding: 0.5rem 1.5rem;"></div>
+            <div style="flex:1; overflow:auto; padding: 0 1.5rem 1.5rem 1.5rem;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NOMBRES Y APELLIDOS</th>
+                            <th>DNI</th>
+                            <th>CELULAR</th>
+                            <th>COORDINADOR LOCAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableCoordinadores">
+                        <!-- Content loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>

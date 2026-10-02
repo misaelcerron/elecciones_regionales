@@ -416,5 +416,140 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === MÓDULO COORDINADORES ===
+    const btnOpenCoordinadores = document.getElementById('btnOpenCoordinadores');
+    const modalCoordinadores = document.getElementById('modalCoordinadores');
+    const btnCloseCoordinadores = document.getElementById('btnCloseCoordinadores');
+    const fileCoordinadores = document.getElementById('fileCoordinadores');
+    const coordFileName = document.getElementById('coordFileName');
+    const btnImportarCoordinadores = document.getElementById('btnImportarCoordinadores');
+    const btnPlantillaCoordinadores = document.getElementById('btnPlantillaCoordinadores');
+    const tableCoordinadores = document.getElementById('tableCoordinadores');
+    const coordFeedback = document.getElementById('coordFeedback');
+
+    let coordinadoresData = [];
+
+    if (btnOpenCoordinadores) {
+        btnOpenCoordinadores.addEventListener('click', () => {
+            modalCoordinadores.classList.add('active');
+            loadCoordinadores();
+        });
+    }
+
+    if (btnCloseCoordinadores) {
+        btnCloseCoordinadores.addEventListener('click', () => {
+            modalCoordinadores.classList.remove('active');
+        });
+    }
+
+    async function loadCoordinadores() {
+        tableCoordinadores.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Cargando coordinadores...</td></tr>';
+        try {
+            const res = await fetch('api/get_coordinadores.php');
+            const json = await res.json();
+            coordinadoresData = json.data || [];
+            renderCoordinadores();
+        } catch(e) {
+            tableCoordinadores.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
+        }
+    }
+
+    function renderCoordinadores() {
+        tableCoordinadores.innerHTML = '';
+        if (coordinadoresData.length === 0) {
+            tableCoordinadores.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados.</td></tr>';
+            return;
+        }
+        coordinadoresData.forEach(c => {
+            tableCoordinadores.innerHTML += `
+                <tr>
+                    <td>${escapeHtml(c.nombres_apellidos)}</td>
+                    <td>${escapeHtml(c.dni)}</td>
+                    <td>${escapeHtml(c.celular || '-')}</td>
+                    <td>${escapeHtml(c.local_votacion)}</td>
+                </tr>
+            `;
+        });
+    }
+
+    if (fileCoordinadores) {
+        fileCoordinadores.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                coordFileName.textContent = e.target.files[0].name;
+                btnImportarCoordinadores.disabled = false;
+            } else {
+                coordFileName.textContent = 'Ningún archivo';
+                btnImportarCoordinadores.disabled = true;
+            }
+        });
+    }
+
+    if (btnPlantillaCoordinadores) {
+        btnPlantillaCoordinadores.addEventListener('click', () => {
+            const rows = [['NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL']];
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+            ws['!cols'] = [{wch:35}, {wch:12}, {wch:15}, {wch:40}];
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Coordinadores');
+            XLSX.writeFile(wb, 'Plantilla_Coordinadores.xlsx');
+        });
+    }
+
+    if (btnImportarCoordinadores) {
+        btnImportarCoordinadores.addEventListener('click', () => {
+            const file = fileCoordinadores.files[0];
+            if (!file) return;
+            btnImportarCoordinadores.disabled = true;
+            btnImportarCoordinadores.textContent = '⏳...';
+            coordFeedback.innerHTML = '';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
+                    const records = [];
+                    for (let i = 1; i < rows.length; i++) {
+                        const r = rows[i];
+                        const nombres = String(r[0] ?? '').trim();
+                        const dni = String(r[1] ?? '').trim();
+                        const celular = String(r[2] ?? '').trim();
+                        const local = String(r[3] ?? '').trim();
+                        if (nombres && dni && local) {
+                            records.push({ nombres_apellidos: nombres, dni: dni, celular: celular, local_votacion: local });
+                        }
+                    }
+
+                    if (records.length === 0) {
+                        coordFeedback.innerHTML = '<span style="color:red;">No se encontraron datos válidos para importar. Asegúrese de llenar todas las columnas.</span>';
+                        return;
+                    }
+
+                    const res = await fetch('api/importar_coordinadores.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ coordinadores: records })
+                    });
+                    const result = await res.json();
+                    
+                    if (result.success) {
+                        coordFeedback.innerHTML = `<span style="color:#10b981; font-weight: bold;">✅ ${result.message}</span>`;
+                        loadCoordinadores();
+                    } else {
+                        coordFeedback.innerHTML = `<span style="color:red; font-weight: bold;">❌ ${result.message}</span>`;
+                    }
+                } catch (err) {
+                    coordFeedback.innerHTML = `<span style="color:red; font-weight: bold;">Error procesando Excel: ${err.message}</span>`;
+                } finally {
+                    btnImportarCoordinadores.textContent = '⬆ Importar';
+                    btnImportarCoordinadores.disabled = false;
+                    fileCoordinadores.value = '';
+                    coordFileName.textContent = 'Ningún archivo';
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
     loadPersoneros();
 });
