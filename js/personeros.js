@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const filterDistrito = document.getElementById('filterDistrito');
     const filterLocal = document.getElementById('filterLocal');
+    const filterEstado = document.getElementById('filterEstado');
     const btnExportarExcel = document.getElementById('btnExportarExcel');
 
     let personerosData = [];
@@ -52,17 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (filterLocal) filterLocal.addEventListener('change', renderTable);
+    if (filterEstado) filterEstado.addEventListener('change', renderTable);
     searchInput.addEventListener('input', renderTable);
 
     function renderTable() {
         const query = searchInput.value.toLowerCase();
         const dist = filterDistrito ? filterDistrito.value : '';
         const loc = filterLocal ? filterLocal.value : '';
+        const estado = filterEstado ? filterEstado.value : '';
         tableBody.innerHTML = '';
 
         filtradosActuales = personerosData.filter(p => {
             if (dist && p.distrito !== dist) return false;
             if (loc && p.local_votacion !== loc) return false;
+            if (estado === 'ASIGNADO' && !p.id_personero) return false;
+            if (estado === 'FALTA' && p.id_personero) return false;
 
             const searchStr = [
                 p.id_mesa || '',

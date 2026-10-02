@@ -390,6 +390,11 @@
             <select class="search-input" id="filterLocal" style="padding-left: 1rem; width: auto; background: var(--surface); max-width: 250px;">
                 <option value="">Todos los Locales</option>
             </select>
+            <select class="search-input" id="filterEstado" style="padding-left: 1rem; width: auto; background: var(--surface);">
+                <option value="">Todos los Estados</option>
+                <option value="ASIGNADO">Asignados</option>
+                <option value="FALTA">Falta Asignar</option>
+            </select>
             <button class="btn-primary" id="btnExportarExcel" style="background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.4); color: #f87171; margin-left: auto;">
                 <span>📄</span> Exportar PDF
             </button>
@@ -581,8 +586,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=43"></script>
-<script src="js/personeros.js?v=43"></script>
+<script src="js/auth.js?v=44"></script>
+<script src="js/personeros.js?v=44"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
