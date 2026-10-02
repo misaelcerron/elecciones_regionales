@@ -168,17 +168,78 @@ document.addEventListener('DOMContentLoaded', () => {
             btnImportar.disabled = !archivoExcel;
         });
 
-        document.getElementById('btnDescargarPlantilla').addEventListener('click', () => {
-            const wb = XLSX.utils.book_new();
-            const datos = [
-                ['N° MESA','APELLIDOS Y NOMBRES','DNI','CELULAR','TIPO (TITULAR/SUPLENTE)'],
-                ['068426','PEREZ GARCIA, JUAN','12345678','999888777','TITULAR'],
-                ['068427','GOMEZ DIAZ, MARIA','87654321','','SUPLENTE']
-            ];
-            const ws = XLSX.utils.aoa_to_sheet(datos);
-            ws['!cols'] = [{wch:10},{wch:30},{wch:12},{wch:12},{wch:22}];
-            XLSX.utils.book_append_sheet(wb, ws, 'PERSONEROS');
-            XLSX.writeFile(wb, 'Plantilla_Personeros.xlsx');
+        document.getElementById('btnDescargarPlantilla').addEventListener('click', async () => {
+            const btn = document.getElementById('btnDescargarPlantilla');
+            btn.textContent = '⏳...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('api/get_mesas.php');
+                const json = await res.json();
+                const mesas = json.data || [];
+
+                const rows = [];
+                // Cabeceras con las nuevas columnas
+                rows.push(['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO (TITULAR/SUPLENTE)']);
+                
+                if (mesas.length > 0) {
+                    mesas.forEach(m => {
+                        rows.push([m.id_mesa, m.distrito, m.local_votacion, '', '', '', 'TITULAR']);
+                    });
+                } else {
+                    rows.push(['068426', 'GOYLLARISQUIZGA', 'IE 34052', 'PEREZ GARCIA, JUAN', '12345678', '999888777', 'TITULAR']);
+                }
+
+                const ws = XLSX.utils.aoa_to_sheet(rows);
+
+                // Estilos para xlsx-js-style
+                const headerStyle = {
+                    font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11 },
+                    fill: { fgColor: { rgb: "1B4B8A" } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: {
+                        top: { style: "medium", color: { rgb: "000000" } },
+                        bottom: { style: "medium", color: { rgb: "000000" } },
+                        left: { style: "medium", color: { rgb: "000000" } },
+                        right: { style: "medium", color: { rgb: "000000" } }
+                    }
+                };
+
+                const cellStyle = {
+                    alignment: { vertical: "center" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "000000" } },
+                        bottom: { style: "thin", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "000000" } },
+                        right: { style: "thin", color: { rgb: "000000" } }
+                    }
+                };
+
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                for(let R = range.s.r; R <= range.e.r; ++R) {
+                    for(let C = range.s.c; C <= range.e.c; ++C) {
+                        const cell_ref = XLSX.utils.encode_cell({c:C, r:R});
+                        if(!ws[cell_ref]) ws[cell_ref] = {t:'s', v:''};
+                        if(R === 0) {
+                            ws[cell_ref].s = headerStyle;
+                        } else {
+                            ws[cell_ref].s = cellStyle;
+                        }
+                    }
+                }
+
+                ws['!cols'] = [{wch:10}, {wch:20}, {wch:35}, {wch:35}, {wch:12}, {wch:15}, {wch:25}];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'PERSONEROS');
+                XLSX.writeFile(wb, 'Plantilla_Personeros.xlsx');
+
+            } catch (err) {
+                alert('Error al generar plantilla: ' + err.message);
+            } finally {
+                btn.textContent = '⬇ Plantilla';
+                btn.disabled = false;
+            }
         });
 
         btnImportar.addEventListener('click', () => { if (archivoExcel) procesarExcel(archivoExcel); });
@@ -198,16 +259,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let i = 1; i < rows.length; i++) {
                     const r = rows[i];
                     const mesa = String(r[0] ?? '').trim().padStart(6,'0');
-                    const nombres = String(r[1] ?? '').trim();
-                    const dni = String(r[2] ?? '').trim();
+                    // r[1] es DISTRITO, r[2] es LOCAL DE VOTACION, saltamos a r[3] para nombres
+                    const nombres = String(r[3] ?? '').trim();
+                    const dni = String(r[4] ?? '').trim();
                     if (!mesa || !nombres || !dni || mesa === '000000') continue;
                     
                     personeros.push({ 
                         id_mesa: mesa, 
                         nombres_apellidos: nombres, 
                         dni: dni, 
-                        celular: String(r[3] ?? '').trim(), 
-                        tipo: String(r[4] || 'TITULAR').trim().toUpperCase() 
+                        celular: String(r[5] ?? '').trim(), 
+                        tipo: String(r[6] || 'TITULAR').trim().toUpperCase() 
                     });
                 }
                 if (!personeros.length) { mostrarFeedback('err', 'No se encontraron personeros válidos.'); return; }
