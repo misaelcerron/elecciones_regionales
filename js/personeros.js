@@ -82,14 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filtradosActuales.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#86868b;padding:2rem;">No se encontraron personeros</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#86868b;padding:2rem;">No se encontraron personeros</td></tr>`;
             return;
         }
 
-        filtradosActuales.forEach(p => {
+        filtradosActuales.forEach((p, index) => {
             const tr = document.createElement('tr');
             if (p.id_personero) {
                 tr.innerHTML = `
+                    <td style="color: var(--text-tertiary); font-size: 0.8rem; text-align: center; font-weight: 600;">${index + 1}</td>
                     <td>${escapeHtml(p.id_mesa)}</td>
                     <td style="font-weight:600;">${escapeHtml(p.nombres_apellidos)}</td>
                     <td>${escapeHtml(p.dni)}</td>
@@ -104,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             } else {
                 tr.innerHTML = `
+                    <td style="color: var(--text-tertiary); font-size: 0.8rem; text-align: center; font-weight: 600;">${index + 1}</td>
                     <td>${escapeHtml(p.id_mesa)}</td>
                     <td style="font-weight:600; color: #ef4444;">FALTA ASIGNAR</td>
                     <td>-</td>
@@ -427,8 +429,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     const tableData = [];
-                    filtradosActuales.forEach(p => {
+                    filtradosActuales.forEach((p, index) => {
                         tableData.push([
+                            index + 1,
                             p.id_mesa || '',
                             p.distrito || '',
                             p.local_votacion || '',
@@ -442,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     doc.autoTable({
                         startY: tableStartY,
-                        head: [['N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO', 'COORDINADOR']],
+                        head: [['#', 'N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO', 'COORDINADOR']],
                         body: tableData,
                         styles: { fontSize: 8, cellPadding: 2, textColor: [40, 40, 40] },
                         headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
