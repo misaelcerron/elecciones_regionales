@@ -431,14 +431,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnOpenCoordinadores) {
         btnOpenCoordinadores.addEventListener('click', () => {
-            modalCoordinadores.classList.add('active');
+            modalCoordinadores.style.display = 'flex';
             loadCoordinadores();
         });
     }
 
     if (btnCloseCoordinadores) {
         btnCloseCoordinadores.addEventListener('click', () => {
-            modalCoordinadores.classList.remove('active');
+            modalCoordinadores.style.display = 'none';
         });
     }
 
