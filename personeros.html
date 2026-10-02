@@ -494,6 +494,11 @@
     <div class="modal-sheet" style="max-width: 900px; height: 80vh; display:flex; flex-direction:column; padding: 0;">
         <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
             <h2>👔 Coordinadores de Local</h2>
+            <div style="display:flex; gap: 0.5rem; margin-left: auto; margin-right: 1rem;">
+                <button class="btn-primary" id="btnNewCoordinador" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); color: #34d399; font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+                    ➕ Nuevo Coordinador
+                </button>
+            </div>
             <button class="modal-close" id="btnCloseCoordinadores">&times;</button>
         </div>
         <div class="modal-body" style="flex:1; overflow:hidden; display:flex; flex-direction:column; padding:0;">
@@ -513,6 +518,7 @@
                             <th>DNI</th>
                             <th>CELULAR</th>
                             <th>COORDINADOR LOCAL</th>
+                            <th style="width: 120px;">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody id="tableCoordinadores">
@@ -520,6 +526,46 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear/Editar Coordinador -->
+<div class="modal-overlay" id="modalCoordinadorForm">
+    <div class="modal-sheet" style="max-width: 500px;">
+        <div class="modal-header" style="padding: 1.25rem 1.5rem 0;">
+            <h2 class="modal-title" id="titleCoordinadorForm">Nuevo Coordinador</h2>
+            <button class="modal-close" id="btnCancelCoordinador">✕</button>
+        </div>
+        <div class="modal-body" style="padding: 1.25rem 1.5rem 1.5rem;">
+            <form id="formCoordinador">
+                <input type="hidden" id="coordId">
+                <div class="field-group">
+                    <label class="field-label">Apellidos y Nombres *</label>
+                    <input type="text" class="field-input" id="coordNombres" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="field-group">
+                        <label class="field-label">DNI *</label>
+                        <input type="text" class="field-input" id="coordDni" required maxlength="8">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Celular</label>
+                        <input type="text" class="field-input" id="coordCelular">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Local de Votación *</label>
+                    <select class="field-input" id="coordLocalSelect" required>
+                        <option value="">Seleccione un local...</option>
+                    </select>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
+                        Guardar Coordinador
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

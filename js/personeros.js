@@ -427,7 +427,105 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableCoordinadores = document.getElementById('tableCoordinadores');
     const coordFeedback = document.getElementById('coordFeedback');
 
+    const btnNewCoordinador = document.getElementById('btnNewCoordinador');
+    const modalCoordinadorForm = document.getElementById('modalCoordinadorForm');
+    const btnCancelCoordinador = document.getElementById('btnCancelCoordinador');
+    const formCoordinador = document.getElementById('formCoordinador');
+    const titleCoordinadorForm = document.getElementById('titleCoordinadorForm');
+    const coordLocalSelect = document.getElementById('coordLocalSelect');
+
     let coordinadoresData = [];
+    let localesData = [];
+
+    async function loadLocales() {
+        if (localesData.length > 0) return;
+        try {
+            const res = await fetch('api/get_locales.php');
+            const json = await res.json();
+            localesData = json.data || [];
+            coordLocalSelect.innerHTML = '<option value="">Seleccione un local...</option>' + 
+                localesData.map(l => `<option value="${l.id_local}">${escapeHtml(l.nombre_local)}</option>`).join('');
+        } catch(e) {
+            console.error('Error al cargar locales:', e);
+        }
+    }
+
+    if (btnNewCoordinador) {
+        btnNewCoordinador.addEventListener('click', () => {
+            openCoordinadorForm();
+        });
+    }
+
+    if (btnCancelCoordinador) {
+        btnCancelCoordinador.addEventListener('click', () => {
+            modalCoordinadorForm.style.display = 'none';
+        });
+    }
+
+    async function openCoordinadorForm(id = null) {
+        formCoordinador.reset();
+        document.getElementById('coordId').value = '';
+        titleCoordinadorForm.textContent = 'Nuevo Coordinador';
+        await loadLocales();
+
+        if (id) {
+            const c = coordinadoresData.find(x => x.id_coordinador == id);
+            if (c) {
+                document.getElementById('coordId').value = c.id_coordinador;
+                document.getElementById('coordNombres').value = c.nombres_apellidos;
+                document.getElementById('coordDni').value = c.dni;
+                document.getElementById('coordCelular').value = c.celular || '';
+                document.getElementById('coordLocalSelect').value = c.id_local;
+                titleCoordinadorForm.textContent = 'Editar Coordinador';
+            }
+        }
+        modalCoordinadorForm.style.display = 'flex';
+    }
+
+    if (formCoordinador) {
+        formCoordinador.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('coordId').value;
+            const data = {
+                id_coordinador: id,
+                nombres_apellidos: document.getElementById('coordNombres').value,
+                dni: document.getElementById('coordDni').value,
+                celular: document.getElementById('coordCelular').value,
+                id_local: document.getElementById('coordLocalSelect').value
+            };
+            
+            const method = id ? 'PUT' : 'POST';
+            
+            try {
+                const res = await fetch('api/crud_coordinadores.php', {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const json = await res.json();
+                if (json.error) throw new Error(json.error);
+                
+                modalCoordinadorForm.style.display = 'none';
+                showToast('Coordinador guardado');
+                loadCoordinadores();
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        });
+    }
+
+    async function deleteCoordinador(id) {
+        if (!confirm('¿Seguro que deseas eliminar este coordinador?')) return;
+        try {
+            const res = await fetch(`api/crud_coordinadores.php?id=${id}`, { method: 'DELETE' });
+            const json = await res.json();
+            if (json.error) throw new Error(json.error);
+            showToast('Coordinador eliminado');
+            loadCoordinadores();
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
+    }
 
     if (btnOpenCoordinadores) {
         btnOpenCoordinadores.addEventListener('click', () => {
@@ -467,10 +565,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${escapeHtml(c.dni)}</td>
                     <td>${escapeHtml(c.celular || '-')}</td>
                     <td>${escapeHtml(c.local_votacion)}</td>
+                    <td>
+                        <button class="btn-icon" onclick="editCoordinador(${c.id_coordinador})" style="display:inline-flex; padding:0.25rem 0.5rem; margin-right:0.25rem;">✏️</button>
+                        <button class="btn-icon danger" onclick="deleteCoordinador(${c.id_coordinador})" style="display:inline-flex; padding:0.25rem 0.5rem;">🗑️</button>
+                    </td>
                 </tr>
             `;
         });
     }
+
+    window.editCoordinador = (id) => openCoordinadorForm(id);
+    window.deleteCoordinador = (id) => deleteCoordinador(id);
 
     if (fileCoordinadores) {
         fileCoordinadores.addEventListener('change', (e) => {

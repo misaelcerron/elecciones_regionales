@@ -16,6 +16,7 @@ try {
             c.nombres_apellidos,
             c.dni,
             c.celular,
+            c.id_local,
             l.nombre_local as local_votacion,
             IFNULL(u.distrito, '') as distrito
         FROM coordinador_local c
