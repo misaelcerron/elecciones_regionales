@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${escapeHtml(p.id_mesa)}</td>
                 <td style="font-weight:600;">${escapeHtml(p.nombres_apellidos)}</td>
                 <td>${escapeHtml(p.dni)}</td>
+                <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
+                <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
                 <td>${escapeHtml(p.celular || '-')}</td>
                 <td><span style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(p.tipo)}</span></td>
                 <td>
