@@ -69,20 +69,7 @@ function listarOrganizaciones() {
         $stmt = $pdo->query(
             "SELECT id_partido, nombre, siglas, simbolo_url
              FROM organizacion_politica
-             ORDER BY 
-                CASE 
-                    WHEN nombre LIKE '%Alianza Para el Progreso%' THEN 1
-                    WHEN nombre LIKE '%Frente de la Esperanza%' THEN 2
-                    WHEN nombre LIKE '%Acción Popular%' THEN 3
-                    WHEN nombre LIKE '%Renovación Popular%' THEN 4
-                    WHEN nombre LIKE '%Demócrata Verde%' THEN 5
-                    WHEN nombre LIKE '%Alianza Regional%' THEN 6
-                    WHEN nombre LIKE '%Perú Primero%' THEN 7
-                    WHEN nombre LIKE '%Somos Perú%' THEN 8
-                    WHEN nombre LIKE '%Podemos Perú%' THEN 9
-                    ELSE 99
-                END ASC,
-                nombre ASC"
+             ORDER BY id_partido ASC"
         );
         $rows = $stmt->fetchAll();
         // Convertir URL relativa a absoluta si hay dominio
