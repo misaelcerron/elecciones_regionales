@@ -420,18 +420,29 @@
 
     <div style="margin-top: 2rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;">
         <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed;">
+                <colgroup>
+                    <col style="width: 40px;">      <!-- # -->
+                    <col style="width: 80px;">      <!-- N° Mesa -->
+                    <col style="width: 18%;">       <!-- Apellidos -->
+                    <col style="width: 80px;">      <!-- DNI -->
+                    <col style="width: 9%;">        <!-- Distrito -->
+                    <col style="width: 18%;">       <!-- Local -->
+                    <col style="width: 9%;">        <!-- Celular -->
+                    <col style="width: 70px;">      <!-- Tipo -->
+                    <col style="width: 120px;">     <!-- Acciones -->
+                </colgroup>
                 <thead>
                     <tr style="background: rgba(255,255,255,0.02); border-bottom: 0.5px solid var(--border);">
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; width: 50px; text-align: center;">#</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">N° Mesa</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Apellidos y Nombres</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">DNI</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Distrito</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Local de Votación</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Celular</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Tipo</th>
-                        <th style="padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; min-width: 180px; white-space: nowrap;">Acciones</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; text-align: center;">#</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">N° Mesa</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Apellidos y Nombres</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">DNI</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Distrito</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Local de Votación</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Celular</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Tipo</th>
+                        <th style="padding: 0.75rem 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="personerosTableBody">
@@ -587,8 +598,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=46"></script>
-<script src="js/personeros.js?v=46"></script>
+<script src="js/auth.js?v=47"></script>
+<script src="js/personeros.js?v=47"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->

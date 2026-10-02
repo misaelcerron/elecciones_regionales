@@ -88,33 +88,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filtradosActuales.forEach((p, index) => {
             const tr = document.createElement('tr');
+            const tdStyle = "padding: 0.6rem 0.5rem; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
             if (p.id_personero) {
                 tr.innerHTML = `
-                    <td style="color: var(--text-tertiary); font-size: 0.8rem; text-align: center; font-weight: 600;">${index + 1}</td>
-                    <td>${escapeHtml(p.id_mesa)}</td>
-                    <td style="font-weight:600;">${escapeHtml(p.nombres_apellidos)}</td>
-                    <td>${escapeHtml(p.dni)}</td>
-                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
-                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
-                    <td>${escapeHtml(p.celular || '-')}</td>
-                    <td><span style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(p.tipo)}</span></td>
-                    <td style="white-space: nowrap;">
-                        <button class="btn-edit" data-id="${p.id_personero}" style="margin-right: 0.5rem;">✏️ Editar</button>
-                        <button class="btn-delete" data-id="${p.id_personero}">🗑️ Eliminar</button>
+                    <td style="${tdStyle} color: var(--text-tertiary); text-align: center; font-weight: 600;">${index + 1}</td>
+                    <td style="${tdStyle} font-weight: 600;">${escapeHtml(p.id_mesa)}</td>
+                    <td style="${tdStyle} font-weight: 600;" title="${escapeHtml(p.nombres_apellidos)}">${escapeHtml(p.nombres_apellidos)}</td>
+                    <td style="${tdStyle}">${escapeHtml(p.dni)}</td>
+                    <td style="${tdStyle}" title="${escapeHtml(p.distrito || '-')}">${escapeHtml(p.distrito || '-')}</td>
+                    <td style="${tdStyle}" title="${escapeHtml(p.local_votacion || '-')}">${escapeHtml(p.local_votacion || '-')}</td>
+                    <td style="${tdStyle}">${escapeHtml(p.celular || '-')}</td>
+                    <td style="${tdStyle}"><span style="background: rgba(255,255,255,0.1); padding: 0.15rem 0.4rem; border-radius: 10px; font-size: 0.7rem;">${escapeHtml(p.tipo)}</span></td>
+                    <td style="padding: 0.4rem 0.5rem; white-space: nowrap;">
+                        <button class="btn-edit" data-id="${p.id_personero}" style="padding: 0.25rem 0.5rem; font-size: 0.72rem; margin-right: 0.25rem;">✏️</button>
+                        <button class="btn-delete" data-id="${p.id_personero}" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">🗑️</button>
                     </td>
                 `;
             } else {
                 tr.innerHTML = `
-                    <td style="color: var(--text-tertiary); font-size: 0.8rem; text-align: center; font-weight: 600;">${index + 1}</td>
-                    <td>${escapeHtml(p.id_mesa)}</td>
-                    <td style="font-weight:600; color: #ef4444;">FALTA ASIGNAR</td>
-                    <td>-</td>
-                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
-                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td style="white-space: nowrap;">
-                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.5rem 1rem;">➕ Asignar</button>
+                    <td style="${tdStyle} color: var(--text-tertiary); text-align: center; font-weight: 600;">${index + 1}</td>
+                    <td style="${tdStyle} font-weight: 600;">${escapeHtml(p.id_mesa)}</td>
+                    <td style="${tdStyle} color: #ef4444; font-weight: 600;">FALTA ASIGNAR</td>
+                    <td style="${tdStyle}">-</td>
+                    <td style="${tdStyle}" title="${escapeHtml(p.distrito || '-')}">${escapeHtml(p.distrito || '-')}</td>
+                    <td style="${tdStyle}" title="${escapeHtml(p.local_votacion || '-')}">${escapeHtml(p.local_votacion || '-')}</td>
+                    <td style="${tdStyle}">-</td>
+                    <td style="${tdStyle}">-</td>
+                    <td style="padding: 0.4rem 0.5rem;">
+                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); padding:0.25rem 0.6rem; font-size:0.72rem; border-radius:6px; cursor:pointer;">➕ Asignar</button>
                     </td>
                 `;
             }
