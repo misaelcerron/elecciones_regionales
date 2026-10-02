@@ -83,19 +83,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filtradosActuales.forEach(p => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${escapeHtml(p.id_mesa)}</td>
-                <td style="font-weight:600;">${escapeHtml(p.nombres_apellidos)}</td>
-                <td>${escapeHtml(p.dni)}</td>
-                <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
-                <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
-                <td>${escapeHtml(p.celular || '-')}</td>
-                <td><span style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(p.tipo)}</span></td>
-                <td>
-                    <button class="btn-edit" data-id="${p.id_personero}" style="margin-right: 0.5rem;">✏️ Editar</button>
-                    <button class="btn-delete" data-id="${p.id_personero}">🗑️ Eliminar</button>
-                </td>
-            `;
+            if (p.id_personero) {
+                tr.innerHTML = `
+                    <td>${escapeHtml(p.id_mesa)}</td>
+                    <td style="font-weight:600;">${escapeHtml(p.nombres_apellidos)}</td>
+                    <td>${escapeHtml(p.dni)}</td>
+                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
+                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
+                    <td>${escapeHtml(p.celular || '-')}</td>
+                    <td><span style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(p.tipo)}</span></td>
+                    <td>
+                        <button class="btn-edit" data-id="${p.id_personero}" style="margin-right: 0.5rem;">✏️ Editar</button>
+                        <button class="btn-delete" data-id="${p.id_personero}">🗑️ Eliminar</button>
+                    </td>
+                `;
+            } else {
+                tr.innerHTML = `
+                    <td>${escapeHtml(p.id_mesa)}</td>
+                    <td style="font-weight:600; color: #ef4444;">FALTA ASIGNAR</td>
+                    <td>-</td>
+                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.distrito || '-')}</span></td>
+                    <td><span style="font-size: 0.8rem;">${escapeHtml(p.local_votacion || '-')}</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>
+                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">➕ Asignar</button>
+                    </td>
+                `;
+            }
             tableBody.appendChild(tr);
         });
 
@@ -113,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNew.addEventListener('click', () => openModal());
     btnCancel.addEventListener('click', () => { modal.style.display = 'none'; });
 
-    function openModal(id = null) {
+    function openModal(id = null, mesaId = null) {
         form.reset();
         document.getElementById('personeroId').value = '';
 
@@ -123,13 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('personeroId').value = p.id_personero;
                 document.getElementById('nombres').value = p.nombres_apellidos;
                 document.getElementById('dni').value = p.dni;
-                document.getElementById('celular').value = p.celular;
+                document.getElementById('celular').value = p.celular || '';
                 document.getElementById('mesa').value = p.id_mesa;
                 document.getElementById('tipo').value = p.tipo;
             }
+        } else if (mesaId) {
+            document.getElementById('mesa').value = mesaId;
         }
         modal.style.display = 'flex';
     }
+
+    window.openModalMesa = (mesaId) => {
+        openModal(null, mesaId);
+    };
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
