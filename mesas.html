@@ -15,25 +15,25 @@
         .navbar { display:flex; justify-content:space-between; align-items:center; padding:0 1.5rem; height:56px; background:rgba(0, 0, 0, 0.82); backdrop-filter:saturate(180%) blur(24px); -webkit-backdrop-filter:saturate(180%) blur(24px); border-bottom:1px solid rgba(59,130,246,0.15); position:fixed; top:0; width:100%; z-index:100; }
         .navbar-links { display:flex; align-items:center; gap:0.3rem; position:absolute; left:50%; transform:translateX(-50%); background:rgba(0, 0, 0, 0.04); border:0.5px solid rgba(0, 0, 0, 0.09); border-radius:26px; padding:0.22rem 0.3rem; }
         .navbar a { color:rgba(0, 0, 0, 0.55); text-decoration:none; font-size:0.8rem; font-weight:600; letter-spacing:0.01em; padding:0.38rem 0.9rem; border-radius:20px; border:0.5px solid transparent; transition:all 0.22s cubic-bezier(0.4,0,0.2,1); white-space:nowrap; }
-        .navbar a:hover { color:white; background:rgba(59,130,246,0.12); border-color:rgba(59,130,246,0.35); box-shadow:0 0 10px rgba(59,130,246,0.2); }
+        .navbar a:hover { color:#1d1d1f; background:rgba(59,130,246,0.12); border-color:rgba(59,130,246,0.35); box-shadow:0 0 10px rgba(59,130,246,0.2); }
         .navbar a[style*="primary"], .navbar a.active { color:white !important; background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8)) !important; border-color:rgba(59,130,246,0.6) !important; box-shadow:0 0 14px rgba(27,75,138,0.5),inset 0 0.5px 0 rgba(0, 0, 0, 0.1) !important; font-weight:700 !important; -webkit-text-fill-color:white !important; }
         .navbar-user { display:flex; align-items:center; gap:0.75rem; }
         .navbar #navUsername { font-size:0.8rem; color:#86868b; background:rgba(0, 0, 0, 0.04); border:0.5px solid rgba(0, 0, 0, 0.09); padding:0.3rem 0.75rem; border-radius:20px; }
         .btn-logout { background:transparent; border:0.5px solid rgba(255,69,58,0.4); color:#ff453a; padding:0.35rem 0.85rem; border-radius:20px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.22s ease; letter-spacing:0.02em; }
-        .btn-logout:hover { background:#ff453a; color:white; border-color:#ff453a; box-shadow:0 0 12px rgba(255,69,58,0.4); }
+        .btn-logout:hover { background:#ff453a; color:#1d1d1f; border-color:#ff453a; box-shadow:0 0 12px rgba(255,69,58,0.4); }
 
         .page-wrapper { margin-top:90px; max-width:1300px; margin-left:auto; margin-right:auto; padding:1rem 1.5rem; }
 
         /* Barra de herramientas */
         .toolbar { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.25rem; }
-        .btn-nueva-mesa { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:white; padding:0.55rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:0.3s; white-space:nowrap; }
+        .btn-nueva-mesa { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:#1d1d1f; padding:0.55rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:0.3s; white-space:nowrap; }
         .btn-nueva-mesa:hover { opacity:0.85; transform:translateY(-1px); }
         .import-bar { display:flex; align-items:center; gap:0.75rem; flex:1; background:rgba(59,130,246,0.07); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:0.5rem 1rem; flex-wrap:wrap; }
         .import-bar label { font-size:0.82rem; font-weight:600; color:#94a3b8; white-space:nowrap; }
         .import-file-btn { background:rgba(0, 0, 0, 0.08); border:1px dashed rgba(0, 0, 0, 0.25); color:#94a3b8; padding:0.35rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.82rem; transition:0.2s; white-space:nowrap; }
-        .import-file-btn:hover { background:rgba(0, 0, 0, 0.15); color:white; }
+        .import-file-btn:hover { background:rgba(0, 0, 0, 0.15); color:#1d1d1f; }
         .import-file-name { font-size:0.78rem; color:#60a5fa; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .btn-upload { background:rgba(59,130,246,0.8); border:none; color:white; padding:0.35rem 0.9rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:700; transition:0.2s; white-space:nowrap; }
+        .btn-upload { background:rgba(59,130,246,0.8); border:none; color:#1d1d1f; padding:0.35rem 0.9rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:700; transition:0.2s; white-space:nowrap; }
         .btn-upload:hover { background:#3b82f6; }
         .btn-upload:disabled { background:#374151; color:#6b7280; cursor:not-allowed; }
         .btn-template-sm { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34d399; padding:0.35rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:600; transition:0.2s; white-space:nowrap; }
@@ -46,7 +46,7 @@
         .table-panel { background:rgba(0,0,0,0.25); padding:1.4rem; border-radius:14px; border:1px solid var(--glass-border); overflow-x:auto; }
         .table-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem; }
         .mesa-count { color:var(--text-muted); font-size:0.82rem; }
-        .search-input { background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); border-radius:8px; padding:0.45rem 0.9rem; color:white; font-size:0.85rem; outline:none; width:200px; }
+        .search-input { background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); border-radius:8px; padding:0.45rem 0.9rem; color:#1d1d1f; font-size:0.85rem; outline:none; width:200px; }
         .search-input:focus { border-color:var(--primary-color); }
         table { width:100%; border-collapse:collapse; font-size:0.9rem; }
         th { color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; padding:0.65rem 0.9rem; border-bottom:1px solid var(--glass-border); }
@@ -54,9 +54,9 @@
         tr:hover td { background:rgba(0, 0, 0, 0.04); }
         .btn-accion { padding:3px 10px; border-radius:5px; border:none; font-size:0.76rem; font-weight:700; cursor:pointer; transition:0.2s; }
         .btn-editar { background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid #3b82f6; }
-        .btn-editar:hover { background:#3b82f6; color:white; }
+        .btn-editar:hover { background:#3b82f6; color:#1d1d1f; }
         .btn-eliminar { background:rgba(239,68,68,0.2); color:#f87171; border:1px solid #ef4444; margin-left:5px; }
-        .btn-eliminar:hover { background:#ef4444; color:white; }
+        .btn-eliminar:hover { background:#ef4444; color:#1d1d1f; }
 
         /* ── MODAL EDITAR/CREAR ── */
         .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9998; justify-content:center; align-items:center; padding:1rem; }
@@ -68,8 +68,8 @@
         .modal-grid .full { grid-column:1/-1; }
         .modal-footer { display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem; }
         .btn-modal-cancel { background:rgba(0, 0, 0, 0.08); border:1px solid rgba(0, 0, 0, 0.2); color:var(--text-muted); padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:600; transition:0.2s; }
-        .btn-modal-cancel:hover { background:rgba(0, 0, 0, 0.15); color:white; }
-        .btn-modal-save { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:white; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
+        .btn-modal-cancel:hover { background:rgba(0, 0, 0, 0.15); color:#1d1d1f; }
+        .btn-modal-save { background:linear-gradient(135deg,#2563eb,#7c3aed); border:none; color:#1d1d1f; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
         .btn-modal-save:hover { opacity:0.85; }
         .btn-modal-save:disabled { background:#374151; color:#6b7280; cursor:not-allowed; }
 
@@ -77,7 +77,7 @@
         .modal-danger { background:#1e0a0a; border-color:#ef4444; text-align:center; }
         .modal-danger h3 { color:#f87171; margin-bottom:0.75rem; }
         .modal-danger p { color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem; line-height:1.6; }
-        .btn-danger-confirm { background:#ef4444; border:none; color:white; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
+        .btn-danger-confirm { background:#ef4444; border:none; color:#1d1d1f; padding:0.6rem 1.4rem; border-radius:8px; cursor:pointer; font-weight:700; transition:0.2s; }
         .btn-danger-confirm:hover { background:#dc2626; }
     </style>
 </head>
@@ -210,7 +210,7 @@
         <div class="modal-box modal-danger">
             <div style="font-size:2.5rem; margin-bottom:0.75rem;">🚨</div>
             <h3>Eliminar Todo el Padrón</h3>
-            <p>Esta acción eliminará <strong style="color:white;">TODAS las mesas</strong>, locales de votación y ubigeos registrados.<br><br>Esta acción es <strong style="color:#f87171;">IRREVERSIBLE</strong>.</p>
+            <p>Esta acción eliminará <strong style="color:#1d1d1f;">TODAS las mesas</strong>, locales de votación y ubigeos registrados.<br><br>Esta acción es <strong style="color:#f87171;">IRREVERSIBLE</strong>.</p>
             <div style="display:flex; gap:1rem; justify-content:center;">
                 <button class="btn-modal-cancel" onclick="document.getElementById('modalEliminarTodo').classList.remove('visible')">Cancelar</button>
                 <button class="btn-danger-confirm" id="btnConfirmarEliminar">Sí, Eliminar Todo</button>
