@@ -855,14 +855,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             renderCoordinadores();
         } catch(e) {
-            tableCoordinadores.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
+            tableCoordinadores.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
         }
     }
 
     function renderCoordinadores() {
         tableCoordinadores.innerHTML = '';
         if (coordinadoresFiltrados.length === 0) {
-            tableCoordinadores.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados o que coincidan con la búsqueda.</td></tr>';
+            tableCoordinadores.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados o que coincidan con la búsqueda.</td></tr>';
             return;
         }
         coordinadoresFiltrados.forEach((c, index) => {
@@ -872,6 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${escapeHtml(c.nombres_apellidos)}</td>
                     <td>${escapeHtml(c.dni)}</td>
                     <td>${escapeHtml(c.celular || '-')}</td>
+                    <td style="font-size:0.85rem; color:#94a3b8;">${escapeHtml(c.distrito || '-')}</td>
                     <td>${escapeHtml(c.local_votacion)}</td>
                     <td>
                         <button class="btn-icon" onclick="editCoordinador(${c.id_coordinador})" style="display:inline-flex; padding:0.25rem 0.5rem; margin-right:0.25rem;">✏️</button>
