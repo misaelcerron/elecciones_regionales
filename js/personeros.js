@@ -577,6 +577,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 try {
+                    // Fix for jspdf-autotable dependency on window.jsPDF
+                    if (window.jspdf && window.jspdf.jsPDF) {
+                        window.jsPDF = window.jspdf.jsPDF;
+                    }
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
 
@@ -585,12 +589,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const logoImg = document.querySelector('img[alt="Podemos Perú"]');
                     let startX = 14;
-                    if (logoImg) {
+                    if (logoImg && logoImg.complete) {
                         try {
-                            doc.addImage(logoImg, 'JPEG', 14, 14, 16, 16);
+                            const canvas = document.createElement('canvas');
+                            canvas.width = logoImg.naturalWidth || logoImg.width || 128;
+                            canvas.height = logoImg.naturalHeight || logoImg.height || 128;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height);
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            doc.addImage(dataUrl, 'JPEG', 14, 14, 16, 16);
                             startX = 34;
                         } catch (err) {
-                            console.warn('No se pudo agregar el logo al PDF:', err);
+                            console.warn('No se pudo agregar el logo al PDF por CORS o error interno:', err);
                         }
                     }
 
@@ -639,6 +649,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         ]);
                     });
 
+                    if (typeof doc.autoTable !== 'function') {
+                        throw new Error("El plugin autoTable no está cargado correctamente. Recarga la página.");
+                    }
+
                     doc.autoTable({
                         startY: tableStartY,
                         head: [['#', 'N° MESA', 'DISTRITO', 'LOCAL DE VOTACIÓN', 'APELLIDOS Y NOMBRES', 'DNI', 'CELULAR', 'TIPO', 'COORDINADOR']],
@@ -650,8 +664,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     doc.save(`Reporte_Personeros${distName ? '_' + distName : ''}.pdf`);
+                    showToast('✅ PDF exportado correctamente');
                 } catch(e) {
-                    alert('Error al exportar: ' + e.message);
+                    console.error(e);
+                    alert('Error al exportar PDF: ' + e.message);
                 } finally {
                     btn.innerHTML = originalText;
                     btn.disabled = false;

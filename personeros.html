@@ -379,28 +379,35 @@
     </header>
 
     <div class="toolbar">
-        <div class="search-wrapper" style="display:flex; gap:0.5rem; max-width: 100%; flex: 1;">
-            <div style="position:relative; flex: 1; max-width: 300px;">
-                <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none;">🔍</span>
-                <input type="text" class="search-input" id="searchInput" placeholder="Buscar DNI, Nombre..." autocomplete="off" style="width: 100%;">
+        <div class="toolbar-bar" style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; width:100%;">
+            <!-- Filters inside a styled wrapper -->
+            <div class="search-wrapper" style="display:flex; gap:0.5rem; flex: 1; min-width:300px; flex-wrap:wrap; align-items:center;">
+                <div style="position:relative; flex: 1; min-width: 180px;">
+                    <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none;">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar DNI, Nombre..." autocomplete="off" style="width: 100%; border:none; background:transparent; color:#fff; outline:none; padding-left:2.5rem;">
+                </div>
+                <select class="select-filter" id="filterDistrito" style="padding-left: 1rem; width: auto; background: transparent; border:none;">
+                    <option value="">Todos los Distritos</option>
+                </select>
+                <select class="select-filter" id="filterLocal" style="padding-left: 1rem; width: auto; background: transparent; max-width: 200px; border:none;">
+                    <option value="">Todos los Locales</option>
+                </select>
+                <select class="select-filter" id="filterEstado" style="padding-left: 1rem; width: auto; background: transparent; border:none;">
+                    <option value="">Todos los Estados</option>
+                    <option value="ASIGNADO">Asignados</option>
+                    <option value="FALTA">Falta Asignar</option>
+                </select>
             </div>
-            <select class="search-input" id="filterDistrito" style="padding-left: 1rem; width: auto; background: var(--surface);">
-                <option value="">Todos los Distritos</option>
-            </select>
-            <select class="search-input" id="filterLocal" style="padding-left: 1rem; width: auto; background: var(--surface); max-width: 250px;">
-                <option value="">Todos los Locales</option>
-            </select>
-            <select class="search-input" id="filterEstado" style="padding-left: 1rem; width: auto; background: var(--surface);">
-                <option value="">Todos los Estados</option>
-                <option value="ASIGNADO">Asignados</option>
-                <option value="FALTA">Falta Asignar</option>
-            </select>
-            <button class="btn-primary" id="btnExportarExcel" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; margin-left: auto;">
-                <span>📊</span> Exportar Excel
-            </button>
-            <button class="btn-primary" id="btnExportarPDF" style="background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.4); color: #f87171;">
-                <span>📄</span> Exportar PDF
-            </button>
+            
+            <!-- Export buttons outside the wrapper -->
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+                <button class="btn-primary" id="btnExportarExcel" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80;">
+                    <span>📊</span> Exportar Excel
+                </button>
+                <button class="btn-primary" id="btnExportarPDF" style="background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.4); color: #f87171;">
+                    <span>📄</span> Exportar PDF
+                </button>
+            </div>
         </div>
         <div class="toolbar-right">
             <button class="btn-primary" id="btnOpenCoordinadores" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); color: #818cf8; margin-right: 0.5rem;">
