@@ -1052,7 +1052,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.jsPDF = window.jspdf.jsPDF;
                     }
                     const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF({ orientation: 'portrait', format: 'a4' });
+                    const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
 
                     const logoImg = document.querySelector('img[alt="Podemos Perú"]');
                     let startX = 14;
