@@ -10,7 +10,7 @@
     <meta name="description" content="Gestión de organizaciones políticas del sistema electoral ODPE PASCO. Registra, edita y administra partidos y agrupaciones políticas.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=10">
+    <link rel="stylesheet" href="css/style.css?v=11">
     <style>
         /* ═══════════════════════════════════════════════════
            APPLE-STYLE DESIGN SYSTEM
@@ -232,7 +232,7 @@
         .modal-overlay.open { display: flex; animation: overlayIn 0.22s ease; }
         @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-sheet {
-            background: #1c1c1e; border: 0.5px solid rgba(0, 0, 0, 0.12);
+            background: #ffffff; border: 0.5px solid rgba(0, 0, 0, 0.12);
             border-radius: 20px 20px 16px 16px; width: 100%; max-width: 540px;
             box-shadow: var(--shadow-lg);
             animation: sheetIn 0.35s cubic-bezier(0.34, 1.22, 0.64, 1); overflow: hidden;
@@ -312,7 +312,7 @@
         .toast {
             position: fixed; bottom: 2rem; left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: rgba(28,28,30,0.95); backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
             border: 0.5px solid var(--border); border-radius: 22px;
             padding: 0.75rem 1.25rem; font-size: 0.875rem; font-weight: 500;
             color: var(--text-primary); z-index: 9999;
@@ -471,8 +471,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=35"></script>
-<script src="js/organizaciones.js?v=10"></script>
+<script src="js/auth.js?v=36"></script>
+<script src="js/organizaciones.js?v=11"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
