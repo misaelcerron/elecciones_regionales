@@ -82,11 +82,11 @@ function renderPartidosTodasLasTabs() {
 
 function buildPartidoRow(org, idx, tabA, tabB) {
     const logoHtml = org.simbolo_url
-        ? `<img src="${esc(org.simbolo_url)}" alt="${esc(org.nombre)}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px; background: rgba(255,255,255,0.1);" onerror="this.parentElement.innerHTML='<span class=\\'party-logo-placeholder\\'>🏛</span>'">`
+        ? `<img src="${esc(org.simbolo_url)}" alt="${esc(org.nombre)}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px; background: rgba(0, 0, 0, 0.1);" onerror="this.parentElement.innerHTML='<span class=\\'party-logo-placeholder\\'>🏛</span>'">`
         : `<span class="party-logo-placeholder" style="font-size: 1.5rem;">🏛</span>`;
 
     return `
-    <tr style="border-bottom: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+    <tr style="border-bottom: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(0, 0, 0, 0.05)'" onmouseout="this.style.background='transparent'">
         <td style="padding: 0.5rem 1rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <div style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${logoHtml}</div>
@@ -94,10 +94,10 @@ function buildPartidoRow(org, idx, tabA, tabB) {
             </div>
         </td>
         <td style="padding: 0.5rem; border-left: 1px solid var(--border); text-align: center; vertical-align: middle;">
-            <input type="number" class="vote-value party-input" id="voto_${tabA}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabA}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+            <input type="number" class="vote-value party-input" id="voto_${tabA}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabA}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
         </td>
         <td style="padding: 0.5rem; border-left: 1px solid var(--border); text-align: center; vertical-align: middle;">
-            <input type="number" class="vote-value party-input" id="voto_${tabB}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabB}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+            <input type="number" class="vote-value party-input" id="voto_${tabB}_${org.id_partido}" data-partido="${org.id_partido}" data-tab="${tabB}" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
         </td>
     </tr>`;
 }

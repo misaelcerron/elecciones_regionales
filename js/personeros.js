@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="${tdStyle}" title="${escapeHtml(p.distrito || '-')}">${escapeHtml(p.distrito || '-')}</td>
                     <td style="${tdStyle}" title="${escapeHtml(p.local_votacion || '-')}">${escapeHtml(p.local_votacion || '-')}</td>
                     <td style="${tdStyle}">${escapeHtml(p.celular || '-')}</td>
-                    <td style="${tdStyle}"><span style="background: rgba(255,255,255,0.1); padding: 0.15rem 0.4rem; border-radius: 10px; font-size: 0.7rem;">${escapeHtml(p.tipo)}</span></td>
+                    <td style="${tdStyle}"><span style="background: rgba(0, 0, 0, 0.1); padding: 0.15rem 0.4rem; border-radius: 10px; font-size: 0.7rem;">${escapeHtml(p.tipo)}</span></td>
                     <td style="padding: 0.4rem 0.5rem; white-space: nowrap;">
                         <button class="btn-edit" data-id="${p.id_personero}" style="padding: 0.25rem 0.5rem; font-size: 0.72rem; margin-right: 0.25rem;">✏️</button>
                         <button class="btn-delete" data-id="${p.id_personero}" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">🗑️</button>

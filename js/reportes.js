@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>
                         <span class="mesa-tag">${escapeHtml(row.id_mesa)}</span>
                     </td>
-                    <td style="font-weight: 600; color: #ffffff;">${escapeHtml(row.distrito)}</td>
+                    <td style="font-weight: 600; color: #1d1d1ffff;">${escapeHtml(row.distrito)}</td>
                     <td style="color: #94a3b8;">${electores.toLocaleString()}</td>
                     <td style="font-weight: 700; color: #f5f5f7;">${votaron.toLocaleString()}</td>
                     <td>
@@ -299,12 +299,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             html += `
                 <tr>
-                    <td style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">
+                    <td style="font-weight: 700; color: #1d1d1ffff; font-size: 0.95rem;">
                         <span>📍</span> ${escapeHtml(row.distrito)}
                     </td>
                     <td>
                         <div class="progress-bar-wrap">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #fff; font-weight: 700;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #1d1d1f; font-weight: 700;">
                                 <span style="color: #60a5fa;">${escrutadas} de ${totalM} actas</span>
                                 <span style="color: #32d74b;">${pctAvance}%</span>
                             </div>

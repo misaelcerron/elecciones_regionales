@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 0 0 0 1px ${cfg.pillBorder},
                 0 8px 32px rgba(0,0,0,0.5),
                 0 0 40px ${cfg.gradFrom},
-                inset 0 1px 0 rgba(255,255,255,0.08)
+                inset 0 1px 0 rgba(0, 0, 0, 0.08)
             `;
         }
         if (elIcon)     elIcon.textContent = cfg.icon;
@@ -115,10 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
             subText = `${cfg.sub} · 📍 Distrito: ${distrito}`;
         }
         if (elSub) {
-            elSub.innerHTML = `<span style="color: rgba(255,255,255,0.5);">${cfg.sub.split('·')[0].trim()}</span>` +
+            elSub.innerHTML = `<span style="color: rgba(0, 0, 0, 0.5);">${cfg.sub.split('·')[0].trim()}</span>` +
                 (distrito && distrito !== 'TODOS' && distrito !== ''
                     ? ` <span style="display:inline-flex;align-items:center;gap:0.3rem;background:${cfg.pillBg};border:1px solid ${cfg.pillBorder};border-radius:20px;padding:0.15rem 0.65rem;font-size:0.72rem;font-weight:700;color:${cfg.pillColor};margin-left:0.5rem;">📍 ${distrito}</span>`
-                    : `<span style="color:rgba(255,255,255,0.35);"> · ODPE Pasco 2026</span>`);
+                    : `<span style="color:rgba(0, 0, 0, 0.35);"> · ODPE Pasco 2026</span>`);
         }
         if (elMesasNum) {
             elMesasNum.textContent = Number(mesasProcesadas).toLocaleString();
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(20,24,33,0.95)',
-                        borderColor: 'rgba(255,255,255,0.15)',
+                        borderColor: 'rgba(0, 0, 0, 0.15)',
                         borderWidth: 1,
                         padding: 10,
                         titleFont: { weight: 'bold' }
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
                         ticks: { color: '#86868b', font: { size: 11 } }
                     },
                     x: {
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const x = xAxis.getPixelForTick(index);
                             const size = 32;
                             ctx.save();
-                            ctx.fillStyle = '#fff';
+                            ctx.fillStyle = '#1d1d1f';
                             ctx.beginPath();
                             if (ctx.roundRect) {
                                 ctx.roundRect(x - size/2, y, size, size, 6);
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Válidos', 'Blancos', 'Nulos', 'Impugnados'],
                 datasets: [{
                     data: [validVotes, blancos, nulos, impugnados],
-                    backgroundColor: ['#0071e3', 'rgba(255,255,255,0.55)', '#ff453a', '#ffd60a'],
+                    backgroundColor: ['#0071e3', 'rgba(0, 0, 0, 0.55)', '#ff453a', '#ffd60a'],
                     borderWidth: 0,
                     hoverOffset: 6
                 }]
@@ -683,19 +683,19 @@ function renderRankingBarras(partidos, totalValidos, colores) {
             : escapeHtml(p.nombre);
 
         html += `
-            <div style="background:rgba(255,255,255,0.025);border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;padding:0.85rem 1.1rem;transition:all 0.2s ease;">
+            <div style="background:rgba(0, 0, 0, 0.025);border:0.5px solid rgba(0, 0, 0, 0.07);border-radius:14px;padding:0.85rem 1.1rem;transition:all 0.2s ease;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;gap:1rem;flex-wrap:wrap;">
                     <div style="display:flex;align-items:center;gap:0.75rem;">
                         <span style="font-size:0.8rem;font-weight:800;color:#86868b;min-width:20px;">#${index + 1}</span>
-                        <img src="${logoUrl}" alt="${escapeHtml(p.nombre)}" style="width:32px;height:32px;border-radius:8px;object-fit:contain;background:#fff;padding:2px;border:1px solid rgba(255,255,255,0.15);flex-shrink:0;" onerror="this.src='img/podemos_peru_logo.jpg'">
-                        <span style="font-size:0.88rem;color:#fff;">${nombreMostrar}</span>
+                        <img src="${logoUrl}" alt="${escapeHtml(p.nombre)}" style="width:32px;height:32px;border-radius:8px;object-fit:contain;background:#fff;padding:2px;border:1px solid rgba(0, 0, 0, 0.15);flex-shrink:0;" onerror="this.src='img/podemos_peru_logo.jpg'">
+                        <span style="font-size:0.88rem;color:#1d1d1f;">${nombreMostrar}</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:1rem;">
                         <span style="font-size:1.05rem;font-weight:800;color:${color};">${votos.toLocaleString()} <span style="font-size:0.72rem;color:#86868b;font-weight:600;">votos</span></span>
-                        <span style="font-size:0.82rem;font-weight:700;color:#fff;background:rgba(255,255,255,0.07);padding:0.2rem 0.55rem;border-radius:20px;border:0.5px solid rgba(255,255,255,0.1);min-width:58px;text-align:right;">${pct}%</span>
+                        <span style="font-size:0.82rem;font-weight:700;color:#1d1d1f;background:rgba(0, 0, 0, 0.07);padding:0.2rem 0.55rem;border-radius:20px;border:0.5px solid rgba(0, 0, 0, 0.1);min-width:58px;text-align:right;">${pct}%</span>
                     </div>
                 </div>
-                <div style="width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">
+                <div style="width:100%;height:8px;background:rgba(0, 0, 0, 0.06);border-radius:99px;overflow:hidden;">
                     <div style="height:100%;width:${pct}%;background:${color};border-radius:99px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1);"></div>
                 </div>
             </div>
@@ -747,11 +747,11 @@ function renderDistritoPanel(data, distrito) {
                 const logoUrl = p.simbolo_url || 'img/podemos_peru_logo.jpg';
                 const medals = ['🥇','🥈','🥉'];
                 top3Html += `
-                    <div style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0;${idx < item.top3.length - 1 ? 'border-bottom:0.5px solid rgba(255,255,255,0.06);' : ''}">
+                    <div style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0;${idx < item.top3.length - 1 ? 'border-bottom:0.5px solid rgba(0, 0, 0, 0.06);' : ''}">
                         <span style="font-size:0.9rem;">${medals[idx] || ''}</span>
                         <img src="${logoUrl}" style="width:26px;height:26px;border-radius:7px;background:#fff;padding:2px;object-fit:contain;flex-shrink:0;" onerror="this.src='img/podemos_peru_logo.jpg'">
                         <div style="flex:1;min-width:0;">
-                            <div style="font-size:0.78rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.siglas || p.nombre)}</div>
+                            <div style="font-size:0.78rem;font-weight:700;color:#1d1d1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.siglas || p.nombre)}</div>
                         </div>
                         <div style="font-size:0.85rem;font-weight:800;color:${item.color};">${Number(p.votos || 0).toLocaleString()}</div>
                     </div>`;
@@ -782,7 +782,7 @@ function renderDistritoPanel(data, distrito) {
                     <span style="font-size:1.5rem;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">${item.icono}</span>
                     <div>
                         <div style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:${item.color};margin-bottom:0.1rem;">Tipo de Elección</div>
-                        <div style="font-size:0.88rem;font-weight:800;color:#fff;line-height:1.2;">${escapeHtml(item.nombre)}</div>
+                        <div style="font-size:0.88rem;font-weight:800;color:#1d1d1f;line-height:1.2;">${escapeHtml(item.nombre)}</div>
                     </div>
                 </div>
                 <div style="
@@ -793,25 +793,25 @@ function renderDistritoPanel(data, distrito) {
                     text-align:center;
                 ">
                     <div style="font-size:1.4rem;font-weight:900;color:${item.color};letter-spacing:-0.04em;line-height:1;text-shadow:0 0 16px ${item.color};">${mesas}</div>
-                    <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.4);">mesas</div>
+                    <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(0, 0, 0, 0.4);">mesas</div>
                 </div>
             </div>
 
             <!-- Total Votos KPI -->
             <div style="background:rgba(0,0,0,0.25);border-radius:12px;padding:0.75rem 1rem;margin-bottom:0.85rem;display:flex;align-items:center;justify-content:space-between;">
                 <div>
-                    <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.15rem;">Total Votos Emitidos</div>
+                    <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0, 0, 0, 0.35);margin-bottom:0.15rem;">Total Votos Emitidos</div>
                     <div style="font-size:1.75rem;font-weight:900;color:${item.color};letter-spacing:-0.05em;line-height:1;text-shadow:0 0 20px ${item.color}80;">${votos.toLocaleString()}</div>
                 </div>
-                <div style="text-align:right;font-size:0.7rem;color:rgba(255,255,255,0.4);">
-                    <div>Válidos: <span style="color:rgba(255,255,255,0.7);font-weight:700;">${validos.toLocaleString()}</span></div>
+                <div style="text-align:right;font-size:0.7rem;color:rgba(0, 0, 0, 0.4);">
+                    <div>Válidos: <span style="color:rgba(0, 0, 0, 0.7);font-weight:700;">${validos.toLocaleString()}</span></div>
                     <div>Blancos: <span style="font-weight:700;">${blancos.toLocaleString()}</span></div>
                     <div>Nulos: <span style="font-weight:700;">${nulos.toLocaleString()}</span></div>
                 </div>
             </div>
 
             <!-- Divider -->
-            <div style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.5rem;">Top 3 Partidos</div>
+            <div style="font-size:0.6rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0, 0, 0, 0.3);margin-bottom:0.5rem;">Top 3 Partidos</div>
 
             <!-- Top 3 -->
             <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:0.5rem 0.75rem;">

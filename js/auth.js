@@ -173,7 +173,7 @@ function adaptNavbarForRole(rol, currentPage, username) {
         }
 
         userSpan.innerHTML = `
-            <span style="color:#fff;font-weight:600;">${escapeHtml(username)}</span>
+            <span style="color:#1d1d1f;font-weight:600;">${escapeHtml(username)}</span>
             <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.04em;padding:0.12rem 0.45rem;border-radius:99px;background:${badgeBg};color:${badgeColor};margin-left:0.35rem;border:0.5px solid ${badgeColor}40;">
                 ${rolLabel}
             </span>
