@@ -245,7 +245,7 @@ async function validarMesa(nro) {
         if (json.success && json.data) {
             const m = json.data;
             mesaValida = true;
-            inputElect.value = m.electores_habiles;
+            inputElect.value = m.electores_habiles > 0 ? m.electores_habiles : '';
 
             // Build location string
             const distParts = [m.distrito, m.provincia, m.departamento].filter(Boolean);
