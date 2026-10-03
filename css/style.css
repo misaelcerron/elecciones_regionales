@@ -50,9 +50,9 @@ body::before {
     --text:          #1d1d1f;
     --text-2:        #86868b;
     --text-3:        #86868b;
-    --ok:            #32d74b;
-    --err:           #ff453a;
-    --warn:          #ffd60a;
+    --ok:            #16a34a;
+    --err:           #dc2626;
+    --warn:          #d97706;
     --r-sm:          8px;
     --r:             14px;
     --r-lg:          20px;
@@ -197,7 +197,7 @@ display: flex !important;
 .btn-logout {
     background: transparent !important;
     border: 0.5px solid rgba(255, 69, 58, 0.4) !important;
-    color: #ff453a !important;
+    color: #dc2626 !important;
     padding: 0.32rem 0.8rem !important;
     border-radius: 20px !important;
     font-size: 0.78rem !important;
@@ -208,9 +208,9 @@ display: flex !important;
     font-family: inherit !important;
 }
 .btn-logout:hover {
-    background: #ff453a !important;
+    background: #dc2626 !important;
     color: #1d1d1f !important;
-    border-color: #ff453a !important;
+    border-color: #dc2626 !important;
     box-shadow: 0 0 12px rgba(255, 69, 58, 0.45) !important;
 }
 
@@ -599,7 +599,7 @@ tr:hover td {
 }
 .badge.contabilizada {
     background: rgba(50, 215, 75, 0.14) !important;
-    color: #32d74b !important;
+    color: #16a34a !important;
     border: 0.5px solid rgba(50, 215, 75, 0.35) !important;
 }
 .badge.digitada {
@@ -609,7 +609,7 @@ tr:hover td {
 }
 .badge.observada {
     background: rgba(255, 69, 58, 0.14) !important;
-    color: #ff453a !important;
+    color: #dc2626 !important;
     border: 0.5px solid rgba(255, 69, 58, 0.35) !important;
 }
 .badge.falta,
@@ -636,7 +636,7 @@ tr:hover td {
 }
 .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #0071e3, #32d74b);
+    background: linear-gradient(90deg, #0071e3, #16a34a);
     border-radius: 99px;
     transition: width 0.6s ease;
 }

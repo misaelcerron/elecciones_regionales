@@ -10,7 +10,7 @@
     <meta name="description" content="Gestión de personeros del sistema electoral ODPE PASCO.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=10">
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -25,7 +25,7 @@
            APPLE-STYLE DESIGN SYSTEM
         ═══════════════════════════════════════════════════ */
         :root {
-            --bg: #000000;
+            --bg: #f5f5f7;
             --surface: rgba(0, 0, 0, 0.04);
             --surface-hover: rgba(0, 0, 0, 0.07);
             --surface-active: rgba(0, 0, 0, 0.10);
@@ -37,10 +37,10 @@
             --text-primary: #f5f5f7;
             --text-secondary: #86868b;
             --text-tertiary: #515154;
-            --danger: #ff453a;
-            --danger-light: rgba(255,69,58,0.12);
-            --success: #32d74b;
-            --success-light: rgba(50,215,75,0.12);
+            --danger: #dc2626;
+            --danger-light: rgba(220,38,38,0.12);
+            --success: #16a34a;
+            --success-light: rgba(22,163,74,0.12);
             --radius-md: 12px;
             --radius-lg: 18px;
             --shadow: 0 8px 32px rgba(0,0,0,0.6);
@@ -115,12 +115,12 @@
             padding: 0.3rem 0.75rem; border-radius: 20px;
         }
         .btn-logout {
-            background: transparent; border: 0.5px solid rgba(255,69,58,0.4);
+            background: transparent; border: 0.5px solid rgba(220,38,38,0.4);
             color: var(--danger); padding: 0.35rem 0.85rem; border-radius: 20px;
             font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: var(--transition);
             letter-spacing: 0.02em;
         }
-        .btn-logout:hover { background: var(--danger); color: #1d1d1f; border-color: var(--danger); box-shadow: 0 0 12px rgba(255,69,58,0.4); }
+        .btn-logout:hover { background: var(--danger); color: #1d1d1f; border-color: var(--danger); box-shadow: 0 0 12px rgba(220,38,38,0.4); }
 
         /* PAGE */
         .page-wrapper {
@@ -244,7 +244,7 @@
             display: flex; align-items: center; gap: 0.3rem; white-space: nowrap;
         }
         .btn-icon:hover { background: rgba(0,113,227,0.2); color: #60a5fa; border-color: rgba(0,113,227,0.3); }
-        .btn-icon.danger:hover { background: var(--danger-light); color: var(--danger); border-color: rgba(255,69,58,0.3); }
+        .btn-icon.danger:hover { background: var(--danger-light); color: var(--danger); border-color: rgba(220,38,38,0.3); }
 
         /* MODAL */
         .modal-overlay {
@@ -288,14 +288,14 @@
             color: var(--text-primary); font-size: 0.95rem; outline: none; transition: var(--transition);
         }
         .field-input::placeholder { color: var(--text-tertiary); }
-        .field-input:focus { border-color: var(--accent); background: rgba(0,113,227,0.06); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .field-input:focus { border-color: var(--accent); background: rgba(0,113,227,0.06); box-shadow: 0 0 0 3px var(--accent-glow);  color: #1d1d1f;}
 
 
         .logo-upload-icon { font-size: 2rem; opacity: 0.4; }
         .logo-upload-text { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
         .logo-upload-sub { font-size: 0.75rem; color: var(--text-tertiary); }
         .logo-file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-        .current-logo-row { display: none; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--success-light); border: 0.5px solid rgba(50,215,75,0.2); border-radius: var(--radius-md); margin-bottom: 0.75rem; }
+        .current-logo-row { display: none; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--success-light); border: 0.5px solid rgba(22,163,74,0.2); border-radius: var(--radius-md); margin-bottom: 0.75rem; }
         .current-logo-row.visible { display: flex; }
         .current-logo-thumb { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
         .current-logo-text { font-size: 0.8rem; color: var(--success); font-weight: 500; }
@@ -314,7 +314,7 @@
         .delete-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
         .delete-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.5rem; padding: 0 1rem; }
         .btn-delete-confirm { background: var(--danger); border: none; color: #1d1d1f; padding: 0.65rem 1.5rem; border-radius: 22px; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: var(--transition); }
-        .btn-delete-confirm:hover { background: #ff3b30; box-shadow: 0 4px 16px rgba(255,69,58,0.4); }
+        .btn-delete-confirm:hover { background: #ff3b30; box-shadow: 0 4px 16px rgba(220,38,38,0.4); }
 
         /* Toast */
         .toast {
@@ -329,8 +329,8 @@
             white-space: nowrap; box-shadow: var(--shadow);
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast.success { border-color: rgba(50,215,75,0.3); }
-        .toast.error   { border-color: rgba(255,69,58,0.3); }
+        .toast.success { border-color: rgba(22,163,74,0.3); }
+        .toast.error   { border-color: rgba(220,38,38,0.3); }
 
         /* Spinner */
         .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0, 0, 0, 0.15); border-top-color: #1d1d1f; border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -615,8 +615,8 @@
 <div class="toast" id="toast">
     <span id="toastMsg">Guardado</span>
 </div>
-<script src="js/auth.js?v=50"></script>
-<script src="js/personeros.js?v=64"></script>
+<script src="js/auth.js?v=52"></script>
+<script src="js/personeros.js?v=66"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
@@ -747,9 +747,9 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(50,215,75,0.85);
-    background: rgba(50,215,75,0.08);
-    border: 0.5px solid rgba(50,215,75,0.2);
+    color: rgba(22,163,74,0.85);
+    background: rgba(22,163,74,0.08);
+    border: 0.5px solid rgba(22,163,74,0.2);
     border-radius: 30px;
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.75rem;
@@ -758,8 +758,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #32d74b;
-    box-shadow: 0 0 6px #32d74b;
+    background: #16a34a;
+    box-shadow: 0 0 6px #16a34a;
     animation: pulseDot 2s ease-in-out infinite;
 }
 @keyframes pulseDot {

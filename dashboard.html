@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>Estadísticas y Dashboard | Sistema Electoral Podemos Perú</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=10">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* ─── RESET & TOKENS ─── */
@@ -99,12 +99,12 @@
             padding:0.28rem 0.7rem;border-radius:20px;white-space:nowrap;
         }
         .btn-logout{
-            background:transparent;border:0.5px solid rgba(255,69,58,0.4);
-            color:#ff453a;padding:0.32rem 0.8rem;border-radius:20px;
+            background:transparent;border:0.5px solid rgba(220,38,38,0.4);
+            color:#dc2626;padding:0.32rem 0.8rem;border-radius:20px;
             font-size:0.78rem;font-weight:600;cursor:pointer;
             transition:all 0.22s ease;letter-spacing:0.02em;
         }
-        .btn-logout:hover{background:#ff453a;color:#1d1d1f;border-color:#ff453a;box-shadow:0 0 12px rgba(255,69,58,0.4);}
+        .btn-logout:hover{background:#dc2626;color:#1d1d1f;border-color:#dc2626;box-shadow:0 0 12px rgba(220,38,38,0.4);}
 
         /* ─── PAGE ─── */
         .page{
@@ -133,8 +133,8 @@
         .kpi-card h3{color:#86868b;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.75rem;}
         .kpi-card .value{font-size:2.75rem;font-weight:800;letter-spacing:-0.04em;color:#f5f5f7;}
         .kpi-card .value.blue{color:#60a5fa;}
-        .kpi-card .value.green{color:#32d74b;}
-        .kpi-card .value.red{color:#ff453a;}
+        .kpi-card .value.green{color:#16a34a;}
+        .kpi-card .value.red{color:#dc2626;}
 
         /* Charts */
         .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;}
@@ -289,8 +289,8 @@
             <p class="page-sub" style="margin-bottom: 0;">Monitoreo y análisis estadístico en barras de votos por organización política y avance de actas.</p>
             <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
                 <!-- LIVE BADGE -->
-                <div id="liveBadge" style="display:flex;align-items:center;gap:0.45rem;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(50,215,75,0.9);background:rgba(50,215,75,0.09);border:0.5px solid rgba(50,215,75,0.25);border-radius:30px;padding:0.3rem 0.85rem;">
-                    <span id="liveDot" style="width:7px;height:7px;border-radius:50%;background:#32d74b;box-shadow:0 0 6px #32d74b;display:inline-block;"></span>
+                <div id="liveBadge" style="display:flex;align-items:center;gap:0.45rem;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(22,163,74,0.9);background:rgba(22,163,74,0.09);border:0.5px solid rgba(22,163,74,0.25);border-radius:30px;padding:0.3rem 0.85rem;">
+                    <span id="liveDot" style="width:7px;height:7px;border-radius:50%;background:#16a34a;box-shadow:0 0 6px #16a34a;display:inline-block;"></span>
                     EN VIVO
                 </div>
                 <!-- COUNTDOWN -->
@@ -397,19 +397,19 @@
         <div id="adminPanel" style="display: none; margin-top: 2rem; background: rgba(255,59,48,0.05); border: 1px solid rgba(255,59,48,0.2); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <h3 style="font-size: 1.1rem; font-weight: 800; color: #ff453a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                    <h3 style="font-size: 1.1rem; font-weight: 800; color: #dc2626; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
                         <span>⚠️</span> Zona de Peligro: Reiniciar Proceso Electoral
                     </h3>
                     <p style="font-size: 0.85rem; color: #86868b;">Esta acción eliminará todas las actas digitadas y vaciará los votos. Se usa para iniciar un nuevo escrutinio desde cero.</p>
                 </div>
-                <button id="btnLimpiarProceso" style="background: rgba(255,69,58,0.15); color: #ff453a; border: 1px solid rgba(255,69,58,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                <button id="btnLimpiarProceso" style="background: rgba(220,38,38,0.15); color: #dc2626; border: 1px solid rgba(220,38,38,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
                     Limpiar Proceso Electoral
                 </button>
             </div>
         </div>
     </div>
-<script src="js/auth.js?v=33"></script>
-    <script src="js/dashboard.js?v=35"></script>
+<script src="js/auth.js?v=35"></script>
+    <script src="js/dashboard.js?v=37"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
@@ -540,9 +540,9 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(50,215,75,0.85);
-    background: rgba(50,215,75,0.08);
-    border: 0.5px solid rgba(50,215,75,0.2);
+    color: rgba(22,163,74,0.85);
+    background: rgba(22,163,74,0.08);
+    border: 0.5px solid rgba(22,163,74,0.2);
     border-radius: 30px;
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.75rem;
@@ -551,8 +551,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #32d74b;
-    box-shadow: 0 0 6px #32d74b;
+    background: #16a34a;
+    box-shadow: 0 0 6px #16a34a;
     animation: pulseDot 2s ease-in-out infinite;
 }
 @keyframes pulseDot {

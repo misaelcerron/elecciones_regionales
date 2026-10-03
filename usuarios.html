@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>Gestión de Usuarios | Sistema Electoral Podemos Perú</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=10">
     <style>
         /* ─── RESET & BASE ─── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -105,12 +105,12 @@
         }
         .btn-logout {
             background: transparent; border: 0.5px solid rgba(255, 69, 58, 0.4);
-            color: #ff453a; padding: 0.32rem 0.8rem; border-radius: 20px;
+            color: #dc2626; padding: 0.32rem 0.8rem; border-radius: 20px;
             font-size: 0.78rem; font-weight: 600; cursor: pointer;
             transition: all 0.22s ease;
         }
         .btn-logout:hover {
-            background: #ff453a; color: #1d1d1f; border-color: #ff453a;
+            background: #dc2626; color: #1d1d1f; border-color: #dc2626;
             box-shadow: 0 0 12px rgba(255, 69, 58, 0.4);
         }
 
@@ -275,11 +275,11 @@
             border: 0.5px solid rgba(139, 92, 246, 0.4);
         }
         .role-pill.digitador {
-            background: rgba(50, 215, 75, 0.16); color: #32d74b;
+            background: rgba(50, 215, 75, 0.16); color: #16a34a;
             border: 0.5px solid rgba(50, 215, 75, 0.4);
         }
         .role-pill.invitado {
-            background: rgba(255, 214, 10, 0.16); color: #ffd60a;
+            background: rgba(255, 214, 10, 0.16); color: #d97706;
             border: 0.5px solid rgba(255, 214, 10, 0.4);
         }
 
@@ -305,7 +305,7 @@
         }
         .btn-action.delete:hover {
             background: rgba(255, 69, 58, 0.2);
-            border-color: rgba(255, 69, 58, 0.5); color: #ff453a;
+            border-color: rgba(255, 69, 58, 0.5); color: #dc2626;
         }
         .btn-action:disabled {
             opacity: 0.3; cursor: not-allowed; pointer-events: none;
@@ -472,20 +472,20 @@
                 <div class="stat-card-value" id="kpiTotal">0</div>
                 <div class="stat-card-sub">Cuentas habilitadas en el sistema</div>
             </div>
-            <div class="stat-card" style="--stat-accent: #32d74b;">
+            <div class="stat-card" style="--stat-accent: #16a34a;">
                 <div class="stat-card-title">
                     <span>Digitadores</span>
                     <span>✍️</span>
                 </div>
-                <div class="stat-card-value" style="color: #32d74b;" id="kpiDigitadores">0</div>
+                <div class="stat-card-value" style="color: #16a34a;" id="kpiDigitadores">0</div>
                 <div class="stat-card-sub">Acceso exclusivo a ingreso de votos</div>
             </div>
-            <div class="stat-card" style="--stat-accent: #ffd60a;">
+            <div class="stat-card" style="--stat-accent: #d97706;">
                 <div class="stat-card-title">
                     <span>Invitados / Veedores</span>
                     <span>📊</span>
                 </div>
-                <div class="stat-card-value" style="color: #ffd60a;" id="kpiInvitados">0</div>
+                <div class="stat-card-value" style="color: #d97706;" id="kpiInvitados">0</div>
                 <div class="stat-card-sub">Acceso exclusivo a resultados en barras</div>
             </div>
             <div class="stat-card" style="--stat-accent: #c084fc;">
@@ -589,8 +589,8 @@
         <span id="toastIcon">✅</span>
         <span id="toastMsg">Operación completada</span>
     </div>
-<script src="js/auth.js?v=33"></script>
-    <script src="js/usuarios.js?v=33"></script>
+<script src="js/auth.js?v=35"></script>
+    <script src="js/usuarios.js?v=35"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
@@ -721,9 +721,9 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(50,215,75,0.85);
-    background: rgba(50,215,75,0.08);
-    border: 0.5px solid rgba(50,215,75,0.2);
+    color: rgba(22,163,74,0.85);
+    background: rgba(22,163,74,0.08);
+    border: 0.5px solid rgba(22,163,74,0.2);
     border-radius: 30px;
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.75rem;
@@ -732,8 +732,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #32d74b;
-    box-shadow: 0 0 6px #32d74b;
+    background: #16a34a;
+    box-shadow: 0 0 6px #16a34a;
     animation: pulseDot 2s ease-in-out infinite;
 }
 @keyframes pulseDot {

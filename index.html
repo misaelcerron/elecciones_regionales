@@ -10,7 +10,7 @@
     <meta name="description" content="Digitación y cómputo de votos por organización política. Elecciones Regionales 2026 - ODPE Pasco.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=10">
     <style>
         /* ═══════════════════════════════════
            DESIGN TOKENS — Apple Dark
@@ -27,15 +27,15 @@
             --accent-h:     #0077ed;
             --accent-glow:  rgba(0,113,227,0.3);
             --accent-light: rgba(0,113,227,0.12);
-            --text:         #f5f5f7;
+            --text: #1d1d1f;
             --text-2:       #86868b;
-            --text-3:       #515154;
-            --ok:           #32d74b;
-            --ok-light:     rgba(50,215,75,0.12);
-            --warn:         #ffd60a;
-            --warn-light:   rgba(255,214,10,0.12);
-            --err:          #ff453a;
-            --err-light:    rgba(255,69,58,0.12);
+            --text-3: #86868b;
+            --ok:           #16a34a;
+            --ok-light:     rgba(22,163,74,0.12);
+            --warn:         #d97706;
+            --warn-light:   rgba(217,119,6,0.12);
+            --err:          #dc2626;
+            --err-light:    rgba(220,38,38,0.12);
             --r:            16px;
             --r-lg:         20px;
             --shadow:       0 8px 32px rgba(0,0,0,0.55);
@@ -57,14 +57,14 @@
 
         /* ── MESA FIELD STATES ── */
         .field-input.mesa-ok{
-            border-color:rgba(50,215,75,0.5) !important;
-            background:rgba(50,215,75,0.06) !important;
-            box-shadow:0 0 0 3px rgba(50,215,75,0.18) !important;
+            border-color:rgba(22,163,74,0.5) !important;
+            background:rgba(22,163,74,0.06) !important;
+            box-shadow:0 0 0 3px rgba(22,163,74,0.18) !important;
         }
         .field-input.mesa-err{
-            border-color:rgba(255,69,58,0.55) !important;
-            background:rgba(255,69,58,0.06) !important;
-            box-shadow:0 0 0 3px rgba(255,69,58,0.18) !important;
+            border-color:rgba(220,38,38,0.55) !important;
+            background:rgba(220,38,38,0.06) !important;
+            box-shadow:0 0 0 3px rgba(220,38,38,0.18) !important;
         }
         .mesa-feedback{
             margin-top:0.55rem;
@@ -77,14 +77,14 @@
         @keyframes feedIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
         .mesa-feedback.ok{
             display:flex;
-            background:rgba(50,215,75,0.1);
-            border:0.5px solid rgba(50,215,75,0.25);
+            background:rgba(22,163,74,0.1);
+            border:0.5px solid rgba(22,163,74,0.25);
             color:var(--ok);
         }
         .mesa-feedback.err{
             display:flex;
-            background:rgba(255,69,58,0.1);
-            border:0.5px solid rgba(255,69,58,0.25);
+            background:rgba(220,38,38,0.1);
+            border:0.5px solid rgba(220,38,38,0.25);
             color:var(--err);
         }
         .mesa-feedback.loading{
@@ -225,12 +225,12 @@
             padding:0.3rem 0.75rem;border-radius:20px;
         }
         .btn-logout{
-            background:transparent;border:0.5px solid rgba(255,69,58,0.4);
+            background:transparent;border:0.5px solid rgba(220,38,38,0.4);
             color:var(--err);padding:0.35rem 0.85rem;border-radius:20px;
             font-size:0.8rem;font-weight:600;cursor:pointer;transition:var(--t);
             letter-spacing:0.02em;
         }
-        .btn-logout:hover{background:var(--err);color:#1d1d1f;border-color:var(--err);box-shadow:0 0 12px rgba(255,69,58,0.4);}
+        .btn-logout:hover{background:var(--err);color:#1d1d1f;border-color:var(--err);box-shadow:0 0 12px rgba(220,38,38,0.4);}
 
         /* ── PAGE WRAPPER ── */
         .page{
@@ -305,7 +305,7 @@
             font-size:0.72rem;font-weight:700;letter-spacing:0.07em;
             text-transform:uppercase;color:var(--text-2);
         }
-        .field-input{
+        .field-input {
             background:rgba(0, 0, 0, 0.05);border:0.5px solid rgba(0, 0, 0, 0.1);
             border-radius:var(--r);padding:0.75rem 1rem;
             color:var(--text);font-size:1rem;font-weight:500;
@@ -315,14 +315,14 @@
         .field-input:focus{
             border-color:var(--accent);background:rgba(0,113,227,0.07);
             box-shadow:0 0 0 3px var(--accent-glow);
-        }
-        select.field-input{cursor:pointer;}
+         color: #1d1d1f;}
+        select.field-input {cursor:pointer;}
         select.field-input option{background:#1c1c1e;color:var(--text);}
 
         /* ── MESA INFO CHIP (carga desde API) ── */
         .mesa-chip{
             margin-top:0.75rem;padding:0.6rem 1rem;
-            background:var(--ok-light);border:0.5px solid rgba(50,215,75,0.22);
+            background:var(--ok-light);border:0.5px solid rgba(22,163,74,0.22);
             border-radius:var(--r);font-size:0.82rem;color:var(--ok);
             display:none;align-items:center;gap:0.5rem;
         }
@@ -419,7 +419,7 @@
         }
         .btn-step:hover{background:var(--accent-light);color:var(--accent);border-color:rgba(0,113,227,0.3);}
         .btn-step:active{transform:scale(0.9);}
-        .btn-step.minus:hover{background:var(--err-light);color:var(--err);border-color:rgba(255,69,58,0.3);}
+        .btn-step.minus:hover{background:var(--err-light);color:var(--err);border-color:rgba(220,38,38,0.3);}
 
         /* Cuando el input tiene valor > 0 */
         .party-card.has-votes{border-color:rgba(0,113,227,0.3);}
@@ -456,9 +456,9 @@
             border:0.5px solid rgba(0, 0, 0, 0.08);
             background:rgba(0, 0, 0, 0.03);
         }
-        .validation-box.ok{background:var(--ok-light);border-color:rgba(50,215,75,0.3);}
-        .validation-box.err{background:var(--err-light);border-color:rgba(255,69,58,0.3);}
-        .validation-box.warn{background:var(--warn-light);border-color:rgba(255,214,10,0.3);}
+        .validation-box.ok{background:var(--ok-light);border-color:rgba(22,163,74,0.3);}
+        .validation-box.err{background:var(--err-light);border-color:rgba(220,38,38,0.3);}
+        .validation-box.warn{background:var(--warn-light);border-color:rgba(217,119,6,0.3);}
         .validation-box.info{background:rgba(0,113,227,0.12);border-color:rgba(59,130,246,0.35);}
         .val-left{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;}
         .val-icon{font-size:1.2rem;}
@@ -535,8 +535,8 @@
             white-space:nowrap;box-shadow:var(--shadow);
         }
         .toast.show{transform:translateX(-50%) translateY(0);}
-        .toast.success{border-color:rgba(50,215,75,0.3);}
-        .toast.error{border-color:rgba(255,69,58,0.3);}
+        .toast.success{border-color:rgba(22,163,74,0.3);}
+        .toast.error{border-color:rgba(220,38,38,0.3);}
 
         /* Spinner */
         .spinner{
@@ -641,7 +641,7 @@
                 </div>
 
                 <!-- Info del Personero (Se muestra dinámicamente) -->
-                <div class="field-group" id="personeroBox" style="display: none; grid-column: 1 / -1; background: rgba(50,215,75,0.08); border: 1px solid rgba(50,215,75,0.2); border-radius: var(--radius-md); padding: 1rem; margin-top: 0.5rem;">
+                <div class="field-group" id="personeroBox" style="display: none; grid-column: 1 / -1; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); border-radius: var(--radius-md); padding: 1rem; margin-top: 0.5rem;">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <div style="font-size: 2rem;">👤</div>
                         <div>
@@ -680,7 +680,7 @@
             </div>
 
             <!-- Banner llamativo de bloqueo -->
-            <div id="alertLockContainer" style="display:none; background:linear-gradient(135deg, rgba(255,159,10,0.2), rgba(255,69,58,0.1)); border:1px solid rgba(255,159,10,0.5); padding:1.25rem; border-radius:12px; margin-bottom:1.5rem; align-items:flex-start; gap:1rem; box-shadow: 0 4px 16px rgba(255,159,10,0.15);">
+            <div id="alertLockContainer" style="display:none; background:linear-gradient(135deg, rgba(255,159,10,0.2), rgba(220,38,38,0.1)); border:1px solid rgba(255,159,10,0.5); padding:1.25rem; border-radius:12px; margin-bottom:1.5rem; align-items:flex-start; gap:1rem; box-shadow: 0 4px 16px rgba(255,159,10,0.15);">
                 <div style="font-size:2rem; line-height:1;">⚠️</div>
                 <div>
                     <h4 style="color:#ff9f0a; font-size:1rem; margin-bottom:0.3rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">Atención: Datos ya registrados</h4>
@@ -846,12 +846,12 @@
     <div id="adminPanel" style="display: none; margin-top: 2rem; background: rgba(255,59,48,0.05); border: 1px solid rgba(255,59,48,0.2); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
             <div>
-                <h3 style="font-size: 1.1rem; font-weight: 800; color: #ff453a; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; color: #dc2626; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
                     <span>⚠️</span> Zona de Peligro: Reiniciar Proceso Electoral
                 </h3>
                 <p style="font-size: 0.85rem; color: #86868b;">Esta acción eliminará todas las actas digitadas y vaciará los votos. Se usa para iniciar un nuevo escrutinio desde cero.</p>
             </div>
-            <button id="btnLimpiarProceso" style="background: rgba(255,69,58,0.15); color: #ff453a; border: 1px solid rgba(255,69,58,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+            <button id="btnLimpiarProceso" style="background: rgba(220,38,38,0.15); color: #dc2626; border: 1px solid rgba(220,38,38,0.4); padding: 0.7rem 1.2rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
                 Limpiar Proceso Electoral
             </button>
         </div>
@@ -863,8 +863,8 @@
     <span id="toastMsg">Guardado</span>
 </div>
 
-<script src="js/auth.js?v=38"></script>
-<script src="js/app.js?v=44"></script>
+<script src="js/auth.js?v=40"></script>
+<script src="js/app.js?v=46"></script>
 
 
 <!-- ════ FOOTER PREMIUM ════ -->
@@ -995,9 +995,9 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(50,215,75,0.85);
-    background: rgba(50,215,75,0.08);
-    border: 0.5px solid rgba(50,215,75,0.2);
+    color: rgba(22,163,74,0.85);
+    background: rgba(22,163,74,0.08);
+    border: 0.5px solid rgba(22,163,74,0.2);
     border-radius: 30px;
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.75rem;
@@ -1006,8 +1006,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #32d74b;
-    box-shadow: 0 0 6px #32d74b;
+    background: #16a34a;
+    box-shadow: 0 0 6px #16a34a;
     animation: pulseDot 2s ease-in-out infinite;
 }
 @keyframes pulseDot {
