@@ -147,7 +147,7 @@ function bindInputsEscuchadores() {
     document.querySelectorAll('.btnAutoVotaron').forEach(btn => {
         btn.addEventListener('click', () => {
             const t = btn.dataset.target;
-            fijarVotantes(t);
+            calcularYFijarVotantes(t);
         });
     });
 
@@ -201,7 +201,7 @@ function windowFijarVotantes(t, n) {
 }
 window.fijarVotantes = windowFijarVotantes;
 
-function fijarVotantes(t) {
+function calcularYFijarVotantes(t) {
     let sum = 0;
     document.querySelectorAll(`.party-input[data-tab="${t}"]`).forEach(inp => { sum += parseInt(inp.value) || 0; });
     sum += (parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0);
