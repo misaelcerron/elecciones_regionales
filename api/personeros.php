@@ -23,7 +23,8 @@ try {
                                              LIMIT 1),
                                             'Sin Asignar'
                                         ) as coordinador,
-                                        p.id_personero, p.nombres_apellidos, p.dni, p.celular, p.tipo
+                                        p.id_personero, p.nombres_apellidos, p.dni, p.celular, p.tipo,
+                                        EXISTS(SELECT 1 FROM coordinador_local cl WHERE cl.dni = p.dni) as es_coordinador
                                  FROM mesa_sufragio m 
                                  LEFT JOIN local_votacion l ON m.id_local = l.id_local 
                                  LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo 

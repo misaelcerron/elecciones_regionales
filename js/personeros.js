@@ -89,6 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filtradosActuales.forEach((p, index) => {
             const tr = document.createElement('tr');
+            if (p.es_coordinador == 1) {
+                tr.style.backgroundColor = '#fee2e2';
+                tr.title = 'Este personero ya está registrado como coordinador de local y debe ser subsanado';
+            }
             const tdStyle = "padding: 0.6rem 0.5rem; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
             if (p.id_personero) {
                 tr.innerHTML = `
