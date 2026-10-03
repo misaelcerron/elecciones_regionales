@@ -287,23 +287,21 @@ async function validarMesa(nro) {
             }
 
             for (let t = 1; t <= 4; t++) {
-                const tabBtn = document.querySelector(`.tab-btn[data-tab="${t}"]`);
-                const tabContent = document.getElementById(`tab-content-${t}`);
-                if (!tabBtn || !tabContent) continue;
-                
-                // Reiniciar estado visual
-                tabBtn.style.opacity = '1';
-                const lockIcon = tabBtn.querySelector('.lock-icon');
-                if (lockIcon) lockIcon.remove();
-                
                 const isLocked = lockedTabs.includes(t);
                 
                 if (isLocked && m.actas_data && m.actas_data[t]) {
                     const d = m.actas_data[t];
-                    document.getElementById(`total_votaron_${t}`).value = d.total_votaron;
-                    document.getElementById(`votos_blancos_${t}`).value = d.votos_blancos;
-                    document.getElementById(`votos_nulos_${t}`).value = d.votos_nulos;
-                    document.getElementById(`votos_impugnados_${t}`).value = d.votos_impugnados;
+                    const totInp = document.getElementById(`total_votaron_${t}`);
+                    if (totInp) totInp.value = d.total_votaron;
+                    
+                    const blInp = document.getElementById(`votos_blancos_${t}`);
+                    if (blInp) blInp.value = d.votos_blancos;
+                    
+                    const nulInp = document.getElementById(`votos_nulos_${t}`);
+                    if (nulInp) nulInp.value = d.votos_nulos;
+                    
+                    const impInp = document.getElementById(`votos_impugnados_${t}`);
+                    if (impInp) impInp.value = d.votos_impugnados;
                     
                     if (d.resultados) {
                         for (const [id_partido, votos] of Object.entries(d.resultados)) {
@@ -316,12 +314,25 @@ async function validarMesa(nro) {
                     }
                 }
                 
-                // Bloquear inputs
-                tabContent.querySelectorAll('input, button').forEach(el => {
+                // Bloquear inputs solo de esta acta
+                document.querySelectorAll(`input[data-tab="${t}"], button[data-target="${t}"]`).forEach(el => {
                     el.disabled = isLocked;
                 });
+            }
+
+            // Actualizar candados en los botones de las pestañas UI (1 y 2)
+            for (let tabGroup = 1; tabGroup <= 2; tabGroup++) {
+                const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabGroup}"]`);
+                if (!tabBtn) continue;
                 
-                if (isLocked) {
+                tabBtn.style.opacity = '1';
+                const lockIcon = tabBtn.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                
+                const actasInGroup = tabGroup === 1 ? [1, 2] : [3, 4];
+                const allLocked = actasInGroup.every(t => lockedTabs.includes(t));
+                
+                if (allLocked) {
                     tabBtn.innerHTML += ' <span class="lock-icon" style="font-size:0.75rem;">🔒</span>';
                     tabBtn.style.opacity = '0.7';
                 }
@@ -452,20 +463,18 @@ window.unlockTab = function(t) {
     // Eliminar de lockedTabs
     lockedTabs = lockedTabs.filter(x => x !== t);
     
-    // Desbloquear UI
-    const tabBtn = document.querySelector(`.tab-btn[data-tab="${t}"]`);
-    const tabContent = document.getElementById(`tab-content-${t}`);
-    
+    // Desbloquear inputs de esta acta
+    document.querySelectorAll(`input[data-tab="${t}"], button[data-target="${t}"]`).forEach(el => {
+        el.disabled = false;
+    });
+
+    // Actualizar candado en el botón de la pestaña UI
+    const tabGroup = (t === 1 || t === 2) ? 1 : 2;
+    const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabGroup}"]`);
     if (tabBtn) {
         tabBtn.style.opacity = '1';
         const lockIcon = tabBtn.querySelector('.lock-icon');
         if (lockIcon) lockIcon.remove();
-    }
-    
-    if (tabContent) {
-        tabContent.querySelectorAll('input, button').forEach(el => {
-            el.disabled = false;
-        });
     }
     
     // Forzar foco a la pestaña
