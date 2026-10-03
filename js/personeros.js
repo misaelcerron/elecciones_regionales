@@ -833,26 +833,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadCoordinadores() {
-        tableCoordinadores.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem;">Cargando coordinadores...</td></tr>';
+        tableCoordinadores.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Cargando coordinadores...</td></tr>';
         try {
             const res = await fetch('api/get_coordinadores.php');
             const json = await res.json();
             coordinadoresData = json.data || [];
             renderCoordinadores();
         } catch(e) {
-            tableCoordinadores.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
+            tableCoordinadores.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
         }
     }
 
     function renderCoordinadores() {
         tableCoordinadores.innerHTML = '';
         if (coordinadoresData.length === 0) {
-            tableCoordinadores.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados.</td></tr>';
+            tableCoordinadores.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados.</td></tr>';
             return;
         }
-        coordinadoresData.forEach(c => {
+        coordinadoresData.forEach((c, index) => {
             tableCoordinadores.innerHTML += `
                 <tr>
+                    <td style="color:var(--text-tertiary); text-align:center; font-weight:600;">${index + 1}</td>
                     <td>${escapeHtml(c.nombres_apellidos)}</td>
                     <td>${escapeHtml(c.dni)}</td>
                     <td>${escapeHtml(c.celular || '-')}</td>
@@ -945,6 +946,139 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // EXPORTAR COORDINADORES EXCEL
+    const btnExportarCoordExcel = document.getElementById('btnExportarCoordExcel');
+    if (btnExportarCoordExcel) {
+        btnExportarCoordExcel.addEventListener('click', () => {
+            if (!coordinadoresData || coordinadoresData.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarCoordExcel;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const titleRows = [
+                        ['SISTEMA ELECTORAL – PODEMOS PERÚ | ODPE PASCO'],
+                        ['REPORTE DE COORDINADORES DE LOCAL'],
+                        [`Fecha: ${new Date().toLocaleDateString('es-PE')}   |   Total: ${coordinadoresData.length}`],
+                        []
+                    ];
+
+                    const headers = ['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL'];
+                    const dataRows = coordinadoresData.map((c, i) => [
+                        i + 1,
+                        c.nombres_apellidos || '',
+                        c.dni || '',
+                        c.celular || '-',
+                        c.local_votacion || ''
+                    ]);
+
+                    const aoa = [...titleRows, headers, ...dataRows];
+                    const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+                    ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 12 }, { wch: 15 }, { wch: 40 }];
+                    ws['!merges'] = [
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
+                        { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: headers.length - 1 } }
+                    ];
+
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'COORDINADORES');
+                    XLSX.writeFile(wb, `Reporte_Coordinadores_${new Date().toLocaleDateString('es-PE').replace(/\//g,'-')}.xlsx`);
+                } catch (e) {
+                    alert('Error al exportar Excel: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
+        });
+    }
+
+    // EXPORTAR COORDINADORES PDF
+    const btnExportarCoordPDF = document.getElementById('btnExportarCoordPDF');
+    if (btnExportarCoordPDF) {
+        btnExportarCoordPDF.addEventListener('click', () => {
+            if (!coordinadoresData || coordinadoresData.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarCoordPDF;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    if (window.jspdf && window.jspdf.jsPDF) {
+                        window.jsPDF = window.jspdf.jsPDF;
+                    }
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'portrait', format: 'a4' });
+
+                    const logoImg = document.querySelector('img[alt="Podemos Perú"]');
+                    let startX = 14;
+                    if (logoImg && logoImg.complete) {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = logoImg.naturalWidth || logoImg.width || 128;
+                            canvas.height = logoImg.naturalHeight || logoImg.height || 128;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height);
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            doc.addImage(dataUrl, 'JPEG', 14, 14, 16, 16);
+                            startX = 34;
+                        } catch (err) {
+                            console.warn('CORS logo err:', err);
+                        }
+                    }
+
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(22);
+                    doc.setTextColor(27, 75, 138);
+                    doc.text("PODEMOS PERÚ", startX, 22);
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(80, 80, 80);
+                    doc.text("REPORTE DE COORDINADORES DE LOCAL", startX, 30);
+
+                    const tableData = coordinadoresData.map((c, index) => [
+                        index + 1,
+                        c.nombres_apellidos || '',
+                        c.dni || '',
+                        c.celular || '-',
+                        c.local_votacion || ''
+                    ]);
+
+                    if (typeof doc.autoTable !== 'function') throw new Error("Plugin autoTable no cargado.");
+
+                    doc.autoTable({
+                        startY: 36,
+                        head: [['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL']],
+                        body: tableData,
+                        styles: { fontSize: 9, cellPadding: 2, textColor: [40, 40, 40] },
+                        headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
+                        alternateRowStyles: { fillColor: [245, 248, 252] },
+                        theme: 'grid'
+                    });
+
+                    doc.save(`Reporte_Coordinadores_${new Date().toLocaleDateString('es-PE').replace(/\//g,'-')}.pdf`);
+                } catch(e) {
+                    console.error(e);
+                    alert('Error al exportar PDF: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
         });
     }
 
