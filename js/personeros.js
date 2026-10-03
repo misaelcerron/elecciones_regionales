@@ -696,6 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const coordLocalSelect = document.getElementById('coordLocalSelect');
 
     let coordinadoresData = [];
+    let coordinadoresFiltrados = [];
     let localesData = [];
 
     async function loadLocales() {
@@ -838,6 +839,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('api/get_coordinadores.php');
             const json = await res.json();
             coordinadoresData = json.data || [];
+            
+            // Actualizar filtrados también si hay una búsqueda activa
+            if (searchCoordinador && searchCoordinador.value.trim() !== '') {
+                const term = searchCoordinador.value.toLowerCase();
+                coordinadoresFiltrados = coordinadoresData.filter(c => 
+                    (c.nombres_apellidos || '').toLowerCase().includes(term) ||
+                    (c.distrito || '').toLowerCase().includes(term) ||
+                    (c.local_votacion || '').toLowerCase().includes(term) ||
+                    (c.dni || '').toLowerCase().includes(term)
+                );
+            } else {
+                coordinadoresFiltrados = [...coordinadoresData];
+            }
+            
             renderCoordinadores();
         } catch(e) {
             tableCoordinadores.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red; padding: 2rem;">Error al cargar: ${e.message}</td></tr>`;
@@ -846,11 +861,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCoordinadores() {
         tableCoordinadores.innerHTML = '';
-        if (coordinadoresData.length === 0) {
-            tableCoordinadores.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados.</td></tr>';
+        if (coordinadoresFiltrados.length === 0) {
+            tableCoordinadores.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding: 2rem;">No hay coordinadores registrados o que coincidan con la búsqueda.</td></tr>';
             return;
         }
-        coordinadoresData.forEach((c, index) => {
+        coordinadoresFiltrados.forEach((c, index) => {
             tableCoordinadores.innerHTML += `
                 <tr>
                     <td style="color:var(--text-tertiary); text-align:center; font-weight:600;">${index + 1}</td>
@@ -869,6 +884,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.editCoordinador = (id) => openCoordinadorForm(id);
     window.deleteCoordinador = (id) => deleteCoordinador(id);
+
+    if (searchCoordinador) {
+        searchCoordinador.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            coordinadoresFiltrados = coordinadoresData.filter(c => 
+                (c.nombres_apellidos || '').toLowerCase().includes(term) ||
+                (c.distrito || '').toLowerCase().includes(term) ||
+                (c.local_votacion || '').toLowerCase().includes(term) ||
+                (c.dni || '').toLowerCase().includes(term)
+            );
+            renderCoordinadores();
+        });
+    }
 
     if (fileCoordinadores) {
         fileCoordinadores.addEventListener('change', (e) => {
@@ -953,7 +981,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnExportarCoordExcel = document.getElementById('btnExportarCoordExcel');
     if (btnExportarCoordExcel) {
         btnExportarCoordExcel.addEventListener('click', () => {
-            if (!coordinadoresData || coordinadoresData.length === 0) {
+            if (!coordinadoresFiltrados || coordinadoresFiltrados.length === 0) {
                 alert('No hay datos para exportar.');
                 return;
             }
@@ -967,23 +995,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const titleRows = [
                         ['SISTEMA ELECTORAL – PODEMOS PERÚ | ODPE PASCO'],
                         ['REPORTE DE COORDINADORES DE LOCAL'],
-                        [`Fecha: ${new Date().toLocaleDateString('es-PE')}   |   Total: ${coordinadoresData.length}`],
+                        [`Fecha: ${new Date().toLocaleDateString('es-PE')}   |   Total: ${coordinadoresFiltrados.length}`],
                         []
                     ];
 
-                    const headers = ['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL'];
-                    const dataRows = coordinadoresData.map((c, i) => [
+                    const headers = ['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL', 'DISTRITO'];
+                    const dataRows = coordinadoresFiltrados.map((c, i) => [
                         i + 1,
                         c.nombres_apellidos || '',
                         c.dni || '',
                         c.celular || '-',
-                        c.local_votacion || ''
+                        c.local_votacion || '',
+                        c.distrito || ''
                     ]);
 
                     const aoa = [...titleRows, headers, ...dataRows];
                     const ws = XLSX.utils.aoa_to_sheet(aoa);
 
-                    ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 12 }, { wch: 15 }, { wch: 40 }];
+                    ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 12 }, { wch: 15 }, { wch: 40 }, { wch: 20 }];
                     ws['!merges'] = [
                         { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
                         { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
@@ -1007,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnExportarCoordPDF = document.getElementById('btnExportarCoordPDF');
     if (btnExportarCoordPDF) {
         btnExportarCoordPDF.addEventListener('click', () => {
-            if (!coordinadoresData || coordinadoresData.length === 0) {
+            if (!coordinadoresFiltrados || coordinadoresFiltrados.length === 0) {
                 alert('No hay datos para exportar.');
                 return;
             }
@@ -1048,21 +1077,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     doc.setFontSize(14);
                     doc.setTextColor(80, 80, 80);
-                    doc.text("REPORTE DE COORDINADORES DE LOCAL", startX, 30);
+                    let subtitle = "REPORTE DE COORDINADORES DE LOCAL";
+                    if (searchCoordinador && searchCoordinador.value.trim() !== '') {
+                        subtitle += ` - FILTRADO POR: ${searchCoordinador.value.trim().toUpperCase()}`;
+                    }
+                    doc.text(subtitle, startX, 30);
 
-                    const tableData = coordinadoresData.map((c, index) => [
+                    const tableData = coordinadoresFiltrados.map((c, index) => [
                         index + 1,
                         c.nombres_apellidos || '',
                         c.dni || '',
                         c.celular || '-',
-                        c.local_votacion || ''
+                        c.local_votacion || '',
+                        c.distrito || ''
                     ]);
 
                     if (typeof doc.autoTable !== 'function') throw new Error("Plugin autoTable no cargado.");
 
                     doc.autoTable({
                         startY: 36,
-                        head: [['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL']],
+                        head: [['#', 'NOMBRES Y APELLIDOS', 'DNI', 'CELULAR', 'COORDINADOR LOCAL', 'DISTRITO']],
                         body: tableData,
                         styles: { fontSize: 9, cellPadding: 2, textColor: [40, 40, 40] },
                         headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
