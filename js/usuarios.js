@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="user-cell">
                             <div class="user-avatar">${avatarLetter}</div>
                             <div>
-                                <div class="user-name">${escapeHtml(u.username)} ${isSelf ? '<span style="font-size:0.72rem;color:#60a5fa;font-weight:600;">(Tú)</span>' : ''}</div>
+                                <div class="user-name">${escapeHtml(u.username)} ${isSelf ? '<span style="font-size:0.72rem;color:#1d4ed8;font-weight:600;">(Tú)</span>' : ''}</div>
                                 <div class="user-id-tag">ID: #${u.id}</div>
                             </div>
                         </div>

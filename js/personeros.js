@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="${tdStyle}">-</td>
                     <td style="${tdStyle}">-</td>
                     <td style="padding: 0.4rem 0.5rem;">
-                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); padding:0.25rem 0.6rem; font-size:0.72rem; border-radius:6px; cursor:pointer;">➕ Asignar</button>
+                        <button class="btn-icon" onclick="openModalMesa('${p.id_mesa}')" style="background: rgba(59,130,246,0.15); color:#1d4ed8; border:1px solid rgba(59,130,246,0.3); padding:0.25rem 0.6rem; font-size:0.72rem; border-radius:6px; cursor:pointer;">➕ Asignar</button>
                     </td>
                 `;
             }

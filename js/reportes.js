@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>
                         <div class="progress-bar-wrap">
                             <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #1d1d1f; font-weight: 700;">
-                                <span style="color: #60a5fa;">${escrutadas} de ${totalM} actas</span>
+                                <span style="color: #1d4ed8;">${escrutadas} de ${totalM} actas</span>
                                 <span style="color: #32d74b;">${pctAvance}%</span>
                             </div>
                             <div class="progress-bar-bg" style="height: 8px;">

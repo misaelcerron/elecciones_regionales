@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td style="color:var(--text-muted); text-align:center; font-weight:600;">${index + 1}</td>
-                <td style="font-weight:700;color:#60a5fa;">${m.id_mesa}</td>
+                <td style="font-weight:700;color:#1d4ed8;">${m.id_mesa}</td>
                 <td style="font-size:0.83rem;">${m.departamento}</td>
                 <td style="font-size:0.83rem;">${m.provincia}</td>
                 <td>${m.distrito}</td>
