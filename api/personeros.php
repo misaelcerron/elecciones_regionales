@@ -60,6 +60,14 @@ try {
                 exit;
             }
 
+            // Check if person is a local coordinator
+            $stmtCoord = $pdo->prepare("SELECT id_coordinador FROM coordinador_local WHERE dni = ?");
+            $stmtCoord->execute([$dni]);
+            if ($stmtCoord->fetch()) {
+                echo json_encode(['error' => 'La persona ya es coordinador de local y no puede ser personero.']);
+                exit;
+            }
+
             $stmt = $pdo->prepare("INSERT INTO personero (nombres_apellidos, dni, celular, id_mesa, tipo) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$nombres, $dni, $celular, $id_mesa, $tipo]);
             echo json_encode(['success' => true]);
@@ -79,6 +87,14 @@ try {
             $stmtMesa->execute([$id_mesa]);
             if (!$stmtMesa->fetch()) {
                 echo json_encode(['error' => 'La mesa no existe.']);
+                exit;
+            }
+
+            // Check if person is a local coordinator
+            $stmtCoord = $pdo->prepare("SELECT id_coordinador FROM coordinador_local WHERE dni = ?");
+            $stmtCoord->execute([$dni]);
+            if ($stmtCoord->fetch()) {
+                echo json_encode(['error' => 'La persona ya es coordinador de local y no puede ser personero.']);
                 exit;
             }
 
