@@ -28,6 +28,9 @@ try {
                                  LEFT JOIN local_votacion l ON m.id_local = l.id_local 
                                  LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo 
                                  LEFT JOIN personero p ON m.id_mesa = p.id_mesa
+                                 WHERE p.id_personero IN (
+                                     SELECT MIN(id_personero) FROM personero GROUP BY id_mesa, tipo
+                                 ) OR p.id_personero IS NULL
                                  ORDER BY CAST(m.id_mesa AS UNSIGNED) ASC, p.tipo ASC");
             $personeros = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['data' => $personeros]);
@@ -46,6 +49,14 @@ try {
             $stmtMesa->execute([$id_mesa]);
             if (!$stmtMesa->fetch()) {
                 echo json_encode(['error' => 'La mesa no existe.']);
+                exit;
+            }
+
+            // Check for existing personero of same type
+            $stmtExist = $pdo->prepare("SELECT id_personero FROM personero WHERE id_mesa = ? AND tipo = ?");
+            $stmtExist->execute([$id_mesa, $tipo]);
+            if ($stmtExist->fetch()) {
+                echo json_encode(['error' => 'Ya existe un personero ' . strtolower($tipo) . ' para esta mesa.']);
                 exit;
             }
 
