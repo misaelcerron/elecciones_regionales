@@ -338,17 +338,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isLoading) return;
         isLoading = true;
 
+        const localFilterSelect = document.getElementById('localFilterSelect');
+        const mesaFilterSelect = document.getElementById('mesaFilterSelect');
+
         // Show/hide district filter
         if (distritoFilterSelect) {
             distritoFilterSelect.style.display = 'inline-block';
         }
+        if (localFilterSelect) {
+            localFilterSelect.style.display = 'inline-block';
+        }
+        if (mesaFilterSelect) {
+            mesaFilterSelect.style.display = 'inline-block';
+        }
 
         const distritoSeleccionado = (distritoFilterSelect && distritoFilterSelect.style.display !== 'none')
             ? distritoFilterSelect.value : '';
+        const localSeleccionado = (localFilterSelect && localFilterSelect.style.display !== 'none')
+            ? localFilterSelect.value : '';
+        const mesaSeleccionado = (mesaFilterSelect && mesaFilterSelect.style.display !== 'none')
+            ? mesaFilterSelect.value : '';
 
         try {
             const res = await fetch(
-                `api/estadisticas.php?id_tipo_eleccion=${idTipoEleccion}&distrito=${encodeURIComponent(distritoSeleccionado)}&_=${Date.now()}`
+                `api/estadisticas.php?id_tipo_eleccion=${idTipoEleccion}&distrito=${encodeURIComponent(distritoSeleccionado)}&local_votacion=${encodeURIComponent(localSeleccionado)}&id_mesa=${encodeURIComponent(mesaSeleccionado)}&_=${Date.now()}`
             );
             const data = await res.json();
             if (data.error) throw new Error(data.error);
@@ -363,6 +376,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 distritoFilterSelect.innerHTML = distritosHtml;
                 if (data.distritos_disponibles.includes(currentSelection)) {
                     distritoFilterSelect.value = currentSelection;
+                }
+            }
+            
+            // ── Locales dropdown ──
+            if (localFilterSelect && data.locales_disponibles) {
+                const currentSelection = localFilterSelect.value;
+                let localesHtml = '<option value="TODOS" style="color:black;">Todos los locales</option>';
+                data.locales_disponibles.forEach(l => {
+                    localesHtml += `<option value="${escapeHtml(l)}" style="color:black;">${escapeHtml(l)}</option>`;
+                });
+                localFilterSelect.innerHTML = localesHtml;
+                if (data.locales_disponibles.includes(currentSelection)) {
+                    localFilterSelect.value = currentSelection;
+                }
+            }
+            
+            // ── Mesas dropdown ──
+            if (mesaFilterSelect && data.mesas_disponibles) {
+                const currentSelection = mesaFilterSelect.value;
+                let mesasHtml = '<option value="TODOS" style="color:black;">Todas las mesas</option>';
+                data.mesas_disponibles.forEach(m => {
+                    mesasHtml += `<option value="${escapeHtml(m)}" style="color:black;">Mesa ${escapeHtml(m)}</option>`;
+                });
+                mesaFilterSelect.innerHTML = mesasHtml;
+                if (data.mesas_disponibles.includes(currentSelection)) {
+                    mesaFilterSelect.value = currentSelection;
                 }
             }
 
@@ -493,6 +532,44 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(countdownTimer);
             const tipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
             const dist = distritoFilterSelect.value;
+            
+            const localFilterSelect = document.getElementById('localFilterSelect');
+            const mesaFilterSelect = document.getElementById('mesaFilterSelect');
+            if(localFilterSelect) localFilterSelect.value = 'TODOS';
+            if(mesaFilterSelect) mesaFilterSelect.value = 'TODOS';
+
+            loadDashboard(tipo).then(() => {
+                loadDistritoPanel(dist);
+                scheduleRefresh();
+            });
+        });
+    }
+
+    const localFilterSelect = document.getElementById('localFilterSelect');
+    if (localFilterSelect) {
+        localFilterSelect.addEventListener('change', () => {
+            clearTimeout(autoRefreshTimer);
+            clearInterval(countdownTimer);
+            const tipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
+            const dist = distritoFilterSelect ? distritoFilterSelect.value : '';
+            
+            const mesaFilterSelect = document.getElementById('mesaFilterSelect');
+            if(mesaFilterSelect) mesaFilterSelect.value = 'TODOS';
+
+            loadDashboard(tipo).then(() => {
+                loadDistritoPanel(dist);
+                scheduleRefresh();
+            });
+        });
+    }
+
+    const mesaFilterSelect = document.getElementById('mesaFilterSelect');
+    if (mesaFilterSelect) {
+        mesaFilterSelect.addEventListener('change', () => {
+            clearTimeout(autoRefreshTimer);
+            clearInterval(countdownTimer);
+            const tipo = tipoEleccionSelect ? tipoEleccionSelect.value : 1;
+            const dist = distritoFilterSelect ? distritoFilterSelect.value : '';
             loadDashboard(tipo).then(() => {
                 loadDistritoPanel(dist);
                 scheduleRefresh();

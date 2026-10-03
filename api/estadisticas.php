@@ -12,33 +12,47 @@ if (!isset($_SESSION['user_id'])) {
 try {
     $id_tipo_eleccion = isset($_GET['id_tipo_eleccion']) ? (int)$_GET['id_tipo_eleccion'] : 1;
     $distrito = isset($_GET['distrito']) ? $_GET['distrito'] : '';
+    $local_votacion = isset($_GET['local_votacion']) ? $_GET['local_votacion'] : '';
+    $id_mesa = isset($_GET['id_mesa']) ? $_GET['id_mesa'] : '';
 
-    // Condición extra para distrito si se envía
-    $distritoJoin = "";
-    $distritoWhere = "";
+    $filtersJoin = "";
+    $filtersWhere = "";
     $params = ['tipo_elec' => $id_tipo_eleccion];
     
+    if (!empty($distrito) || !empty($local_votacion) || !empty($id_mesa)) {
+        $filtersJoin .= " LEFT JOIN local_votacion l ON m.id_local = l.id_local LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo ";
+    }
+    
     if (!empty($distrito) && $distrito !== 'TODOS') {
-        $distritoJoin = " LEFT JOIN local_votacion l ON m.id_local = l.id_local LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo ";
-        $distritoWhere = " AND u.distrito = :distrito ";
+        $filtersWhere .= " AND u.distrito = :distrito ";
         $params['distrito'] = $distrito;
+    }
+    
+    if (!empty($local_votacion) && $local_votacion !== 'TODOS') {
+        $filtersWhere .= " AND l.nombre_local = :local_votacion ";
+        $params['local_votacion'] = $local_votacion;
+    }
+    
+    if (!empty($id_mesa) && $id_mesa !== 'TODOS') {
+        $filtersWhere .= " AND m.id_mesa = :id_mesa ";
+        $params['id_mesa'] = $id_mesa;
     }
 
     // 1. Tarjetas Superiores
     $sqlTotal = "SELECT COUNT(*) as mesas_procesadas, SUM(a.total_ciudadanos_votaron) as total_votantes FROM acta_electoral a";
-    if ($distritoWhere) {
-        $sqlTotal .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $distritoJoin ";
+    if ($filtersWhere) {
+        $sqlTotal .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $filtersJoin ";
     }
-    $sqlTotal .= " WHERE a.id_tipo_eleccion = :tipo_elec $distritoWhere";
+    $sqlTotal .= " WHERE a.id_tipo_eleccion = :tipo_elec $filtersWhere";
     $stmtTotal = $pdo->prepare($sqlTotal);
     $stmtTotal->execute($params);
     $kpis = $stmtTotal->fetch();
 
     $sqlObs = "SELECT COUNT(*) as observadas FROM acta_electoral a";
-    if ($distritoWhere) {
-        $sqlObs .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $distritoJoin ";
+    if ($filtersWhere) {
+        $sqlObs .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $filtersJoin ";
     }
-    $sqlObs .= " WHERE a.estado = 'OBSERVADA' AND a.id_tipo_eleccion = :tipo_elec $distritoWhere";
+    $sqlObs .= " WHERE a.estado = 'OBSERVADA' AND a.id_tipo_eleccion = :tipo_elec $filtersWhere";
     $stmtObservadas = $pdo->prepare($sqlObs);
     $stmtObservadas->execute($params);
     $kpis['observadas'] = $stmtObservadas->fetch()['observadas'];
@@ -52,8 +66,8 @@ try {
             SELECT vr.id_partido, vr.cantidad_votos
             FROM voto_resultado vr
             INNER JOIN acta_electoral a ON vr.id_acta = a.id_acta
-            " . ($distritoWhere ? " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $distritoJoin " : "") . "
-            WHERE a.id_tipo_eleccion = :tipo_elec $distritoWhere
+            " . ($filtersWhere ? " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $filtersJoin " : "") . "
+            WHERE a.id_tipo_eleccion = :tipo_elec $filtersWhere
         ) vr_filt ON op.id_partido = vr_filt.id_partido
         GROUP BY op.id_partido, op.nombre, op.siglas, op.simbolo_url
         ORDER BY total_votos DESC
@@ -70,17 +84,44 @@ try {
             SUM(a.votos_impugnados) as impugnados 
         FROM acta_electoral a
     ";
-    if ($distritoWhere) {
-        $sqlDist .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $distritoJoin ";
+    if ($filtersWhere) {
+        $sqlDist .= " INNER JOIN mesa_sufragio m ON a.id_mesa = m.id_mesa $filtersJoin ";
     }
-    $sqlDist .= " WHERE a.id_tipo_eleccion = :tipo_elec $distritoWhere";
+    $sqlDist .= " WHERE a.id_tipo_eleccion = :tipo_elec $filtersWhere";
     $stmtDistribucion = $pdo->prepare($sqlDist);
     $stmtDistribucion->execute($params);
     $distribucion = $stmtDistribucion->fetch();
 
-    // 4. Lista de todos los distritos disponibles (para llenar el select)
+    // 4. Listas para los filtros
     $stmtDistritos = $pdo->query("SELECT DISTINCT distrito FROM ubigeo WHERE distrito IS NOT NULL ORDER BY distrito ASC");
     $distritos_list = $stmtDistritos->fetchAll(PDO::FETCH_COLUMN);
+    
+    // Locales (depende del distrito seleccionado, o todos)
+    $sqlLocales = "SELECT DISTINCT l.nombre_local FROM local_votacion l LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo WHERE l.nombre_local IS NOT NULL";
+    $locParams = [];
+    if (!empty($distrito) && $distrito !== 'TODOS') {
+        $sqlLocales .= " AND u.distrito = ?";
+        $locParams[] = $distrito;
+    }
+    $sqlLocales .= " ORDER BY l.nombre_local ASC";
+    $stmtLoc = $pdo->prepare($sqlLocales);
+    $stmtLoc->execute($locParams);
+    $locales_list = $stmtLoc->fetchAll(PDO::FETCH_COLUMN);
+
+    // Mesas (depende del local seleccionado, o todos)
+    $sqlMesas = "SELECT DISTINCT m.id_mesa FROM mesa_sufragio m LEFT JOIN local_votacion l ON m.id_local = l.id_local LEFT JOIN ubigeo u ON l.id_ubigeo = u.id_ubigeo WHERE m.id_mesa IS NOT NULL";
+    $mesParams = [];
+    if (!empty($local_votacion) && $local_votacion !== 'TODOS') {
+        $sqlMesas .= " AND l.nombre_local = ?";
+        $mesParams[] = $local_votacion;
+    } else if (!empty($distrito) && $distrito !== 'TODOS') {
+        $sqlMesas .= " AND u.distrito = ?";
+        $mesParams[] = $distrito;
+    }
+    $sqlMesas .= " ORDER BY m.id_mesa ASC";
+    $stmtMesas = $pdo->prepare($sqlMesas);
+    $stmtMesas->execute($mesParams);
+    $mesas_list = $stmtMesas->fetchAll(PDO::FETCH_COLUMN);
 
     // 5. Total de mesas en el sistema
     $stmtTotalMesas = $pdo->query("SELECT COUNT(DISTINCT id_mesa) as total FROM mesa_sufragio");
@@ -90,7 +131,9 @@ try {
         'kpis'                 => $kpis,
         'partidos'             => $votos_partidos,
         'distribucion'         => $distribucion,
-        'distritos_disponibles' => $distritos_list
+        'distritos_disponibles' => $distritos_list,
+        'locales_disponibles'   => $locales_list,
+        'mesas_disponibles'     => $mesas_list
     ]);
 } catch (Exception $e) {
     http_response_code(500);
