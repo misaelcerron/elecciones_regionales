@@ -375,7 +375,8 @@ function validateMath() {
     if (!mesaValida) return;
     const electoresHab = parseInt(inputElect.value) || 0;
     
-    let allOk = true;
+    let hasError = false;
+    let hasValidData = false;
 
     for (let t = 1; t <= 4; t++) {
         const totalVotaron = parseInt(document.getElementById(`total_votaron_${t}`).value) || 0;
@@ -415,30 +416,29 @@ function validateMath() {
         
         if (totalVotaron === 0 && sumaTotalVotos === 0) {
             setValBox(t, 'neutral', '⏳', 'Sin datos');
-            allOk = false;
         } else if (totalVotaron === 0 && sumaTotalVotos > 0) {
             setValBox(t, 'err', '⚠️', `Votos=${sumaTotalVotos}, Votaron=0 <button onclick="window.fijarVotantes(${t},${sumaTotalVotos})" style="cursor:pointer;font-size:0.75rem;padding:2px;border:1px solid #ccc;border-radius:4px;">Usar ${sumaTotalVotos}</button>`);
-            allOk = false;
+            hasError = true;
         } else if (electoresHab > 0 && totalVotaron > electoresHab) {
             setValBox(t, 'err', '⚠️', `Votaron (${totalVotaron}) > Padrón (${electoresHab})`);
-            allOk = false;
+            hasError = true;
         } else if (sumaTotalVotos !== totalVotaron) {
             setValBox(t, 'err', '✗', `Descuadre: Suma=${sumaTotalVotos}, Votaron=${totalVotaron}`);
-            allOk = false;
+            hasError = true;
         } else {
             setValBox(t, 'ok', '✓', `Cuadre OK`);
+            hasValidData = true;
         }
     }
     
     // Si las 4 están bloqueadas, no se puede enviar nada
     if (lockedTabs.length === 4) {
-        allOk = false;
         btnSubmit.innerHTML = 'Mesa Completada 🔒';
+        btnSubmit.disabled = true;
     } else {
         btnSubmit.innerHTML = 'Guardar Actas Verificadas';
+        btnSubmit.disabled = hasError || !hasValidData;
     }
-
-    btnSubmit.disabled = !allOk;
 }
 
 function setValBox(t, state, icon, text) {
@@ -491,20 +491,33 @@ async function handleSubmit(e) {
     for (let t = 1; t <= 4; t++) {
         if (lockedTabs.includes(t)) continue; // Omitir las que ya están en DB
 
+        const totalVotaron = parseInt(document.getElementById(`total_votaron_${t}`).value) || 0;
+        const blancos = parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0;
+        const nulos = parseInt(document.getElementById(`votos_nulos_${t}`).value) || 0;
+        const impugnados = parseInt(document.getElementById(`votos_impugnados_${t}`).value) || 0;
+        
         const resultados = [];
+        let sumPartidos = 0;
         document.querySelectorAll(`.party-input[data-tab="${t}"]`).forEach(inp => {
+            const v = parseInt(inp.value) || 0;
+            sumPartidos += v;
             resultados.push({
                 id_partido: parseInt(inp.dataset.partido),
-                votos: parseInt(inp.value) || 0
+                votos: v
             });
         });
         
+        const sumTotal = sumPartidos + blancos + nulos + impugnados;
+        
+        // Si está completamente vacía (Sin datos), la omitimos de este guardado parcial
+        if (totalVotaron === 0 && sumTotal === 0) continue;
+        
         actas.push({
             tipo_eleccion: t,
-            total_votaron: parseInt(document.getElementById(`total_votaron_${t}`).value) || 0,
-            votos_blancos: parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0,
-            votos_nulos: parseInt(document.getElementById(`votos_nulos_${t}`).value) || 0,
-            votos_impugnados: parseInt(document.getElementById(`votos_impugnados_${t}`).value) || 0,
+            total_votaron: totalVotaron,
+            votos_blancos: blancos,
+            votos_nulos: nulos,
+            votos_impugnados: impugnados,
             resultados
         });
     }
