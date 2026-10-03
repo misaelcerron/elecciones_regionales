@@ -111,7 +111,7 @@ function crearCajasValidacion() {
         <div class="validation-box neutral" id="valBox_${t}" style="margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.85rem;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div><strong style="width:70px; display:inline-block;">${nombresEleccion[t]}</strong> <span id="valIcon_${t}">⏳</span> <span id="valText_${t}">Esperando...</span></div>
-                <div style="font-size: 0.75rem;">Suma: <b id="sumVotos_${t}">0</b> | Votaron: <b id="txtVotantes_${t}">0</b></div>
+                <div style="font-size: 0.75rem;">Suma: <b id="valSumVotos_${t}">0</b> | Votaron: <b id="valTxtVotantes_${t}">0</b></div>
             </div>
         </div>`;
     }
@@ -154,11 +154,17 @@ function bindInputsEscuchadores() {
     // Sincronizar campos de total votaron
     document.getElementById('total_votaron_1')?.addEventListener('input', function() {
         const p = document.getElementById('total_votaron_2');
-        if (p) p.value = this.value;
+        if (p) {
+            p.value = this.value;
+            validateMath();
+        }
     });
     document.getElementById('total_votaron_3')?.addEventListener('input', function() {
         const p = document.getElementById('total_votaron_4');
-        if (p) p.value = this.value;
+        if (p) {
+            p.value = this.value;
+            validateMath();
+        }
     });
 
     document.addEventListener('click', (e) => {
@@ -383,8 +389,14 @@ function validateMath() {
         });
         const sumaTotalVotos = sumPartidos + blancos + nulos + impugnados;
         
-        document.getElementById(`sumVotos_${t}`).textContent = sumaTotalVotos;
-        document.getElementById(`txtVotantes_${t}`).textContent = totalVotaron;
+        const sumVotosSpan = document.getElementById(`sumVotos_${t}`);
+        if (sumVotosSpan) sumVotosSpan.textContent = sumaTotalVotos;
+        
+        const valSumVotosSpan = document.getElementById(`valSumVotos_${t}`);
+        if (valSumVotosSpan) valSumVotosSpan.textContent = sumaTotalVotos;
+        
+        const valTxtVotantesSpan = document.getElementById(`valTxtVotantes_${t}`);
+        if (valTxtVotantesSpan) valTxtVotantesSpan.textContent = totalVotaron;
 
         if (lockedTabs.includes(t)) {
             setValBox(t, 'ok', '🔒', `Registrada <button type="button" onclick="window.unlockTab(${t})" style="cursor:pointer;font-size:0.75rem;padding:2px 8px;margin-left:10px;border:1px solid rgba(255,159,10,0.6);border-radius:12px;background:rgba(255,159,10,0.15);color:#ff9f0a;font-weight:700;">Editar</button>`);
