@@ -29,19 +29,24 @@ try {
     $pdo->query("DELETE FROM voto_resultado");
     $pdo->query("DELETE FROM acta_electoral");
 
-    // Intentar reiniciar auto-incrementos, ignorar si falla por permisos
+    if ($pdo->inTransaction()) {
+        $pdo->commit();
+    }
+    
+    // Intentar reiniciar auto-incrementos DESPUÉS del commit (ALTER causa commit implícito)
     try {
         $pdo->query("ALTER TABLE auditoria_acta AUTO_INCREMENT = 1");
         $pdo->query("ALTER TABLE voto_resultado AUTO_INCREMENT = 1");
-    } catch(Exception $e) {
+    } catch(Throwable $e) {
         // Ignorar error de ALTER (posiblemente falta de permisos en el hosting)
     }
 
-    $pdo->commit();
     echo json_encode(['success' => true, 'message' => 'Proceso electoral limpiado correctamente.']);
 
-} catch (Exception $e) {
-    $pdo->rollBack();
+} catch (Throwable $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     echo json_encode(['success' => false, 'message' => 'Error BD: ' . $e->getMessage()]);
 }
 ?>
