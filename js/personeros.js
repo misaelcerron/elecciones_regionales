@@ -92,6 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (p.es_coordinador == 1) {
                 tr.style.backgroundColor = '#fee2e2';
                 tr.title = 'Este personero ya está registrado como coordinador de local y debe ser subsanado';
+            } else if (p.es_duplicado == 1) {
+                tr.style.backgroundColor = '#fef08a';
+                tr.title = 'Este personero está duplicado (registrado en más de una mesa) y debe ser subsanado';
             }
             const tdStyle = "padding: 0.6rem 0.5rem; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
             if (p.id_personero) {
