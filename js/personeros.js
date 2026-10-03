@@ -993,9 +993,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 try {
+                    let excelSubtitle = 'REPORTE DE COORDINADORES DE LOCAL';
+                    const distritosUnicos = [...new Set(coordinadoresFiltrados.map(c => c.distrito).filter(Boolean))];
+                    if (distritosUnicos.length === 1) {
+                        excelSubtitle += ` - DISTRITO: ${distritosUnicos[0].toUpperCase()}`;
+                    } else if (searchCoordinador && searchCoordinador.value.trim() !== '') {
+                        excelSubtitle += ` - BÚSQUEDA: ${searchCoordinador.value.trim().toUpperCase()}`;
+                    }
+
                     const titleRows = [
                         ['SISTEMA ELECTORAL – PODEMOS PERÚ | ODPE PASCO'],
-                        ['REPORTE DE COORDINADORES DE LOCAL'],
+                        [excelSubtitle],
                         [`Fecha: ${new Date().toLocaleDateString('es-PE')}   |   Total: ${coordinadoresFiltrados.length}`],
                         []
                     ];
@@ -1079,8 +1087,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     doc.setFontSize(14);
                     doc.setTextColor(80, 80, 80);
                     let subtitle = "REPORTE DE COORDINADORES DE LOCAL";
-                    if (searchCoordinador && searchCoordinador.value.trim() !== '') {
-                        subtitle += ` - FILTRADO POR: ${searchCoordinador.value.trim().toUpperCase()}`;
+                    const distritosUnicos = [...new Set(coordinadoresFiltrados.map(c => c.distrito).filter(Boolean))];
+                    if (distritosUnicos.length === 1) {
+                        subtitle += ` - DISTRITO: ${distritosUnicos[0].toUpperCase()}`;
+                    } else if (searchCoordinador && searchCoordinador.value.trim() !== '') {
+                        subtitle += ` - BÚSQUEDA: ${searchCoordinador.value.trim().toUpperCase()}`;
                     }
                     doc.text(subtitle, startX, 30);
 
