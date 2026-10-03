@@ -9,6 +9,8 @@
     <title>Gestión de Mesas | Sistema Electoral Podemos Perú</title>
     <link rel="stylesheet" href="css/style.css?v=5">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
         .navbar { display:flex; justify-content:space-between; align-items:center; padding:0 1.5rem; height:56px; background:rgba(0,0,0,0.82); backdrop-filter:saturate(180%) blur(24px); -webkit-backdrop-filter:saturate(180%) blur(24px); border-bottom:1px solid rgba(59,130,246,0.15); position:fixed; top:0; width:100%; z-index:100; }
         .navbar-links { display:flex; align-items:center; gap:0.3rem; position:absolute; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.09); border-radius:26px; padding:0.22rem 0.3rem; }
@@ -109,6 +111,12 @@
         <!-- Barra de herramientas -->
         <div class="toolbar">
             <button class="btn-nueva-mesa" onclick="abrirModalNueva()">+ Nueva Mesa</button>
+            <button class="btn-primary" id="btnExportarExcel" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding:0.55rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:0.3s; white-space:nowrap;">
+                <span>📊</span> Exportar Excel
+            </button>
+            <button class="btn-primary" id="btnExportarPDF" style="background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.4); color: #f87171; padding:0.55rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:0.3s; white-space:nowrap;">
+                <span>📄</span> Exportar PDF
+            </button>
             <div class="import-bar">
                 <label>📥 Importar Excel:</label>
                 <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
@@ -137,6 +145,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th style="width: 40px; text-align: center;">#</th>
                         <th>N° Mesa</th>
                         <th>Departamento</th>
                         <th>Provincia</th>
@@ -148,7 +157,7 @@
                     </tr>
                 </thead>
                 <tbody id="tablaMesas">
-                    <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
+                    <tr><td colspan="9" style="text-align:center; padding:2rem; color:var(--text-muted);">Cargando...</td></tr>
                 </tbody>
             </table>
         </div>

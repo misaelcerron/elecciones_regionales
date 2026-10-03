@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let todasLasMesas = [];
+    let mesasFiltradas = [];
     let archivoExcel = null;
 
     cargarMesas();
@@ -14,23 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = await res.json();
             if (json.error) throw new Error(json.error);
             todasLasMesas = json.data;
+            mesasFiltradas = todasLasMesas;
             document.getElementById('mesaCount').textContent = `Total: ${todasLasMesas.length} mesas`;
             renderTabla(todasLasMesas);
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="7" style="color:#ef4444;text-align:center;">Error: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" style="color:#ef4444;text-align:center;">Error: ${err.message}</td></tr>`;
         }
     }
 
     function renderTabla(data) {
         const tbody = document.getElementById('tablaMesas');
         if (!data.length) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">No hay mesas registradas.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">No hay mesas registradas.</td></tr>';
             return;
         }
         tbody.innerHTML = '';
-        data.forEach(m => {
+        data.forEach((m, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
+                <td style="color:var(--text-muted); text-align:center; font-weight:600;">${index + 1}</td>
                 <td style="font-weight:700;color:#60a5fa;">${m.id_mesa}</td>
                 <td style="font-size:0.83rem;">${m.departamento}</td>
                 <td style="font-size:0.83rem;">${m.provincia}</td>
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             (m.centro_poblado || '').toLowerCase().includes(q)
         );
         document.getElementById('mesaCount').textContent = `Mostrando: ${fil.length} / ${todasLasMesas.length}`;
+        mesasFiltradas = fil;
         renderTabla(fil);
     });
 
@@ -253,5 +257,148 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.display = msg ? 'inline-block' : 'none';
         el.className = 'import-feedback ' + tipo;
         el.textContent = msg;
+    }
+
+    // ══════════════════════════════════════
+    //  EXPORTAR EXCEL
+    // ══════════════════════════════════════
+    const btnExportarExcel = document.getElementById('btnExportarExcel');
+    if (btnExportarExcel) {
+        btnExportarExcel.addEventListener('click', () => {
+            if (!mesasFiltradas || mesasFiltradas.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarExcel;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Generando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const titleRows = [
+                        ['SISTEMA ELECTORAL – PODEMOS PERÚ | ODPE PASCO'],
+                        ['PADRÓN DE MESAS'],
+                        [`Fecha: ${new Date().toLocaleDateString('es-PE')}   |   Total: ${mesasFiltradas.length}`],
+                        []
+                    ];
+
+                    const headers = ['#', 'N° MESA', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'CENTRO POBLADO', 'LOCAL DE VOTACIÓN', 'ELECTORES'];
+                    const dataRows = mesasFiltradas.map((m, i) => [
+                        i + 1,
+                        m.id_mesa || '',
+                        m.departamento || '',
+                        m.provincia || '',
+                        m.distrito || '',
+                        m.centro_poblado || '',
+                        m.local_votacion || '',
+                        m.electores_habiles || 0
+                    ]);
+
+                    const aoa = [...titleRows, headers, ...dataRows];
+                    const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+                    ws['!cols'] = [{ wch: 5 }, { wch: 10 }, { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 30 }, { wch: 10 }];
+                    ws['!merges'] = [
+                        { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
+                        { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } },
+                        { s: { r: 2, c: 0 }, e: { r: 2, c: headers.length - 1 } }
+                    ];
+
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'MESAS');
+                    XLSX.writeFile(wb, `Reporte_Mesas_${new Date().toLocaleDateString('es-PE').replace(/\//g,'-')}.xlsx`);
+                } catch (e) {
+                    alert('Error al exportar Excel: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
+        });
+    }
+
+    // ══════════════════════════════════════
+    //  EXPORTAR PDF
+    // ══════════════════════════════════════
+    const btnExportarPDF = document.getElementById('btnExportarPDF');
+    if (btnExportarPDF) {
+        btnExportarPDF.addEventListener('click', () => {
+            if (!mesasFiltradas || mesasFiltradas.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            const btn = btnExportarPDF;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Generando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    if (window.jspdf && window.jspdf.jsPDF) {
+                        window.jsPDF = window.jspdf.jsPDF;
+                    }
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'landscape', format: 'a4' });
+
+                    const logoImg = document.querySelector('img[alt="Podemos Perú"]');
+                    let startX = 14;
+                    if (logoImg && logoImg.complete) {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = logoImg.naturalWidth || logoImg.width || 128;
+                            canvas.height = logoImg.naturalHeight || logoImg.height || 128;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height);
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            doc.addImage(dataUrl, 'JPEG', 14, 14, 16, 16);
+                            startX = 34;
+                        } catch (err) {
+                            console.warn('CORS logo err:', err);
+                        }
+                    }
+
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(22);
+                    doc.setTextColor(27, 75, 138);
+                    doc.text("PODEMOS PERÚ", startX, 22);
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(80, 80, 80);
+                    doc.text("REPORTE DE MESAS", startX, 30);
+
+                    const tableData = mesasFiltradas.map((m, index) => [
+                        index + 1,
+                        m.id_mesa || '',
+                        m.departamento || '',
+                        m.provincia || '',
+                        m.distrito || '',
+                        m.centro_poblado || '',
+                        m.local_votacion || '',
+                        m.electores_habiles || 0
+                    ]);
+
+                    if (typeof doc.autoTable !== 'function') throw new Error("Plugin autoTable no cargado.");
+
+                    doc.autoTable({
+                        startY: 36,
+                        head: [['#', 'N° MESA', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'CENTRO POBLADO', 'LOCAL DE VOTACIÓN', 'ELECTORES']],
+                        body: tableData,
+                        styles: { fontSize: 8, cellPadding: 2, textColor: [40, 40, 40] },
+                        headStyles: { fillColor: [27, 75, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
+                        alternateRowStyles: { fillColor: [245, 248, 252] },
+                        theme: 'grid'
+                    });
+
+                    doc.save(`Reporte_Mesas_${new Date().toLocaleDateString('es-PE').replace(/\//g,'-')}.pdf`);
+                } catch(e) {
+                    console.error(e);
+                    alert('Error al exportar PDF: ' + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 100);
+        });
     }
 });
