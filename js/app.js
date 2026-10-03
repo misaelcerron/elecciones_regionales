@@ -160,6 +160,10 @@ function bindInputsEscuchadores() {
         }
     });
     document.getElementById('total_votaron_3')?.addEventListener('input', function() {
+        if (window.currentMesaDistrito === 'YANAHUANCA') {
+            validateMath();
+            return;
+        }
         const p = document.getElementById('total_votaron_4');
         if (p) {
             p.value = this.value;
@@ -258,6 +262,7 @@ async function validarMesa(nro) {
             const distLabel = distParts.length > 0 ? distParts[0] : '';
             const localLabel = m.local_votacion ? ` · ${m.local_votacion}` : '';
             const distritoTag = distLabel ? ` · 📍 ${distLabel}${localLabel}` : '';
+            window.currentMesaDistrito = m.distrito ? m.distrito.toUpperCase() : '';
 
             setMesaFeedback('ok', `✓ Mesa ${m.id_mesa} — ${Number(m.electores_habiles).toLocaleString()} electores${distritoTag}`);
             escrutinioSection.style.display = 'block';
@@ -317,6 +322,21 @@ async function validarMesa(nro) {
                 // Bloquear inputs solo de esta acta
                 document.querySelectorAll(`input[data-tab="${t}"], button[data-target="${t}"]`).forEach(el => {
                     el.disabled = isLocked;
+                });
+            }
+
+            // Lógica especial para YANAHUANCA (t=4 No Aplica)
+            if (window.currentMesaDistrito === 'YANAHUANCA') {
+                document.querySelectorAll(`input[data-tab="4"], button[data-target="4"]`).forEach(el => {
+                    el.disabled = true;
+                    el.style.opacity = '0.2';
+                    if (el.tagName === 'INPUT') el.value = '';
+                });
+                const sum4 = document.getElementById('sumVotos_4');
+                if (sum4) sum4.textContent = '-';
+            } else {
+                document.querySelectorAll(`input[data-tab="4"], button[data-target="4"]`).forEach(el => {
+                    el.style.opacity = '1';
                 });
             }
 
@@ -390,6 +410,13 @@ function validateMath() {
     let hasValidData = false;
 
     for (let t = 1; t <= 4; t++) {
+        if (t === 4 && window.currentMesaDistrito === 'YANAHUANCA') {
+            setValBox(t, 'neutral', '—', 'No Aplica (Capital Provincial)');
+            const sumVotosSpan = document.getElementById(`sumVotos_${t}`);
+            if (sumVotosSpan) sumVotosSpan.textContent = '-';
+            continue;
+        }
+
         const totalVotaron = parseInt(document.getElementById(`total_votaron_${t}`).value) || 0;
         const blancos      = parseInt(document.getElementById(`votos_blancos_${t}`).value) || 0;
         const nulos        = parseInt(document.getElementById(`votos_nulos_${t}`).value) || 0;
@@ -460,6 +487,8 @@ function setValBox(t, state, icon, text) {
 }
 
 window.unlockTab = function(t) {
+    if (t === 4 && window.currentMesaDistrito === 'YANAHUANCA') return;
+
     // Eliminar de lockedTabs
     lockedTabs = lockedTabs.filter(x => x !== t);
     
