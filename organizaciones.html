@@ -17,10 +17,10 @@
         ═══════════════════════════════════════════════════ */
         :root {
             --bg: #000000;
-            --surface: rgba(255,255,255,0.04);
-            --surface-hover: rgba(255,255,255,0.07);
-            --surface-active: rgba(255,255,255,0.10);
-            --border: rgba(255,255,255,0.09);
+            --surface: rgba(0, 0, 0, 0.04);
+            --surface-hover: rgba(0, 0, 0, 0.07);
+            --surface-active: rgba(0, 0, 0, 0.10);
+            --border: rgba(0, 0, 0, 0.09);
             --accent: #0071e3;
             --accent-hover: #0077ed;
             --accent-light: rgba(0,113,227,0.15);
@@ -68,13 +68,13 @@
         .navbar-links {
             display: flex; align-items: center; gap: 0.3rem;
             position: absolute; left: 50%; transform: translateX(-50%);
-            background: rgba(255,255,255,0.04);
-            border: 0.5px solid rgba(255,255,255,0.09);
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             border-radius: 26px;
             padding: 0.22rem 0.3rem;
         }
         .navbar-links a {
-            color: rgba(255,255,255,0.55);
+            color: rgba(0, 0, 0, 0.55);
             text-decoration: none;
             font-size: 0.8rem;
             font-weight: 600;
@@ -95,14 +95,14 @@
             color: white;
             background: linear-gradient(135deg, rgba(27,75,138,0.65), rgba(10,40,90,0.8));
             border-color: rgba(59,130,246,0.6);
-            box-shadow: 0 0 14px rgba(27,75,138,0.5), inset 0 0.5px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 0 14px rgba(27,75,138,0.5), inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             font-weight: 700;
         }
         .navbar-user { display: flex; align-items: center; gap: 0.75rem; }
         .nav-username {
             font-size: 0.8rem; color: var(--text-secondary);
-            background: rgba(255,255,255,0.04);
-            border: 0.5px solid rgba(255,255,255,0.09);
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             padding: 0.3rem 0.75rem; border-radius: 20px;
         }
         .btn-logout {
@@ -186,7 +186,7 @@
         }
         .org-card::before {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.03) 0%, transparent 60%);
             pointer-events: none;
         }
         @keyframes cardIn {
@@ -194,7 +194,7 @@
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         .org-card:hover {
-            border-color: rgba(255,255,255,0.14); background: var(--surface-hover);
+            border-color: rgba(0, 0, 0, 0.14); background: var(--surface-hover);
             transform: translateY(-2px); box-shadow: var(--shadow);
         }
         .org-logo-wrap {
@@ -232,7 +232,7 @@
         .modal-overlay.open { display: flex; animation: overlayIn 0.22s ease; }
         @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-sheet {
-            background: #1c1c1e; border: 0.5px solid rgba(255,255,255,0.12);
+            background: #1c1c1e; border: 0.5px solid rgba(0, 0, 0, 0.12);
             border-radius: 20px 20px 16px 16px; width: 100%; max-width: 540px;
             box-shadow: var(--shadow-lg);
             animation: sheetIn 0.35s cubic-bezier(0.34, 1.22, 0.64, 1); overflow: hidden;
@@ -241,15 +241,15 @@
             from { opacity: 0; transform: translateY(40px) scale(0.97); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .modal-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 10px auto 0; }
+        .modal-handle { width: 36px; height: 4px; background: rgba(0, 0, 0, 0.2); border-radius: 2px; margin: 10px auto 0; }
         .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem 0; }
         .modal-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
         .modal-close {
-            background: rgba(255,255,255,0.1); border: none; color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.1); border: none; color: var(--text-secondary);
             width: 28px; height: 28px; border-radius: 50%; font-size: 1rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center; transition: var(--transition);
         }
-        .modal-close:hover { background: rgba(255,255,255,0.18); color: white; }
+        .modal-close:hover { background: rgba(0, 0, 0, 0.18); color: white; }
         .modal-body { padding: 1.25rem 1.5rem 1.5rem; }
         .field-group { margin-bottom: 1rem; }
         .field-label {
@@ -258,8 +258,8 @@
             color: var(--text-secondary); margin-bottom: 0.45rem;
         }
         .field-input {
-            width: 100%; background: rgba(255,255,255,0.06);
-            border: 0.5px solid rgba(255,255,255,0.1);
+            width: 100%; background: rgba(0, 0, 0, 0.06);
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
             border-radius: var(--radius-md); padding: 0.75rem 1rem;
             color: var(--text-primary); font-size: 0.95rem; outline: none; transition: var(--transition);
         }
@@ -268,7 +268,7 @@
 
         /* Logo upload */
         .logo-upload-zone {
-            border: 1.5px dashed rgba(255,255,255,0.12); border-radius: var(--radius-lg);
+            border: 1.5px dashed rgba(0, 0, 0, 0.12); border-radius: var(--radius-lg);
             padding: 2rem 1.5rem; text-align: center; cursor: pointer;
             transition: var(--transition); position: relative; overflow: hidden;
         }
@@ -276,7 +276,7 @@
         .logo-upload-zone.drag-over { border-color: var(--accent); background: rgba(0,113,227,0.1); transform: scale(1.01); }
         .logo-preview-container { display: none; align-items: center; gap: 1.25rem; }
         .logo-preview-container.visible { display: flex; }
-        .logo-preview-img { width: 72px; height: 72px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,0.05); border: 0.5px solid var(--border); padding: 4px; }
+        .logo-preview-img { width: 72px; height: 72px; object-fit: contain; border-radius: 12px; background: rgba(0, 0, 0, 0.05); border: 0.5px solid var(--border); padding: 4px; }
         .logo-preview-info { text-align: left; }
         .logo-preview-name { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
         .logo-preview-size { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; }
@@ -293,12 +293,12 @@
         .current-logo-text { font-size: 0.8rem; color: var(--success); font-weight: 500; }
 
         /* Modal footer */
-        .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1rem 1.5rem 1.5rem; border-top: 0.5px solid rgba(255,255,255,0.06); }
+        .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1rem 1.5rem 1.5rem; border-top: 0.5px solid rgba(0, 0, 0, 0.06); }
         .btn-cancel { background: var(--surface); border: 0.5px solid var(--border); color: var(--text-secondary); padding: 0.65rem 1.25rem; border-radius: 22px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
         .btn-cancel:hover { background: var(--surface-hover); color: var(--text-primary); }
         .btn-save { background: var(--accent); border: none; color: white; padding: 0.65rem 1.5rem; border-radius: 22px; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 0.4rem; }
         .btn-save:hover { background: var(--accent-hover); box-shadow: 0 4px 16px var(--accent-glow); }
-        .btn-save:disabled { background: rgba(255,255,255,0.1); color: var(--text-tertiary); cursor: not-allowed; box-shadow: none; }
+        .btn-save:disabled { background: rgba(0, 0, 0, 0.1); color: var(--text-tertiary); cursor: not-allowed; box-shadow: none; }
 
         /* Delete modal */
         .modal-delete .modal-sheet { max-width: 400px; text-align: center; }
@@ -325,7 +325,7 @@
         .toast.error   { border-color: rgba(255,69,58,0.3); }
 
         /* Spinner */
-        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.15); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0, 0, 0, 0.15); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
@@ -341,11 +341,11 @@
 <body>
 
 <nav class="navbar">
-    <a href="dashboard.html" style="display:flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,rgba(27,75,138,0.55),rgba(10,40,90,0.7));border:1px solid rgba(59,130,246,0.55);border-radius:22px;padding:0.25rem 0.75rem 0.25rem 0.3rem;box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(255,255,255,0.1);text-decoration:none;flex-shrink:0;">
+    <a href="dashboard.html" style="display:flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,rgba(27,75,138,0.55),rgba(10,40,90,0.7));border:1px solid rgba(59,130,246,0.55);border-radius:22px;padding:0.25rem 0.75rem 0.25rem 0.3rem;box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(0, 0, 0, 0.1);text-decoration:none;flex-shrink:0;">
         <img src="img/podemos_peru_logo.jpg" alt="Podemos Perú"
              style="width:28px;height:28px;border-radius:7px;object-fit:cover;background:white;padding:1px;box-shadow:0 2px 6px rgba(0,0,0,0.5);flex-shrink:0;">
         <div style="display:flex;flex-direction:column;line-height:1.15;">
-            <span style="font-size:0.75rem;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;color:#fff;text-shadow:0 0 10px rgba(96,165,250,0.7);">Sistema Electoral</span>
+            <span style="font-size:0.75rem;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;color:#1d1d1f;text-shadow:0 0 10px rgba(96,165,250,0.7);">Sistema Electoral</span>
             <span style="font-size:0.55rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#93c5fd;">Podemos Perú &middot; ODPE Pasco</span>
         </div>
     </a>
@@ -540,7 +540,7 @@
     position: relative;
     margin-top: 5rem;
     background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
-    border-top: 0.5px solid rgba(255,255,255,0.06);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 .footer-gradient-line {
     height: 1px;
@@ -567,8 +567,8 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.12);
+    background: rgba(0, 0, 0, 0.06);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
@@ -584,12 +584,12 @@
 .footer-brand-name {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.9);
+    color: rgba(0, 0, 0, 0.9);
     letter-spacing: -0.01em;
 }
 .footer-brand-sub {
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
     margin-top: 0.1rem;
 }
 .footer-info {
@@ -624,7 +624,7 @@
 }
 .footer-legal {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(0, 0, 0, 0.3);
     margin-bottom: 0.15rem;
 }
 .footer-company {
@@ -644,7 +644,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
 }
 .footer-meta-item {
     display: flex;
@@ -680,7 +680,7 @@
 }
 .footer-copy {
     font-size: 0.65rem;
-    color: rgba(255,255,255,0.2);
+    color: rgba(0, 0, 0, 0.2);
     line-height: 1.6;
 }
 @media (max-width: 720px) {

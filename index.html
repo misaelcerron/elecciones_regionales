@@ -18,11 +18,11 @@
         :root {
             --bg:           #000;
             --bg2:          #0a0a0a;
-            --surface:      rgba(255,255,255,0.045);
-            --surface-h:    rgba(255,255,255,0.075);
-            --surface-a:    rgba(255,255,255,0.10);
-            --border:       rgba(255,255,255,0.09);
-            --border-h:     rgba(255,255,255,0.16);
+            --surface:      rgba(0, 0, 0, 0.045);
+            --surface-h:    rgba(0, 0, 0, 0.075);
+            --surface-a:    rgba(0, 0, 0, 0.10);
+            --border:       rgba(0, 0, 0, 0.09);
+            --border-h:     rgba(0, 0, 0, 0.16);
             --accent:       #0071e3;
             --accent-h:     #0077ed;
             --accent-glow:  rgba(0,113,227,0.3);
@@ -89,7 +89,7 @@
         }
         .mesa-feedback.loading{
             display:flex;
-            background:rgba(255,255,255,0.04);
+            background:rgba(0, 0, 0, 0.04);
             border:0.5px solid var(--border);
             color:var(--text-2);
         }
@@ -100,12 +100,12 @@
             border:1px solid rgba(59,130,246,0.55);
             border-radius:22px;
             padding:0.25rem 0.75rem 0.25rem 0.3rem;
-            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(255,255,255,0.1);
+            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             text-decoration:none;flex-shrink:0;
         }
         .navbar-brand-wrap:hover{
             border-color:rgba(59,130,246,0.85);
-            box-shadow:0 0 28px rgba(27,75,138,0.65),inset 0 0.5px 0 rgba(255,255,255,0.15);
+            box-shadow:0 0 28px rgba(27,75,138,0.65),inset 0 0.5px 0 rgba(0, 0, 0, 0.15);
         }
         .navbar-logo{
             width:28px;height:28px;border-radius:7px;
@@ -119,7 +119,7 @@
         .navbar-brand-main{
             font-size:0.75rem;font-weight:900;letter-spacing:0.06em;
             text-transform:uppercase;
-            color:#ffffff;
+            color:#1d1d1f;
             text-shadow:0 0 10px rgba(96,165,250,0.7);
         }
         .navbar-brand-sub{
@@ -173,7 +173,7 @@
             position:fixed;top:0;left:0;right:0;z-index:1000;
             display:flex;align-items:center;justify-content:space-between;
             padding:0 1.5rem;height:56px;
-            background:rgba(0,0,0,0.82);
+            background:rgba(0, 0, 0, 0.82);
             backdrop-filter:saturate(180%) blur(24px);
             -webkit-backdrop-filter:saturate(180%) blur(24px);
             border-bottom:1px solid rgba(59,130,246,0.15);
@@ -187,13 +187,13 @@
         .navbar-links{
             display:flex;align-items:center;gap:0.3rem;
             position:absolute;left:50%;transform:translateX(-50%);
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);
+            border:0.5px solid rgba(0, 0, 0, 0.09);
             border-radius:26px;
             padding:0.22rem 0.3rem;
         }
         .navbar-links a{
-            color:rgba(255,255,255,0.55);
+            color:rgba(0, 0, 0, 0.55);
             text-decoration:none;
             font-size:0.8rem;
             font-weight:600;
@@ -214,14 +214,14 @@
             color:white;
             background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8));
             border-color:rgba(59,130,246,0.6);
-            box-shadow:0 0 14px rgba(27,75,138,0.5), inset 0 0.5px 0 rgba(255,255,255,0.1);
+            box-shadow:0 0 14px rgba(27,75,138,0.5), inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             font-weight:700;
         }
         .navbar-user{display:flex;align-items:center;gap:0.75rem;}
         .nav-user-name{
             font-size:0.8rem;color:var(--text-2);
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);
+            border:0.5px solid rgba(0, 0, 0, 0.09);
             padding:0.3rem 0.75rem;border-radius:20px;
         }
         .btn-logout{
@@ -268,7 +268,7 @@
         .step-num{
             display:block;width:22px;height:22px;border-radius:50%;
             margin:0 auto 0.3rem;font-size:0.72rem;font-weight:800;
-            background:rgba(255,255,255,0.08);line-height:22px;
+            background:rgba(0, 0, 0, 0.08);line-height:22px;
         }
         .step.active .step-num{background:var(--accent);color:white;}
         .step.done .step-num{background:var(--ok);color:white;}
@@ -306,7 +306,7 @@
             text-transform:uppercase;color:var(--text-2);
         }
         .field-input{
-            background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.1);
+            background:rgba(0, 0, 0, 0.05);border:0.5px solid rgba(0, 0, 0, 0.1);
             border-radius:var(--r);padding:0.75rem 1rem;
             color:var(--text);font-size:1rem;font-weight:500;
             outline:none;transition:var(--t);width:100%;
@@ -338,7 +338,7 @@
         }
 
         .party-card{
-            background:rgba(255,255,255,0.03);
+            background:rgba(0, 0, 0, 0.03);
             border:0.5px solid var(--border);
             border-radius:var(--r-lg);
             padding:1rem 1rem 1rem 1rem;
@@ -353,12 +353,12 @@
         }
         .party-card::before{
             content:'';position:absolute;inset:0;
-            background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 55%);
+            background:linear-gradient(135deg,rgba(0, 0, 0, 0.025) 0%,transparent 55%);
             pointer-events:none;
         }
         .party-card:hover{
-            border-color:rgba(255,255,255,0.15);
-            background:rgba(255,255,255,0.055);
+            border-color:rgba(0, 0, 0, 0.15);
+            background:rgba(0, 0, 0, 0.055);
             transform:translateY(-2px);box-shadow:var(--shadow);
         }
         .party-card:focus-within{
@@ -371,7 +371,7 @@
         .party-logo{
             flex-shrink:0;
             width:52px;height:52px;border-radius:12px;
-            background:rgba(255,255,255,0.06);
+            background:rgba(0, 0, 0, 0.06);
             border:0.5px solid var(--border);
             display:flex;align-items:center;justify-content:center;
             overflow:hidden;
@@ -396,7 +396,7 @@
             display:flex;align-items:center;justify-content:space-between;
             gap:0.5rem;
             background:rgba(0,0,0,0.3);
-            border:0.5px solid rgba(255,255,255,0.08);
+            border:0.5px solid rgba(0, 0, 0, 0.08);
             border-radius:var(--r);padding:0.3rem 0.4rem 0.3rem 0.75rem;
         }
         .vote-value{
@@ -411,7 +411,7 @@
         .vote-value:focus{color:#60a5fa;}
         .btn-step{
             flex-shrink:0;width:36px;height:36px;border-radius:10px;
-            background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.1);
+            background:rgba(0, 0, 0, 0.08);border:0.5px solid rgba(0, 0, 0, 0.1);
             color:var(--text-2);font-size:1.2rem;font-weight:700;
             cursor:pointer;transition:var(--t);
             display:flex;align-items:center;justify-content:center;
@@ -432,7 +432,7 @@
         .other-card{
             border:0.5px solid var(--border);border-radius:var(--r);
             padding:1rem;display:flex;flex-direction:column;gap:0.75rem;
-            background:rgba(255,255,255,0.03);transition:var(--t);
+            background:rgba(0, 0, 0, 0.03);transition:var(--t);
         }
         .other-card:focus-within{box-shadow:0 0 0 3px rgba(0,113,227,0.18);}
         .other-label{
@@ -453,8 +453,8 @@
             display:flex;justify-content:space-between;align-items:center;
             flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem;
             transition:var(--t);
-            border:0.5px solid rgba(255,255,255,0.08);
-            background:rgba(255,255,255,0.03);
+            border:0.5px solid rgba(0, 0, 0, 0.08);
+            background:rgba(0, 0, 0, 0.03);
         }
         .validation-box.ok{background:var(--ok-light);border-color:rgba(50,215,75,0.3);}
         .validation-box.err{background:var(--err-light);border-color:rgba(255,69,58,0.3);}
@@ -471,7 +471,7 @@
         .val-right strong{color:var(--text);font-weight:700;}
         .btn-val-sync{
             background:linear-gradient(135deg,#0071e3,#005bb5);
-            border:none;color:#ffffff;
+            border:none;color:#1d1d1f;
             padding:0.25rem 0.65rem;border-radius:8px;
             font-size:0.75rem;font-weight:700;cursor:pointer;
             display:inline-flex;align-items:center;gap:0.3rem;
@@ -486,7 +486,7 @@
         /* Progress bar */
         .vote-progress{
             width:100%;height:4px;border-radius:2px;
-            background:rgba(255,255,255,0.07);
+            background:rgba(0, 0, 0, 0.07);
             margin-top:0.75rem;overflow:hidden;
         }
         .vote-progress-fill{
@@ -508,13 +508,13 @@
             box-shadow:0 6px 24px var(--accent-glow);
         }
         .btn-submit:disabled{
-            background:rgba(255,255,255,0.08);color:var(--text-3);
+            background:rgba(0, 0, 0, 0.08);color:var(--text-3);
             cursor:not-allowed;transform:none;box-shadow:none;
         }
 
         /* ── LOADING SKELETON ── */
         .skeleton{
-            background:rgba(255,255,255,0.06);border-radius:var(--r-lg);
+            background:rgba(0, 0, 0, 0.06);border-radius:var(--r-lg);
             animation:shimmer 1.4s ease infinite;
             height:120px;
         }
@@ -541,7 +541,7 @@
         /* Spinner */
         .spinner{
             display:inline-block;width:16px;height:16px;
-            border:2px solid rgba(255,255,255,0.15);border-top-color:white;
+            border:2px solid rgba(0, 0, 0, 0.15);border-top-color:white;
             border-radius:50%;animation:spin 0.7s linear infinite;
         }
         @keyframes spin{to{transform:rotate(360deg);}}
@@ -694,7 +694,7 @@
                 </h3>
                 
                 <div class="table-responsive" style="overflow-x: auto; margin-bottom: 1rem;">
-                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
+                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
                         <thead>
                             <tr>
                                 <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: left; width: 40%;">ORGANIZACIONES POLÍTICAS</th>
@@ -707,34 +707,34 @@
                         </tbody>
                         <tbody>
                             <!-- Otros votos -->
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS EN BLANCO</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_blancos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_blancos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS NULOS</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_nulos_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_nulos_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS IMPUGNADOS</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_impugnados_1" data-tab="1" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_impugnados_2" data-tab="2" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.05); font-weight: 800;">
+                            <tr style="background: rgba(0, 0, 0, 0.05); font-weight: 800;">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border);">TOTAL DE VOTOS EMITIDOS</td>
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_1">0</td>
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_2">0</td>
@@ -758,7 +758,7 @@
                 </h3>
                 
                 <div class="table-responsive" style="overflow-x: auto; margin-bottom: 1rem;">
-                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
+                    <table class="acta-table" style="width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border); border-radius: var(--r-lg);">
                         <thead>
                             <tr>
                                 <th style="padding: 1rem; border-bottom: 1px solid var(--border); text-align: left; width: 40%;">ORGANIZACIONES POLÍTICAS</th>
@@ -771,34 +771,34 @@
                         </tbody>
                         <tbody>
                             <!-- Otros votos -->
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS EN BLANCO</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_blancos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_blancos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS NULOS</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_nulos_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_nulos_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.01);">
+                            <tr style="background: rgba(0, 0, 0, 0.01);">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">VOTOS IMPUGNADOS</td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_impugnados_3" data-tab="3" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                                 <td style="padding: 0.5rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center;">
-                                    <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
+                                    <input type="number" class="vote-value other-input" id="votos_impugnados_4" data-tab="4" value="0" min="0" inputmode="numeric" style="width: 100%; text-align: center; background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 8px; color: var(--text); font-size: 1.5rem; font-weight: 800; outline: none; padding: 0.5rem;">
                                 </td>
                             </tr>
-                            <tr style="background: rgba(255,255,255,0.05); font-weight: 800;">
+                            <tr style="background: rgba(0, 0, 0, 0.05); font-weight: 800;">
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border);">TOTAL DE VOTOS EMITIDOS</td>
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_3">0</td>
                                 <td style="padding: 1rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); text-align: center; color: var(--accent); font-size: 1.5rem;" id="sumVotos_4">0</td>
@@ -932,7 +932,7 @@
     position: relative;
     margin-top: 5rem;
     background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
-    border-top: 0.5px solid rgba(255,255,255,0.06);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 .footer-gradient-line {
     height: 1px;
@@ -959,8 +959,8 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.12);
+    background: rgba(0, 0, 0, 0.06);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
@@ -976,12 +976,12 @@
 .footer-brand-name {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.9);
+    color: rgba(0, 0, 0, 0.9);
     letter-spacing: -0.01em;
 }
 .footer-brand-sub {
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
     margin-top: 0.1rem;
 }
 .footer-info {
@@ -1016,7 +1016,7 @@
 }
 .footer-legal {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(0, 0, 0, 0.3);
     margin-bottom: 0.15rem;
 }
 .footer-company {
@@ -1036,7 +1036,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
 }
 .footer-meta-item {
     display: flex;
@@ -1072,7 +1072,7 @@
 }
 .footer-copy {
     font-size: 0.65rem;
-    color: rgba(255,255,255,0.2);
+    color: rgba(0, 0, 0, 0.2);
     line-height: 1.6;
 }
 @media (max-width: 720px) {

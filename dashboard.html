@@ -15,7 +15,7 @@
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
         body{
             font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-            background:#000; color:#f5f5f7;
+            background:#f5f5f7; color:#1d1d1f;
             min-height:100vh; overflow-x:hidden;
             -webkit-font-smoothing:antialiased;
         }
@@ -30,7 +30,7 @@
             position:fixed;top:0;left:0;right:0;z-index:1000;
             display:flex;align-items:center;justify-content:space-between;
             padding:0 1.5rem;height:56px;
-            background:rgba(0,0,0,0.82);
+            background:rgba(0, 0, 0, 0.82);
             backdrop-filter:saturate(180%) blur(24px);
             -webkit-backdrop-filter:saturate(180%) blur(24px);
             border-bottom:1px solid rgba(59,130,246,0.15);
@@ -43,7 +43,7 @@
             border:1px solid rgba(59,130,246,0.55);
             border-radius:22px;
             padding:0.25rem 0.75rem 0.25rem 0.3rem;
-            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(255,255,255,0.1);
+            box-shadow:0 0 18px rgba(27,75,138,0.4),inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             text-decoration:none;flex-shrink:0;
         }
         .navbar-brand img{
@@ -54,7 +54,7 @@
         .navbar-brand-text{display:flex;flex-direction:column;line-height:1.15;}
         .navbar-brand-main{
             font-size:0.75rem;font-weight:900;letter-spacing:0.06em;
-            text-transform:uppercase;color:#fff;
+            text-transform:uppercase;color:#1d1d1f;
             text-shadow:0 0 10px rgba(96,165,250,0.7);
         }
         .navbar-brand-sub{
@@ -66,13 +66,13 @@
         .navbar-links{
             display:flex;align-items:center;gap:0.25rem;
             position:absolute;left:50%;transform:translateX(-50%);
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);
+            border:0.5px solid rgba(0, 0, 0, 0.09);
             border-radius:26px;
             padding:0.2rem 0.25rem;
         }
         .navbar-links a{
-            color:rgba(255,255,255,0.55);text-decoration:none;
+            color:rgba(0, 0, 0, 0.55);text-decoration:none;
             font-size:0.8rem;font-weight:600;letter-spacing:0.01em;
             padding:0.36rem 0.85rem;border-radius:20px;
             border:0.5px solid transparent;
@@ -86,7 +86,7 @@
             color:white;
             background:linear-gradient(135deg,rgba(27,75,138,0.65),rgba(10,40,90,0.8));
             border-color:rgba(59,130,246,0.6);
-            box-shadow:0 0 14px rgba(27,75,138,0.5),inset 0 0.5px 0 rgba(255,255,255,0.1);
+            box-shadow:0 0 14px rgba(27,75,138,0.5),inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             font-weight:700;
         }
 
@@ -94,8 +94,8 @@
         .navbar-user{display:flex;align-items:center;gap:0.6rem;flex-shrink:0;}
         .nav-username{
             font-size:0.78rem;color:#86868b;
-            background:rgba(255,255,255,0.04);
-            border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);
+            border:0.5px solid rgba(0, 0, 0, 0.09);
             padding:0.28rem 0.7rem;border-radius:20px;white-space:nowrap;
         }
         .btn-logout{
@@ -125,11 +125,11 @@
         /* KPIs */
         .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;}
         .kpi-card{
-            background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);border:0.5px solid rgba(0, 0, 0, 0.09);
             border-radius:18px;padding:1.5rem;text-align:center;
             transition:all 0.22s ease;
         }
-        .kpi-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}
+        .kpi-card:hover{background:rgba(0, 0, 0, 0.07);border-color:rgba(0, 0, 0, 0.14);transform:translateY(-2px);}
         .kpi-card h3{color:#86868b;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.75rem;}
         .kpi-card .value{font-size:2.75rem;font-weight:800;letter-spacing:-0.04em;color:#f5f5f7;}
         .kpi-card .value.blue{color:#60a5fa;}
@@ -139,7 +139,7 @@
         /* Charts */
         .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;}
         .chart-card{
-            background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.09);
+            background:rgba(0, 0, 0, 0.04);border:0.5px solid rgba(0, 0, 0, 0.09);
             border-radius:18px;padding:1.5rem;
         }
         .chart-title{
@@ -159,15 +159,15 @@
             gap: 1rem;
             margin-bottom: 1rem;
             padding: 1.5rem 1.75rem;
-            background: rgba(255,255,255,0.04);
-            border: 1.5px solid rgba(255,255,255,0.15);
+            background: rgba(0, 0, 0, 0.04);
+            border: 1.5px solid rgba(0, 0, 0, 0.15);
             border-radius: 20px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04),
+                0 0 0 1px rgba(0, 0, 0, 0.04),
                 0 8px 32px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.08);
+                inset 0 1px 0 rgba(0, 0, 0, 0.08);
             transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
             position: relative;
             overflow: hidden;
@@ -177,7 +177,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 50%, transparent 100%);
         }
         .election-type-pill {
             display: inline-flex;
@@ -202,14 +202,14 @@
             font-size: 1.6rem;
             font-weight: 900;
             letter-spacing: -0.03em;
-            color: #fff;
+            color: #1d1d1f;
             text-shadow: 0 2px 16px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             line-height: 1.1;
         }
         .election-sub {
             font-size: 0.8rem;
-            color: rgba(255,255,255,0.45);
+            color: rgba(0, 0, 0, 0.45);
             margin-top: 0.35rem;
             display: flex;
             align-items: center;
@@ -235,16 +235,16 @@
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
+            color: rgba(0, 0, 0, 0.4);
         }
         .election-mesas-total {
             font-size: 0.7rem;
-            color: rgba(255,255,255,0.3);
+            color: rgba(0, 0, 0, 0.3);
         }
         .election-progress-wrap {
             width: 100%;
             height: 5px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(0, 0, 0, 0.06);
             border-radius: 99px;
             overflow: hidden;
             margin-bottom: 1.5rem;
@@ -295,16 +295,16 @@
                 </div>
                 <!-- COUNTDOWN -->
                 <span id="refreshCountdown" style="font-size:0.72rem;color:#86868b;font-weight:600;"></span>
-                <select id="distritoFilterSelect" style="display: none; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
+                <select id="distritoFilterSelect" style="display: none; background: rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
                     <option value="TODOS" style="color: black;">Todos los distritos</option>
                 </select>
-                <select id="localFilterSelect" style="display: none; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; max-width: 200px;">
+                <select id="localFilterSelect" style="display: none; background: rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; max-width: 200px;">
                     <option value="TODOS" style="color: black;">Todos los locales</option>
                 </select>
-                <select id="mesaFilterSelect" style="display: none; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; max-width: 150px;">
+                <select id="mesaFilterSelect" style="display: none; background: rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; max-width: 150px;">
                     <option value="TODOS" style="color: black;">Todas las mesas</option>
                 </select>
-                <select id="tipoEleccionSelect" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
+                <select id="tipoEleccionSelect" style="background: rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer;">
                     <option value="1" style="color: black;">Presidente Regional</option>
                     <option value="2" style="color: black;">Consejero Regional</option>
                     <option value="3" style="color: black;">Alcalde Provincial</option>
@@ -363,16 +363,16 @@
         </div>
 
         <!-- LISTA Y RANKING -->
-        <div style="margin-top: 2rem; background: rgba(255,255,255,0.035); border: 0.5px solid rgba(255,255,255,0.09); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
+        <div style="margin-top: 2rem; background: rgba(0, 0, 0, 0.035); border: 0.5px solid rgba(0, 0, 0, 0.09); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(16px);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
                 <div style="display:flex;align-items:center;gap:0.75rem;">
                     <span style="font-size:1.3rem;">📊</span>
                     <div>
-                        <div style="font-size: 1rem; font-weight: 800; color: #fff;">Ranking Detallado de Votos</div>
+                        <div style="font-size: 1rem; font-weight: 800; color: #1d1d1f;">Ranking Detallado de Votos</div>
                         <div style="font-size:0.75rem;color:#86868b;margin-top:0.1rem;" id="rankingSubtitle">Resultados por organización política</div>
                     </div>
                 </div>
-                <span style="font-size: 0.75rem; color: #86868b; font-weight: 600; background:rgba(255,255,255,0.05); padding:0.3rem 0.75rem; border-radius:20px; border:0.5px solid rgba(255,255,255,0.09);" id="rankingUpdateTag">Actualizado</span>
+                <span style="font-size: 0.75rem; color: #86868b; font-weight: 600; background:rgba(0, 0, 0, 0.05); padding:0.3rem 0.75rem; border-radius:20px; border:0.5px solid rgba(0, 0, 0, 0.09);" id="rankingUpdateTag">Actualizado</span>
             </div>
             <div id="partyRankingList" style="display: flex; flex-direction: column; gap: 0.85rem;">
                 <p style="color: #86868b; text-align: center; padding: 1rem;">Cargando estadísticas...</p>
@@ -384,7 +384,7 @@
             <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
                 <div style="font-size:1.4rem;">📍</div>
                 <div>
-                    <div style="font-size:1.1rem;font-weight:800;color:#fff;">Comparativo por Tipo de Elección</div>
+                    <div style="font-size:1.1rem;font-weight:800;color:#1d1d1f;">Comparativo por Tipo de Elección</div>
                     <div style="font-size:0.78rem;color:#86868b;margin-top:0.1rem;" id="distritoPanelSub">Resumen de votos en el distrito seleccionado para todos los tipos de elección</div>
                 </div>
             </div>
@@ -477,7 +477,7 @@
     position: relative;
     margin-top: 5rem;
     background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
-    border-top: 0.5px solid rgba(255,255,255,0.06);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 .footer-gradient-line {
     height: 1px;
@@ -504,8 +504,8 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.12);
+    background: rgba(0, 0, 0, 0.06);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
@@ -521,12 +521,12 @@
 .footer-brand-name {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.9);
+    color: rgba(0, 0, 0, 0.9);
     letter-spacing: -0.01em;
 }
 .footer-brand-sub {
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
     margin-top: 0.1rem;
 }
 .footer-info {
@@ -561,7 +561,7 @@
 }
 .footer-legal {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(0, 0, 0, 0.3);
     margin-bottom: 0.15rem;
 }
 .footer-company {
@@ -581,7 +581,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
 }
 .footer-meta-item {
     display: flex;
@@ -617,7 +617,7 @@
 }
 .footer-copy {
     font-size: 0.65rem;
-    color: rgba(255,255,255,0.2);
+    color: rgba(0, 0, 0, 0.2);
     line-height: 1.6;
 }
 @media (max-width: 720px) {

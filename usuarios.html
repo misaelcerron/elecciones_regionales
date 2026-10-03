@@ -49,7 +49,7 @@
             border: 1px solid rgba(59, 130, 246, 0.55);
             border-radius: 22px;
             padding: 0.25rem 0.75rem 0.25rem 0.3rem;
-            box-shadow: 0 0 18px rgba(27, 75, 138, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 18px rgba(27, 75, 138, 0.4), inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             text-decoration: none; flex-shrink: 0;
         }
         .navbar-brand img {
@@ -60,8 +60,8 @@
         .navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
         .navbar-brand-main {
             font-size: 0.75rem; font-weight: 900; letter-spacing: 0.06em;
-            text-transform: uppercase; color: #fff;
-            text-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+            text-transform: uppercase; color: #1d1d1f;
+            text-shadow: none;
         }
         .navbar-brand-sub {
             font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em;
@@ -71,12 +71,12 @@
         .navbar-links {
             display: flex; align-items: center; gap: 0.25rem;
             position: absolute; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.04);
-            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             border-radius: 26px; padding: 0.2rem 0.25rem;
         }
         .navbar-links a {
-            color: rgba(255, 255, 255, 0.55); text-decoration: none;
+            color: rgba(0, 0, 0, 0.55); text-decoration: none;
             font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em;
             padding: 0.36rem 0.85rem; border-radius: 20px;
             border: 0.5px solid transparent;
@@ -92,15 +92,15 @@
             color: white;
             background: linear-gradient(135deg, rgba(27, 75, 138, 0.65), rgba(10, 40, 90, 0.8));
             border-color: rgba(59, 130, 246, 0.6);
-            box-shadow: 0 0 14px rgba(27, 75, 138, 0.5), inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 14px rgba(27, 75, 138, 0.5), inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
             font-weight: 700;
         }
 
         .navbar-user { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
         .nav-username {
             font-size: 0.78rem; color: #86868b;
-            background: rgba(255, 255, 255, 0.04);
-            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             padding: 0.28rem 0.7rem; border-radius: 20px; white-space: nowrap;
         }
         .btn-logout {
@@ -132,7 +132,7 @@
         }
         .page-title {
             font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em;
-            color: #fff; margin-bottom: 0.35rem;
+            color: #1d1d1f; margin-bottom: 0.35rem;
         }
         .page-sub { font-size: 0.92rem; color: #86868b; max-width: 600px; line-height: 1.5; }
 
@@ -140,7 +140,7 @@
         .btn-primary {
             display: inline-flex; align-items: center; gap: 0.5rem;
             background: linear-gradient(135deg, #0071e3, #1B4B8A);
-            color: #ffffff; border: 1px solid rgba(96, 165, 250, 0.4);
+            color: #1d1d1f; border: 1px solid rgba(96, 165, 250, 0.4);
             padding: 0.65rem 1.4rem; border-radius: 24px;
             font-size: 0.88rem; font-weight: 700; cursor: pointer;
             text-decoration: none; font-family: inherit;
@@ -160,15 +160,15 @@
             gap: 1rem; margin-bottom: 2rem;
         }
         .stat-card {
-            background: rgba(255, 255, 255, 0.035);
-            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            background: rgba(0, 0, 0, 0.035);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             border-radius: 18px; padding: 1.25rem 1.4rem;
             backdrop-filter: blur(16px);
             transition: all 0.25s ease;
             position: relative; overflow: hidden;
         }
         .stat-card:hover {
-            border-color: rgba(255, 255, 255, 0.18);
+            border-color: rgba(0, 0, 0, 0.18);
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
@@ -183,7 +183,7 @@
         }
         .stat-card-value {
             font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em;
-            color: #fff; margin-bottom: 0.25rem;
+            color: #1d1d1f; margin-bottom: 0.25rem;
         }
         .stat-card-sub { font-size: 0.78rem; color: #64748b; }
 
@@ -194,8 +194,8 @@
         }
         .search-box {
             display: flex; align-items: center; gap: 0.6rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
             border-radius: 20px; padding: 0.45rem 1rem;
             width: 100%; max-width: 360px;
             transition: all 0.2s ease;
@@ -203,25 +203,25 @@
         .search-box:focus-within {
             border-color: rgba(59, 130, 246, 0.6);
             box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.06);
         }
         .search-box input {
             background: transparent; border: none; outline: none;
-            color: #fff; font-size: 0.85rem; font-family: inherit; width: 100%;
+            color: #1d1d1f; font-size: 0.85rem; font-family: inherit; width: 100%;
         }
         .search-box input::placeholder { color: #64748b; }
 
         .filter-tabs { display: flex; gap: 0.35rem; }
         .filter-btn {
-            background: rgba(255, 255, 255, 0.035);
-            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.035);
+            border: 0.5px solid rgba(0, 0, 0, 0.08);
             color: #86868b; padding: 0.4rem 0.95rem; border-radius: 18px;
             font-size: 0.78rem; font-weight: 600; cursor: pointer;
             transition: all 0.2s ease; font-family: inherit;
         }
-        .filter-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.07); }
+        .filter-btn:hover { color: #1d1d1f; background: rgba(0, 0, 0, 0.07); }
         .filter-btn.active {
-            color: #fff;
+            color: #1d1d1f;
             background: linear-gradient(135deg, rgba(27, 75, 138, 0.6), rgba(10, 40, 90, 0.8));
             border-color: rgba(59, 130, 246, 0.6);
             box-shadow: 0 0 12px rgba(27, 75, 138, 0.4);
@@ -229,26 +229,26 @@
 
         /* ─── TABLE APPLE DARK ─── */
         .table-wrap {
-            background: rgba(255, 255, 255, 0.03);
-            border: 0.5px solid rgba(255, 255, 255, 0.09);
+            background: rgba(0, 0, 0, 0.03);
+            border: 0.5px solid rgba(0, 0, 0, 0.09);
             border-radius: 20px; overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
         table { width: 100%; border-collapse: collapse; }
         th {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(0, 0, 0, 0.04);
             color: #86868b; font-size: 0.72rem; font-weight: 700;
             letter-spacing: 0.08em; text-transform: uppercase;
             padding: 0.9rem 1.2rem; text-align: left;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
         }
         td {
             padding: 1rem 1.2rem;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
             font-size: 0.88rem; color: #f5f5f7; vertical-align: middle;
         }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(255, 255, 255, 0.025); }
+        tr:hover td { background: rgba(0, 0, 0, 0.025); }
 
         /* User badge info */
         .user-cell { display: flex; align-items: center; gap: 0.8rem; }
@@ -257,10 +257,10 @@
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(27, 75, 138, 0.5));
             border: 1px solid rgba(96, 165, 250, 0.35);
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+            font-weight: 800; font-size: 0.9rem; color: #1d1d1f; flex-shrink: 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .user-name { font-weight: 700; color: #fff; }
+        .user-name { font-weight: 700; color: #1d1d1f; }
         .user-id-tag { font-size: 0.72rem; color: #64748b; }
 
         /* Role badges */
@@ -292,8 +292,8 @@
         /* Action buttons */
         .actions-cell { display: flex; align-items: center; gap: 0.4rem; }
         .btn-action {
-            background: rgba(255, 255, 255, 0.05);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
             color: #f5f5f7; padding: 0.35rem 0.75rem; border-radius: 14px;
             font-size: 0.78rem; font-weight: 600; cursor: pointer;
             transition: all 0.2s ease; font-family: inherit;
@@ -301,7 +301,7 @@
         }
         .btn-action:hover {
             background: rgba(59, 130, 246, 0.18);
-            border-color: rgba(59, 130, 246, 0.45); color: #fff;
+            border-color: rgba(59, 130, 246, 0.45); color: #1d1d1f;
         }
         .btn-action.delete:hover {
             background: rgba(255, 69, 58, 0.2);
@@ -322,7 +322,7 @@
         .modal-backdrop.show { display: flex; opacity: 1; }
         .modal-card {
             background: rgba(18, 20, 26, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.12);
             border-radius: 24px; padding: 2rem;
             width: 100%; max-width: 480px;
             box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 113, 227, 0.2);
@@ -334,14 +334,14 @@
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 1.5rem;
         }
-        .modal-title { font-size: 1.3rem; font-weight: 800; color: #fff; }
+        .modal-title { font-size: 1.3rem; font-weight: 800; color: #1d1d1f; }
         .modal-close {
-            background: rgba(255, 255, 255, 0.08); border: none; color: #86868b;
+            background: rgba(0, 0, 0, 0.08); border: none; color: #86868b;
             width: 30px; height: 30px; border-radius: 50%; font-size: 1.1rem;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
         }
-        .modal-close:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
+        .modal-close:hover { background: rgba(0, 0, 0, 0.16); color: #1d1d1f; }
 
         /* Form fields */
         .form-group { margin-bottom: 1.25rem; }
@@ -352,17 +352,17 @@
         }
         .form-input, .form-select {
             width: 100%; padding: 0.7rem 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 0.5px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px; color: #fff; font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.04);
+            border: 0.5px solid rgba(0, 0, 0, 0.12);
+            border-radius: 14px; color: #1d1d1f; font-size: 0.9rem;
             font-family: inherit; outline: none; transition: all 0.2s ease;
         }
         .form-input:focus, .form-select:focus {
             border-color: #0071e3;
             box-shadow: 0 0 12px rgba(0, 113, 227, 0.3);
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(0, 0, 0, 0.07);
         }
-        .form-select option { background: #12141a; color: #fff; }
+        .form-select option { background: #12141a; color: #1d1d1f; }
         .form-hint { font-size: 0.75rem; color: #64748b; margin-top: 0.35rem; }
 
         /* Role selector visual cards */
@@ -372,13 +372,13 @@
         .role-option {
             display: flex; align-items: flex-start; gap: 0.75rem;
             padding: 0.75rem 1rem; border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             cursor: pointer; transition: all 0.2s ease;
         }
         .role-option:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.05);
         }
         .role-option.selected {
             border-color: #0071e3;
@@ -386,7 +386,7 @@
             box-shadow: 0 0 14px rgba(0, 113, 227, 0.25);
         }
         .role-option input[type="radio"] { margin-top: 0.25rem; accent-color: #0071e3; }
-        .role-option-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.15rem; }
+        .role-option-title { font-size: 0.85rem; font-weight: 700; color: #1d1d1f; margin-bottom: 0.15rem; }
         .role-option-desc { font-size: 0.75rem; color: #86868b; line-height: 1.35; }
 
         .modal-footer {
@@ -394,12 +394,12 @@
             gap: 0.75rem; margin-top: 1.75rem;
         }
         .btn-cancel {
-            background: transparent; border: 0.5px solid rgba(255, 255, 255, 0.15);
+            background: transparent; border: 0.5px solid rgba(0, 0, 0, 0.15);
             color: #86868b; padding: 0.6rem 1.2rem; border-radius: 20px;
             font-size: 0.85rem; font-weight: 600; cursor: pointer;
             transition: all 0.2s ease; font-family: inherit;
         }
-        .btn-cancel:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+        .btn-cancel:hover { color: #1d1d1f; border-color: rgba(0, 0, 0, 0.3); }
 
         /* Toast notification */
         .toast {
@@ -408,7 +408,7 @@
             border: 1px solid rgba(59, 130, 246, 0.4);
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(20px);
-            color: #fff; padding: 0.85rem 1.4rem; border-radius: 16px;
+            color: #1d1d1f; padding: 0.85rem 1.4rem; border-radius: 16px;
             font-size: 0.85rem; font-weight: 600;
             display: flex; align-items: center; gap: 0.6rem;
             z-index: 3000; transform: translateY(100px); opacity: 0;
@@ -559,10 +559,10 @@
                     <label class="form-label">Rol y Alcance de Permisos</label>
                     <select id="formRolSelect" name="formRolSelect" style="
                         width:100%; padding:0.75rem 1rem;
-                        background: rgba(255,255,255,0.06);
-                        border: 1px solid rgba(255,255,255,0.15);
+                        background: rgba(0, 0, 0, 0.06);
+                        border: 1px solid rgba(0, 0, 0, 0.15);
                         border-radius: 10px;
-                        color: #fff;
+                        color: #1d1d1f;
                         font-size: 0.95rem;
                         font-weight: 600;
                         cursor: pointer;
@@ -658,7 +658,7 @@
     position: relative;
     margin-top: 5rem;
     background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
-    border-top: 0.5px solid rgba(255,255,255,0.06);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 .footer-gradient-line {
     height: 1px;
@@ -685,8 +685,8 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.12);
+    background: rgba(0, 0, 0, 0.06);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
@@ -702,12 +702,12 @@
 .footer-brand-name {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.9);
+    color: rgba(0, 0, 0, 0.9);
     letter-spacing: -0.01em;
 }
 .footer-brand-sub {
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
     margin-top: 0.1rem;
 }
 .footer-info {
@@ -742,7 +742,7 @@
 }
 .footer-legal {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(0, 0, 0, 0.3);
     margin-bottom: 0.15rem;
 }
 .footer-company {
@@ -762,7 +762,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.35);
+    color: rgba(0, 0, 0, 0.35);
 }
 .footer-meta-item {
     display: flex;
@@ -798,7 +798,7 @@
 }
 .footer-copy {
     font-size: 0.65rem;
-    color: rgba(255,255,255,0.2);
+    color: rgba(0, 0, 0, 0.2);
     line-height: 1.6;
 }
 @media (max-width: 720px) {

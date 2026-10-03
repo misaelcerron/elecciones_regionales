@@ -17,8 +17,8 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #000000 !important;
-    color: #f5f5f7 !important;
+    background: #f5f5f7 !important;
+    color: #1d1d1f !important;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -38,18 +38,18 @@ body::before {
 
 /* ── TOKENS DE DISEÑO APPLE DARK ── */
 :root {
-    --bg:            #000000;
-    --surface:       rgba(255, 255, 255, 0.04);
-    --surface-h:     rgba(255, 255, 255, 0.07);
-    --border:        rgba(255, 255, 255, 0.09);
-    --border-h:      rgba(255, 255, 255, 0.18);
+    --bg:            #f5f5f7;
+    --surface:       #ffffff;
+    --surface-h:     #f0f0f0;
+    --border:        #d2d2d7;
+    --border-h:      #c7c7cc;
     --accent:        #0071e3;
     --accent-glow:   rgba(0, 113, 227, 0.35);
     --accent-light:  rgba(0, 113, 227, 0.14);
     --blue-brand:    #1B4B8A;
-    --text:          #f5f5f7;
+    --text:          #1d1d1f;
     --text-2:        #86868b;
-    --text-3:        #515154;
+    --text-3:        #86868b;
     --ok:            #32d74b;
     --err:           #ff453a;
     --warn:          #ffd60a;
@@ -91,7 +91,7 @@ a.navbar-brand {
     border: 1px solid rgba(59, 130, 246, 0.55) !important;
     border-radius: 22px !important;
     padding: 0.25rem 0.75rem 0.25rem 0.3rem !important;
-    box-shadow: 0 0 18px rgba(27, 75, 138, 0.4), inset 0 0.5px 0 rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 0 18px rgba(27, 75, 138, 0.4), inset 0 0.5px 0 rgba(0, 0, 0, 0.15) !important;
     text-decoration: none !important;
     flex-shrink: 0 !important;
     transition: var(--t) !important;
@@ -99,7 +99,7 @@ a.navbar-brand {
 .navbar-brand-wrap:hover,
 .navbar-brand:hover {
     border-color: rgba(59, 130, 246, 0.85) !important;
-    box-shadow: 0 0 26px rgba(27, 75, 138, 0.65), inset 0 0.5px 0 rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 0 26px rgba(27, 75, 138, 0.65), inset 0 0.5px 0 rgba(0, 0, 0, 0.25) !important;
 }
 .navbar-brand-wrap img,
 .navbar-brand img,
@@ -124,7 +124,7 @@ a.navbar-brand {
     letter-spacing: 0.06em !important;
     text-transform: uppercase !important;
     color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(96, 165, 250, 0.7) !important;
+    text-shadow: none !important;
     white-space: nowrap !important;
 }
 .navbar-brand-sub {
@@ -145,13 +145,13 @@ a.navbar-brand {
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 0.5px solid rgba(255, 255, 255, 0.09) !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 0.5px solid rgba(0, 0, 0, 0.09) !important;
     border-radius: 26px !important;
     padding: 0.2rem 0.25rem !important;
 }
 .navbar-links a {
-    color: rgba(255, 255, 255, 0.55) !important;
+    color: rgba(0, 0, 0, 0.55) !important;
     text-decoration: none !important;
     font-size: 0.8rem !important;
     font-weight: 600 !important;
@@ -163,16 +163,16 @@ a.navbar-brand {
     white-space: nowrap !important;
 }
 .navbar-links a:hover {
-    color: #ffffff !important;
+    color: #1d1d1f !important;
     background: rgba(59, 130, 246, 0.12) !important;
     border-color: rgba(59, 130, 246, 0.35) !important;
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.2) !important;
 }
 .navbar-links a.active {
-    color: #ffffff !important;
+    color: #1d1d1f !important;
     background: linear-gradient(135deg, rgba(27, 75, 138, 0.7), rgba(10, 40, 90, 0.85)) !important;
     border-color: rgba(59, 130, 246, 0.6) !important;
-    box-shadow: 0 0 14px rgba(27, 75, 138, 0.5), inset 0 0.5px 0 rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 14px rgba(27, 75, 138, 0.5), inset 0 0.5px 0 rgba(0, 0, 0, 0.1) !important;
     font-weight: 700 !important;
 }
 
@@ -188,8 +188,8 @@ a.navbar-brand {
 #navUsername {
     font-size: 0.78rem !important;
     color: #86868b !important;
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 0.5px solid rgba(255, 255, 255, 0.09) !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 0.5px solid rgba(0, 0, 0, 0.09) !important;
     padding: 0.28rem 0.7rem !important;
     border-radius: 20px !important;
     white-space: nowrap !important;
@@ -209,7 +209,7 @@ a.navbar-brand {
 }
 .btn-logout:hover {
     background: #ff453a !important;
-    color: #ffffff !important;
+    color: #1d1d1f !important;
     border-color: #ff453a !important;
     box-shadow: 0 0 12px rgba(255, 69, 58, 0.45) !important;
 }
@@ -220,16 +220,16 @@ a.navbar-brand {
     align-items: center;
     justify-content: center;
     width: 36px; height: 36px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.05);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     border-radius: 10px;
-    color: #fff; font-size: 1.25rem;
+    color: #1d1d1f; font-size: 1.25rem;
     cursor: pointer; transition: var(--t);
     margin-left: 0.35rem;
 }
 .nav-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.25);
 }
 
 /* Mobile Nav Drawer */
@@ -256,17 +256,17 @@ a.navbar-brand {
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: 14px;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
     font-size: 0.92rem;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.03);
-    border: 0.5px solid rgba(255, 255, 255, 0.07);
+    background: rgba(0, 0, 0, 0.03);
+    border: 0.5px solid rgba(0, 0, 0, 0.07);
     transition: var(--t);
 }
 .mobile-nav-drawer a:hover,
 .mobile-nav-drawer a.active {
-    color: #ffffff;
+    color: #1d1d1f;
     background: linear-gradient(135deg, rgba(27, 75, 138, 0.6), rgba(10, 40, 90, 0.8));
     border-color: rgba(59, 130, 246, 0.5);
 }
@@ -297,7 +297,7 @@ a.navbar-brand {
     font-weight: 800;
     letter-spacing: -0.035em;
     line-height: 1.1;
-    color: #ffffff;
+    color: #1d1d1f;
     margin-bottom: 0.35rem;
 }
 .page-sub {
@@ -345,13 +345,13 @@ a.navbar-brand {
 }
 .step:hover,
 .tab-step:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.025);
+    color: #1d1d1f;
+    background: rgba(0, 0, 0, 0.025);
 }
 .step.active,
 .tab-step.active {
     background: var(--accent-light) !important;
-    color: #ffffff !important;
+    color: #1d1d1f !important;
     box-shadow: inset 0 0 16px rgba(0, 113, 227, 0.2);
 }
 .step-num {
@@ -361,7 +361,7 @@ a.navbar-brand {
     margin: 0 auto 0.35rem;
     font-size: 0.72rem;
     font-weight: 800;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.08);
     line-height: 22px;
     color: var(--text-2);
     transition: var(--t);
@@ -369,7 +369,7 @@ a.navbar-brand {
 .step.active .step-num,
 .tab-step.active .step-num {
     background: var(--accent) !important;
-    color: #ffffff !important;
+    color: #1d1d1f !important;
     box-shadow: 0 0 10px rgba(0, 113, 227, 0.5);
 }
 
@@ -404,7 +404,7 @@ a.navbar-brand {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    color: #ffffff;
+    color: #1d1d1f;
 }
 .section-title-icon {
     width: 34px; height: 34px;
@@ -454,7 +454,7 @@ a.navbar-brand {
     font-size: 2.1rem;
     font-weight: 900;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: #1d1d1f;
     margin-bottom: 0.2rem;
 }
 .kpi-card-sub {
@@ -477,8 +477,8 @@ a.navbar-brand {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.04);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     border-radius: 14px;
     padding: 0.6rem 0.95rem;
     flex: 1;
@@ -489,13 +489,13 @@ a.navbar-brand {
 .search-wrapper:focus-within {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.06);
 }
 .search-wrapper input {
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #1d1d1f;
     font-size: 0.88rem;
     font-family: inherit;
     width: 100%;
@@ -505,11 +505,11 @@ a.navbar-brand {
 }
 
 .select-filter {
-    background: rgba(255, 255, 255, 0.04);
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.04);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
     border-radius: 14px;
     padding: 0.6rem 0.95rem;
-    color: #ffffff;
+    color: #1d1d1f;
     font-size: 0.85rem;
     font-family: inherit;
     outline: none;
@@ -522,7 +522,7 @@ a.navbar-brand {
 }
 .select-filter option {
     background: #14161f;
-    color: #ffffff;
+    color: #1d1d1f;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -533,8 +533,8 @@ a.navbar-brand {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     border-radius: 16px;
-    border: 0.5px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 table {
@@ -544,21 +544,21 @@ table {
 }
 
 th {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.04);
     color: var(--text-2);
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 0.85rem 1.1rem;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
     text-align: left;
     white-space: nowrap;
 }
 
 td {
     padding: 0.95rem 1.1rem;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.045);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.045);
     font-size: 0.86rem;
     color: var(--text);
     vertical-align: middle;
@@ -567,7 +567,7 @@ tr:last-child td {
     border-bottom: none;
 }
 tr:hover td {
-    background: rgba(255, 255, 255, 0.025);
+    background: rgba(0, 0, 0, 0.025);
 }
 
 /* Monospace Mesa Badge */
@@ -576,12 +576,12 @@ tr:hover td {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.88rem;
     font-weight: 800;
-    color: #ffffff;
+    color: #1d1d1f;
     letter-spacing: 0.04em;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.06);
     padding: 0.25rem 0.6rem;
     border-radius: 8px;
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
 }
 
 /* Badges de Estado */
@@ -629,7 +629,7 @@ tr:hover td {
 .progress-bar-bg {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.08);
     border-radius: 99px;
     overflow: hidden;
     margin-top: 0.35rem;
@@ -750,5 +750,5 @@ tr:hover td {
 /* Scrollbar Personalizado Apple */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.28); }
